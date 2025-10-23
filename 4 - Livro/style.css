@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+.navbar {
+    width: 100%;
+    height: 90px;
+    background-color: #ffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.logo img {
+    width: 55px;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    /*essa parte que deixa os coisinha grudado ou espaçad*/
+    gap: 25rem;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    font-weight: 650;
+    color: #000;
+}
+
+.perfil-inicial {
+    width: 55px;
+    height: 55px;
+    background-color: #b6b6f8;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 2.5rem;
+}
+
+.traco-azul {
+    width: 500px;
+    height: 3px;
+    background-color: #4A67DF;
+    margin: 0.5rem auto 2rem;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px #4A67DF;
+}
+
+.livro-container {
+    display: grid;
+    justify-content: start;
+    padding: 2rem;
+}
+
+.descricao {
+    position: absolute;
+    left: 18rem;
+    top: 18rem;
+    width: 75%;
+}
+
+.livro button {
+    position: absolute;
+    top: 30rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+.favoritar button {
+    left: 18rem;
+}
+
+.ler button {
+    left: 28rem;
+}
+
+.livro img {
+    width: 250px;
+    border-radius: 10px;
+}
+
+.livro p {
+    margin-top: 0.8rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.informacoes {
+    padding: 0.2rem 2rem;
+}
+
+.informacoes p {
+    margin-top: 2rem;
+    font-weight: 600;
+}
+
+.informacoes button {
+    position: absolute;
+    padding: 0.4rem 0.5rem;
+    border-radius: 25px;
+}
+
+.paginas {
+    left: 17rem;
+    top: 39rem;
+}
+
+.idioma {
+    left: 8.5rem;
+    top: 42.2rem;
+}
+
+.categoria1 {
+    left: 10rem;
+    top: 45.3rem;
+}
+
+.categoria2 {
+    left: 15rem;
+    top: 45.3rem;
+}
