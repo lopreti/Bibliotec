@@ -19,7 +19,7 @@
 }
 
 .logo img {
-    width: 55px;
+    width: 75px;
 }
 
 .navbar ul {
@@ -125,5 +125,8 @@ h1 {
     padding: 0.8rem;
 }
 
-
+a{
+    color: #000;
+    text-decoration: none;
+}
 

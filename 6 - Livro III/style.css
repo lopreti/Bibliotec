@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
 
 * {
@@ -35,7 +36,6 @@
     color: #000;
 }
 
-
 .perfil-inicial {
     width: 55px;
     height: 55px;
@@ -55,7 +55,7 @@ h1 {
 }
 
 .traco-azul {
-    width: 250px;
+    width: 540px;
     height: 3px;
     background-color: #4A67DF;
     margin: 0.5rem auto 2rem;
@@ -63,46 +63,77 @@ h1 {
     box-shadow: 0px 0px 10px #4A67DF;
 }
 
-.textos {
-    width: 65%;
+.livro-container {
+    display: grid;
+    justify-content: start;
     padding: 2rem;
-    margin-top: 6.5rem;
 }
 
-.texto2 {
-    margin-top: 4rem;
-}
-
-.imagem-canto {
+.descricao {
     position: absolute;
-    top: 40%;
-    left: 80%;
+    left: 18rem;
+    top: 18rem;
+    width: 75%;
 }
 
-.imagem-canto img{
-    width: 16rem;
-}
-
-.container-contato button {
+.livro button {
     position: absolute;
-    padding: 1rem 1rem;
+    top: 30rem;
+    padding: 0.6rem 0.8rem;
     border-radius: 15px;
     font-weight: bold;
-    background-color: #4a68df1c;
 }
 
-.insta {
-    left: 2rem;
-    top: 50rem;
+.favoritar button {
+    left: 18rem;
 }
 
-.gmail{
-    left:14rem;
-    top: 50rem;
+.ler button {
+    left: 28rem;
 }
 
-.linkedin{
-    left: 30rem;
-    top: 50rem;
+.livro img {
+    width: 250px;
+    border-radius: 10px;
 }
 
+.livro p {
+    margin-top: 0.8rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.informacoes {
+    padding: 0.2rem 2rem;
+}
+
+.informacoes p {
+    margin-top: 2rem;
+    font-weight: 600;
+}
+
+.informacoes button {
+    position: absolute;
+    padding: 0.4rem 0.5rem;
+    border-radius: 25px;
+}
+
+.paginas {
+    left: 17rem;
+    top: 39rem;
+}
+
+.idioma {
+    left: 8.5rem;
+    top: 42.2rem;
+}
+
+.categoria1 {
+    left: 10rem;
+    top: 45.3rem;
+}
+
+.categoria2 {
+    left: 15rem;
+    top: 45.3rem;
+}

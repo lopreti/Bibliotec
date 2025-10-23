@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
 
 * {
@@ -19,7 +20,7 @@
 }
 
 .logo img {
-    width: 55px;
+    width: 75px;
 }
 
 .navbar ul {
@@ -54,7 +55,7 @@ h1 {
 }
 
 .traco-azul {
-    width: 500px;
+    width: 540px;
     height: 3px;
     background-color: #4A67DF;
     margin: 0.5rem auto 2rem;
