@@ -72,7 +72,7 @@ h1 {
 
 .traco-azul {
     width: 600px;
-    height: 3px;
+    height: 2px;
     background-color: #4A67DF;
     margin: 0.5rem auto 2rem;
     border-radius: 4px;
@@ -97,7 +97,7 @@ h1 {
     border-radius: 10px;
 }
 
-.destaque{
+.destaque {
     margin-top: -60px;
 }
 
@@ -120,13 +120,13 @@ h1 {
     text-align: center;
     color: #4A67DF;
 }
-.veja-mais img{
+
+.veja-mais img {
     width: 100px;
     padding: 0.8rem;
 }
 
-a{
+a {
     color: #000;
     text-decoration: none;
 }
-
