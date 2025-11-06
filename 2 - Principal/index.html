@@ -27,36 +27,14 @@
 
     <main>
         <div class="barra-pesquisa">
-            <input type="text" placeholder="     🔍   Pesquise seu livro">
+            <input type="text" placeholder="     🔍   Pesquise seu livro">
         </div>
 
         <h1>TOP LIVROS RECOMENDADOS</h1>
         <div class="traco-azul"></div>
 
         <section class="livros">
-            <div class="livro">
-                <a href="..//4 - Livro I/index.html">
-                    <img src="..//img/crepusculo.png" alt="Link para outra página">
-                    <h3>CREPÚSCULO</h3>
-                    <p>Stephenie Meyer</p>
-                </a>
-
-            </div>
-            <div class="livro destaque">
-                 <a href="..//6 - Livro III/index.html">
-                <img src="..//img/50tons.png">
-                <h3>CINQUENTA TONS DE CINZA</h3>
-                <p>E. L. James</p>
-                </a>
-            </div>
-            <div class="livro">
-                  <a href="..//5 - Livro II/index.html">
-                <img src="..//img/fabricanteLagrimas.png">
-                <h3>O FABRICANTE DE LÁGRIMAS</h3>
-                <p>Erin Doom</p>
-                </a>
-            </div>
-        </section>
+            </section>
 
         <div class="veja-mais">
             <p>Veja mais
@@ -64,6 +42,33 @@
                 <img src="..//img/vejamais.png" alt="">
         </div>
     </main>
+    
+    <script>
+        fetch("http://localhost:3000/livros")
+            .then(res => res.json())
+            .then(livros => {
+
+                const section = document.querySelector(".livros");
+                section.innerHTML = ""; 
+
+                livros.forEach(l => {
+                    // ⭐️ CORREÇÃO ESSENCIAL: Usando a URL completa do banco (l.capa_url)
+                    // Não é mais necessário o prefixo local '../img/'
+                    const urlCapa = l.capa_url; 
+                    
+                    section.innerHTML += `
+                        <div class="livro">
+                            <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
+                            <h3>${l.titulo}</h3> 
+                            <p>${l.autor}</p> 
+                        </div>
+                    `;
+                });
+
+            })
+            .catch(error => console.error('Erro ao buscar os livros:', error));
+    </script>
+
 </body>
 
 </html>
