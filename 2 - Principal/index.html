@@ -52,8 +52,7 @@
                 section.innerHTML = ""; 
 
                 livros.forEach(l => {
-                    // ⭐️ CORREÇÃO ESSENCIAL: Usando a URL completa do banco (l.capa_url)
-                    // Não é mais necessário o prefixo local '../img/'
+                  
                     const urlCapa = l.capa_url; 
                     
                     section.innerHTML += `
