@@ -70,7 +70,7 @@ app.get("/livros/:id", async (req, res) => {
 // URL: http://localhost:3000/livros
 // =======================================================
 app.post("/livros", async (req, res) => {
-  const { titulo, autor, descricao, capa_url, publicado_em } = req.body; 
+  const { titulo, autor, descricao, capa_url, publicado_ano } = req.body; 
 
   if (!titulo || !autor) {
     return res.status(400).send("Título e autor são obrigatórios.");
@@ -81,8 +81,8 @@ app.post("/livros", async (req, res) => {
     conn = await pool.getConnection();
     
     const result = await conn.query(
-      "INSERT INTO livros (titulo, autor, descricao, capa_url, publicado_em) VALUES (?, ?, ?, ?, ?)", 
-      [titulo, autor, descricao, capa_url, publicado_em]
+      "INSERT INTO livros (titulo, autor, descricao, capa_url, publicado_ano) VALUES (?, ?, ?, ?, ?)", 
+      [titulo, autor, descricao, capa_url, publicado_ano]
     );
 
     res.status(201).json({
@@ -104,10 +104,10 @@ app.post("/livros", async (req, res) => {
 // =======================================================
 app.put("/livros/:id", async (req, res) => {
   const id = req.params.id;
-  const { titulo, autor, descricao, capa_url, publicado_em } = req.body; 
+  const { titulo, autor, descricao, capa_url, publicado_ano } = req.body; 
 
   if (isNaN(id)) return res.status(400).send("ID inválido.");
-  if (!titulo && !autor && !descricao && !capa_url && !publicado_em) return res.status(400).send("Nenhum dado de atualização fornecido.");
+  if (!titulo && !autor && !descricao && !capa_url && !publicado_ano) return res.status(400).send("Nenhum dado de atualização fornecido.");
 
   let conn;
   try {
@@ -119,7 +119,7 @@ app.put("/livros/:id", async (req, res) => {
     if (autor) { fields.push("autor = ?"); values.push(autor); }
     if (descricao) { fields.push("descricao = ?"); values.push(descricao); }
     if (capa_url) { fields.push("capa_url = ?"); values.push(capa_url); }
-    if (publicado_em) { fields.push("publicado_em = ?"); values.push(publicado_em); }
+    if (publicado_ano) { fields.push("publicado_ano = ?"); values.push(publicado_ano); }
 
     if (fields.length === 0) return res.status(400).send("Nenhum campo válido para atualização encontrado.");
 
