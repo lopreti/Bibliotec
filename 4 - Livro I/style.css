@@ -7,15 +7,23 @@
     font-family: "Montserrat", sans-serif;
 }
 
+body {
+    background-color: #f7f7f7;
+    color: #000;
+}
+
+/* --- NAVBAR --- */
 .navbar {
     width: 100%;
-    height: 90px;
-    background-color: #ffff;
+    height: 85px;
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 3rem;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 10;
 }
 
 .logo img {
@@ -25,14 +33,14 @@
 .navbar ul {
     list-style: none;
     display: flex;
-    /*essa parte que deixa os coisinha grudado ou espaçad*/
-    gap: 25rem;
+    gap: 6rem;
 }
 
 .navbar ul li a {
     text-decoration: none;
-    font-weight: 650;
+    font-weight: 700;
     color: #000;
+    transition: 0.3s;
 }
 
 .perfil-inicial {
@@ -41,98 +49,120 @@
     background-color: #b6b6f8;
     color: #fff;
     font-weight: 700;
-    border-radius: 100%;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.1rem;
 }
+
+/* --- CONTEÚDO PRINCIPAL --- */
 
 h1 {
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 2.5rem;
+    font-size: 2rem;
 }
 
-.traco-azul {
-    width: 500px;
-    height: 3px;
-    background-color: #4A67DF;
-    margin: 0.5rem auto 2rem;
-    border-radius: 4px;
-    box-shadow: 0px 0px 10px #4A67DF;
-}
 
 .livro-container {
-    display: grid;
-    justify-content: start;
-    padding: 2rem;
+    background-color: #fafafa;
+    box-shadow:0 2px 50px rgba(0, 0, 0, 0.15) ;
+    border-radius: 40px;
+    width: 85%;
+    height: 650px;
+    margin: 0 auto 4rem;
+    padding: 2rem 3rem;
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+.livro {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 90%;
+}
+
+
+.livro img {
+    width: 230px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .descricao {
-    position: absolute;
-    left: 18rem;
-    top: 18rem;
-    width: 75%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
-.livro button {
-    position: absolute;
-    top: 30rem;
-    padding: 0.6rem 0.8rem;
-    border-radius: 15px;
-    font-weight: bold;
+.descricao h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
 }
 
-.favoritar button {
-    left: 18rem;
-}
-
-.ler button {
-    left: 28rem;
-}
-
-.livro img {
-    width: 250px;
-    border-radius: 10px;
-}
-
-.livro p {
-    margin-top: 0.8rem;
-    color: #555;
+.descricao p {
+    color: #333;
     font-size: 0.9rem;
+    line-height: 1.4rem;
+    margin-bottom: 1rem;
 }
+
+
+.botoes {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding-top: 7rem;
+}
+
+/* estilo dos botões permanece */
+.favoritar button, .ler button {
+    border: 2px solid #000;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.favoritar button:hover, .ler button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* --- INFORMAÇÕES TÉCNICAS --- */
 
 .informacoes {
-    padding: 0.2rem 2rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.informacoes h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .informacoes p {
-    margin-top: 2rem;
-    font-weight: 600;
+    margin-top: 0.6rem;
+    font-weight: 500;
 }
 
-.informacoes button {
-    position: absolute;
-    padding: 0.4rem 0.5rem;
+.informacoes span, .informacoes button {
+    display: inline-block;
+    border: none;
+    background-color: #f0f0f8;
+    color: #333;
     border-radius: 25px;
-}
-
-.paginas {
-    left: 17rem;
-    top: 39rem;
-}
-
-.idioma {
-    left: 8.5rem;
-    top: 42.2rem;
-}
-
-.categoria1 {
-    left: 10rem;
-    top: 45.3rem;
-}
-
-.categoria2 {
-    left: 15rem;
-    top: 45.3rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
 }

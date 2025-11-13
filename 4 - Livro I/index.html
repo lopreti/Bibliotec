@@ -31,29 +31,34 @@
 
         <section class="livro-container">
             <div class="livro">
-                <img id="capa-livro" src="" alt="Capa do livro">
+                <div class="lado-esquerdo">
+                    <img id="capa-livro" src="" alt="Capa do livro">
+
+                    <div class="informacoes">
+                        <h3>Informações Técnicas</h3>
+                        <p>Quantidade de páginas: <span>205</span></p>
+                        <p>Idioma: <span>Português</span></p>
+                        <p>Categoria: <span>Ficção</span> <span>Romance</span></p>
+                    </div>
+                </div>
+
                 <div class="descricao">
-                    <h3 id="nome-livro"></h3>
-                    <p id="autor-livro"></p>
-                    <p id="descricao-livro"></p>
+                    <h3 id="nome-livro">Crepúsculo</h3>
+                    <p id="autor-livro">Stephenie Meyer</p>
+                    <p id="descricao-livro">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc feugiat
+                        efficitur risus, vitae ultrices urna malesuada et.
+                    </p>
+
+                    <div class="botoes">
+                        <div class="favoritar"><button>❤️ Favoritar</button></div>
+                        <div class="ler"><button>📖 Ler</button></div>
+                    </div>
                 </div>
-                <div class="favoritar">
-                    <button>❤️ Favoritar</button>
-                </div>
-                <div class="ler">
-                    <button>📖 Ler</button>
-                </div>
-            </div>
-            <div class="informacoes">
-                <h3>Informações Técnicas</h3>
-                <p>Quantidade de páginas: </p>
-                <button class="paginas" id="paginas"></button>
-                <p>Idioma: </p>
-                <button class="idioma" id="idioma"></button>
-                <p>Categoria: </p>
-                <div id="categorias"></div>
             </div>
         </section>
+
+
     </main>
 
     <script>
@@ -68,10 +73,11 @@
                         document.body.innerHTML = `<h2>${livro.message}</h2>`;
                     } else {
                         document.querySelector("h1").textContent = livro.titulo;
+                        document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.autor;
                         document.querySelector(".descricao p").textContent = livro.descricao;
                         document.querySelector(".livro img").src = livro.capa_url;
                         document.querySelector(".descricao h3").textContent = livro.titulo;
-                        document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.autor;
+
                     }
                 })
                 .catch(err => console.error("Erro ao buscar livro:", err));
