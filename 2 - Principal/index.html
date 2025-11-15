@@ -42,33 +42,8 @@
                 <img src="..//img/vejamais.png" alt="">
         </div>
     </main>
-    
-    <script>
-        fetch("http://localhost:3000/livros")
-            .then(res => res.json())
-            .then(livros => {
 
-                const section = document.querySelector(".livros");
-                section.innerHTML = ""; 
-
-                livros.forEach(l => {
-                  
-                    const urlCapa = l.capa_url; 
-                    
-                    section.innerHTML += `
-                        <div class="livro">
-                            <a href="..//4 - Livro I/index.html?id=${l.ID}">
-                            <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
-                            </a>
-                            <h3>${l.titulo}</h3> 
-                            <p>${l.autor}</p> 
-                        </div>
-                    `;
-                });
-
-            })
-            .catch(error => console.error('Erro ao buscar os livros:', error));
-    </script>
+<script src="app.js"></script>
 
 </body>
 
