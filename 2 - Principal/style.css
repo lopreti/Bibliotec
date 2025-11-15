@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 
 * {
     margin: 0;
@@ -64,6 +65,32 @@
     border: 2px solid #bcbcbc;
     font-size: 15px;
     box-shadow: 0 0 4px #ccc;
+}
+
+#container{
+    position: relative;
+    height: auto;
+    width: 100%;
+}
+
+
+#prev-btn,
+#next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 48px;
+    color: #4A67DF;
+    user-select: none;
+}
+
+#prev-btn {
+    left: 0;   /* seta da esquerda */
+}
+
+#next-btn {
+    right: 0;  /* seta da direita */
 }
 
 h1 {
