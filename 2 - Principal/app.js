@@ -4,7 +4,6 @@ const livrosPorPagina = 3;
 
 function renderizarCarrousel() {
     const containerLivros = document.querySelector(".livros");
-    // Marca o container como carrossel para aplicar estilos de destaque
     containerLivros.classList.add('carrossel');
     containerLivros.innerHTML = "";
 
