@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="..//Logo-Bibliotec.png">
-    <title>Livro</title>
+    <title>Página Inicial</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -52,45 +51,14 @@
                     </p>
 
                     <div class="botoes">
-                        <a href="..//5 -Favoritos/index.html">
-                            <div class="favoritar"><button>❤️ Favoritar</button></div>
-                        </a>
-                        <a href="#">
-                            <div class="ler"><button>📖 Reservar</button></div>
-                        </a>
+                        <div class="favoritar"><button>❤️ Favoritar</button></div>
+                        <div class="ler"><button>📖 Reservar</button></div>
                     </div>
                 </div>
             </div>
         </section>
-
-
     </main>
-
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-
-        if (id) {
-            fetch(`http://localhost:3000/livros/${id}`)
-                .then(res => res.json())
-                .then(livro => {
-                    if (livro.message) {
-                        document.body.innerHTML = `<h2>${livro.message}</h2>`;
-                    } else {
-                        document.querySelector("h1").textContent = livro.titulo;
-                        document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.autor;
-                        document.querySelector(".descricao p").textContent = livro.descricao;
-                        document.querySelector(".livro img").src = livro.capa_url;
-                        document.querySelector(".descricao h3").textContent = livro.titulo;
-
-                    }
-                })
-                .catch(err => console.error("Erro ao buscar livro:", err));
-        } else {
-            document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
-        }
-    </script>
-
+    <script src="..//4 - Livro I/app.js"></script>
 </body>
 
 </html>
