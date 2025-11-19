@@ -131,7 +131,6 @@ app.delete("/favoritos/:userId/:livroId", async (req, res) => {
     }
 });
 
-// ======================================================
 app.listen(3000, () => {
     console.log("API rodando em http://localhost:3000");
 });
