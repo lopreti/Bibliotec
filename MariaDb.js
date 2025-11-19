@@ -66,7 +66,7 @@ app.get("/livros/:id", async (req, res) => {
 // Rota POST para inserir um livro (CREATE)
 // =======================================================
 app.post("/livros", async (req, res) => {
-  const { titulo, autor, descricao, capa_url, publicado_ano, quant_paginas } = req.body;
+  const { titulo, autor, descricao, capa_url, publicado_ano, quant_paginas, idioma } = req.body;
 
   if (!titulo || !autor) {
     return res.status(400).send("Título e autor são obrigatórios.");
@@ -77,8 +77,8 @@ app.post("/livros", async (req, res) => {
     conn = await pool.getConnection();
     
     const result = await conn.query(
-      "INSERT INTO livros (titulo, autor, descricao, capa_url, publicado_ano, quant_paginas) VALUES (?, ?, ?, ?, ?, ?)", 
-      [titulo, autor, descricao, capa_url, publicado_ano, quant_paginas]
+      "INSERT INTO livros (titulo, autor, descricao, capa_url, publicado_ano, quant_paginas, idioma) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+      [titulo, autor, descricao, capa_url, publicado_ano, quant_paginas, idioma]
     );
 
     res.status(201).json({
@@ -99,7 +99,7 @@ app.post("/livros", async (req, res) => {
 // =======================================================
 app.put("/livros/:id", async (req, res) => {
   const id = req.params.id;
-  const { titulo, autor, descricao, capa_url, publicado_ano, quant_paginas } = req.body;
+  const { titulo, autor, descricao, capa_url, publicado_ano, quant_paginas, idioma } = req.body;
 
   if (isNaN(id)) return res.status(400).send("ID inválido.");
 
@@ -116,6 +116,7 @@ app.put("/livros/:id", async (req, res) => {
     if (capa_url) { fields.push("capa_url = ?"); values.push(capa_url); }
     if (publicado_ano) { fields.push("publicado_ano = ?"); values.push(publicado_ano); }
     if (quant_paginas) { fields.push("quant_paginas = ?"); values.push(quant_paginas); }
+    if (idioma) { fields.push("idioma = ?"); values.push(idioma); }
 
     if (fields.length === 0) return res.status(400).send("Nenhum campo para atualizar.");
 
