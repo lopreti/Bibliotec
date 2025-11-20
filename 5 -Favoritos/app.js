@@ -1,6 +1,6 @@
 let todosOsLivrosFavoritos = [];
 
-const userId = 1; 
+const userId = 1;
 
 window.addEventListener('load', () => {
     carregarFavoritos();
@@ -21,21 +21,21 @@ function carregarFavoritos() {
         })
         .catch(error => {
             console.error('Erro ao carregar favoritos:', error);
-            document.getElementById('container-favoritos').innerHTML = 
+            document.getElementById('container-favoritos').innerHTML =
                 '<p class="mensagem-vazio">Erro ao carregar favoritos. Verifique se o servidor está rodando.</p>';
         });
 }
 
 function renderizarFavoritos(livros) {
     const container = document.getElementById('container-favoritos');
-    
+
     if (!livros || livros.length === 0) {
         container.innerHTML = '<p class="mensagem-vazio">Você ainda não tem livros favoritos</p>';
         return;
     }
 
     container.innerHTML = '';
-    
+
     livros.forEach(livro => {
         container.innerHTML += `
             <div class="livro" id="livro-${livro.livro_id}">
@@ -77,21 +77,30 @@ function pesquisarLivros(pesquisa) {
 }
 
 function removerFavorito(livroId) {
-    if (confirm('Deseja remover este livro dos favoritos?')) {
-        fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
-            method: 'DELETE'
-        })
+    if (!confirm('Deseja remover este livro dos favoritos?')) return;
+
+    fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
+        method: 'DELETE'
+    })
         .then(response => response.json())
         .then(data => {
             console.log(data.message);
-            carregarFavoritos();
+
+            // REMOVE DO ARRAY LOCAL
+            todosOsLivrosFavoritos = todosOsLivrosFavoritos.filter(
+                fav => fav.livro_id !== livroId
+            );
+
+            // RE-RENDERIZA SEM RECARREGAR A PÁGINA
+            renderizarFavoritos(todosOsLivrosFavoritos);
+
         })
         .catch(error => {
             console.error('Erro ao remover favorito:', error);
             alert('Erro ao remover favorito');
         });
-    }
 }
+
 
 function adicionarFavorito(livroId) {
     fetch('http://localhost:3000/favoritos', {
@@ -104,15 +113,15 @@ function adicionarFavorito(livroId) {
             livro_id: livroId
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (window.location.href.includes('Favoritos')) {
-            carregarFavoritos();
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao adicionar favorito:', error);
-        alert('Erro ao adicionar favorito');
-    });
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (window.location.href.includes('Favoritos')) {
+                carregarFavoritos();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao adicionar favorito:', error);
+            alert('Erro ao adicionar favorito');
+        });
 }
