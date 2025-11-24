@@ -75,53 +75,47 @@ function pesquisarLivros(pesquisa) {
 
     renderizarFavoritos(livrosFiltrados);
 }
-
 function removerFavorito(livroId) {
-    if (!confirm('Deseja remover este livro dos favoritos?')) return;
+    Swal.fire({
+        title: "Deseja remover este livro dos favoritos?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, remover",
+        cancelButtonText: "Não",
+    }).then((result) => {
+        if (!result.isConfirmed) return;
 
-    fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
-        method: 'DELETE'
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-
-            // REMOVE DO ARRAY LOCAL
-            todosOsLivrosFavoritos = todosOsLivrosFavoritos.filter(
-                fav => fav.livro_id !== livroId
-            );
-
-            // RE-RENDERIZA SEM RECARREGAR A PÁGINA
-            renderizarFavoritos(todosOsLivrosFavoritos);
-
+        fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
+            method: 'DELETE'
         })
-        .catch(error => {
-            console.error('Erro ao remover favorito:', error);
-            alert('Erro ao remover favorito');
-        });
-}
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
 
+                // REMOVE DO ARRAY LOCAL
+                todosOsLivrosFavoritos = todosOsLivrosFavoritos.filter(
+                    fav => fav.livro_id !== livroId
+                );
 
-function adicionarFavorito(livroId) {
-    fetch('http://localhost:3000/favoritos', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            usuario_id: userId,
-            livro_id: livroId
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            if (window.location.href.includes('Favoritos')) {
-                carregarFavoritos();
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao adicionar favorito:', error);
-            alert('Erro ao adicionar favorito');
-        });
+                // ATUALIZA A LISTA NA TELA
+                renderizarFavoritos(todosOsLivrosFavoritos);
+
+                Swal.fire({
+                    title: "Removido dos favoritos!",
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao remover favorito:', error);
+                
+                Swal.fire({
+                    title: "Erro ao remover favorito",
+                    icon: "error",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+    });
 }
