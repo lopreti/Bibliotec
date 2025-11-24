@@ -10,6 +10,9 @@ if (id) {
             if (livro.message) {
                 document.body.innerHTML = `<h2>${livro.message}</h2>`;
             } else {
+
+                const livroId = livro.id || livro.livro_id;
+
                 document.querySelector("h1").textContent = livro.titulo;
                 document.querySelector(".descricao p:nth-of-type(1)").textContent = livro.autor;
                 document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.descricao;
@@ -17,8 +20,8 @@ if (id) {
                 document.querySelector(".descricao h3").textContent = livro.titulo;
                 document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas;
                 document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma;
-                
-                verificarFavorito(livro.livro_id);
+
+                verificarFavorito(livroId);
             }
         })
         .catch(err => console.error("Erro ao buscar livro:", err));
@@ -41,13 +44,16 @@ function verificarFavorito(livroId) {
 
 function atualizarBotaoFavorito(jaFavoritado, livroId) {
     const btnFavoritar = document.querySelector('.favoritar button');
-    
+
     if (jaFavoritado) {
-        btnFavoritar.innerHTML = '❤️ Favoritado';
+        btnFavoritar.innerHTML = '🤍 Favoritado';
         btnFavoritar.style.backgroundColor = '#ff4d4d';
         btnFavoritar.style.color = 'white';
         btnFavoritar.onclick = () => removerFavorito(livroId);
     } else {
+        btnFavoritar.innerHTML = '❤️ Favoritar';
+        btnFavoritar.style.backgroundColor = '';
+        btnFavoritar.style.color = '';
         btnFavoritar.onclick = () => adicionarFavorito(livroId);
     }
 }
@@ -56,7 +62,7 @@ function adicionarFavorito(livroId) {
     const btnFavoritar = document.querySelector('.favoritar button');
     btnFavoritar.disabled = true;
     btnFavoritar.innerHTML = 'Adicionando...';
-    
+
     fetch('http://localhost:3000/favoritos', {
         method: 'POST',
         headers: {
@@ -71,13 +77,13 @@ function adicionarFavorito(livroId) {
     .then(data => {
         alert(data.message);
         btnFavoritar.disabled = false;
-        verificarFavorito(livroId);
+        verificarFavorito(livroId); 
     })
     .catch(err => {
         console.error("Erro ao adicionar favorito:", err);
         alert('Erro ao adicionar aos favoritos');
         btnFavoritar.disabled = false;
-        btnFavoritar.innerHTML = '🤍 Favoritar';
+        atualizarBotaoFavorito(false, livroId);
     });
 }
 
@@ -86,7 +92,7 @@ function removerFavorito(livroId) {
         const btnFavoritar = document.querySelector('.favoritar button');
         btnFavoritar.disabled = true;
         btnFavoritar.innerHTML = 'Removendo...';
-        
+
         fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
             method: 'DELETE'
         })
@@ -94,14 +100,13 @@ function removerFavorito(livroId) {
         .then(data => {
             alert(data.message);
             btnFavoritar.disabled = false;
-            // Atualizar o botão para o estado não favoritado
+
             atualizarBotaoFavorito(false, livroId);
         })
         .catch(err => {
             console.error("Erro ao remover favorito:", err);
             alert('Erro ao remover dos favoritos');
             btnFavoritar.disabled = false;
-            // Volta ao estado favoritado em caso de erro
             atualizarBotaoFavorito(true, livroId);
         });
     }
