@@ -73,41 +73,78 @@ function adicionarFavorito(livroId) {
             livro_id: livroId
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message);
-        btnFavoritar.disabled = false;
-        verificarFavorito(livroId); 
-    })
-    .catch(err => {
-        console.error("Erro ao adicionar favorito:", err);
-        alert('Erro ao adicionar aos favoritos');
-        btnFavoritar.disabled = false;
-        atualizarBotaoFavorito(false, livroId);
-    });
+        .then(res => res.json())
+        .then(data => {
+            Swal.fire({
+                title: (data.message),
+                icon: "success",
+                draggable: true,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            btnFavoritar.disabled = false;
+            verificarFavorito(livroId);
+        })
+        .catch(err => {
+            console.error("Erro ao adicionar favorito:", err);
+            Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Erro ao adicionar aos favoritos",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            btnFavoritar.disabled = false;
+            atualizarBotaoFavorito(false, livroId);
+        });
 }
 
 function removerFavorito(livroId) {
-    if (confirm('Deseja remover este livro dos favoritos?')) {
-        const btnFavoritar = document.querySelector('.favoritar button');
-        btnFavoritar.disabled = true;
-        btnFavoritar.innerHTML = 'Removendo...';
+    Swal.fire({
+        title: "Deseja remover este livro dos favoritos?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, remover",
+        cancelButtonText: "Não",
+    }).then((result) => {
+        if (result.isConfirmed) {
 
-        fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
-            method: 'DELETE'
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-            btnFavoritar.disabled = false;
+            const btnFavoritar = document.querySelector('.favoritar button');
+            btnFavoritar.disabled = true;
+            btnFavoritar.innerHTML = 'Removendo...';
 
-            atualizarBotaoFavorito(false, livroId);
-        })
-        .catch(err => {
-            console.error("Erro ao remover favorito:", err);
-            alert('Erro ao remover dos favoritos');
-            btnFavoritar.disabled = false;
-            atualizarBotaoFavorito(true, livroId);
-        });
-    }
+            fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
+                method: 'DELETE'
+            })
+                .then(res => res.json())
+                .then(data => {
+
+                    Swal.fire({
+                        title: data.message || "Removido dos favoritos!",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    btnFavoritar.disabled = false;
+                    btnFavoritar.innerHTML = 'Favoritar';
+
+                    atualizarBotaoFavorito(false, livroId);
+                })
+                .catch(err => {
+                    console.error("Erro ao remover favorito:", err);
+
+                    Swal.fire({
+                        title: "Erro ao remover dos favoritos",
+                        icon: "error",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    btnFavoritar.disabled = false;
+                    atualizarBotaoFavorito(true, livroId);
+                });
+        }
+    });
 }
+
