@@ -42,7 +42,7 @@ function renderizarFavoritos(livros) {
                 <button class="btn-remover" onclick="removerFavorito(${livro.livro_id})" title="Remover dos favoritos">
                     ❤️
                 </button>
-                <a href="..//4 - Livro I/index.html?id=${livro.livro_id}">
+                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}">
                     <img src="${livro.capa_url}" alt="Capa do livro ${livro.titulo}">
                 </a>
                 <h3>${livro.titulo}</h3>
