@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 
 * {
     margin: 0;
@@ -38,6 +37,9 @@
     transition: 0.3s;
 }
 
+.navbar ul li a:hover {
+    color: #4A67DF;
+}
 
 .perfil-inicial {
     width: 55px;
@@ -67,36 +69,6 @@
     box-shadow: 0 0 4px #ccc;
 }
 
-#container{
-    position: relative;
-    height: auto;
-    width: 100%;
-}
-
-
-#prev-btn,
-#next-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 60px;
-    color: #4A67DF;
-    user-select: none;
-}
-
-#prev-btn {
-    left: 0;
-}
-
-#next-btn {
-    right: 0;
-}
-
-#veja-mais{
-    cursor: pointer;
-}
-
 h1 {
     text-align: center;
     font-weight: 600;
@@ -104,7 +76,7 @@ h1 {
 }
 
 .traco-azul {
-    width: 600px;
+    width: 300px;
     height: 2px;
     background-color: #4A67DF;
     margin: 0.5rem auto 2rem;
@@ -114,33 +86,22 @@ h1 {
 
 .livros {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 4rem;
     justify-items: center;
-    padding: 6rem 2rem;
+    padding: 3rem 2rem;
 }
+
 
 .livro {
     text-align: center;
-    transition: transform 0.3s, opacity 0.3s;
+    transition: transform 0.3s;
+    position: relative;
 }
 
 .livro img {
     width: 250px;
     border-radius: 10px;
-    opacity: 1;
-}
-
-.livros.carrossel .livro.destaque img {
-    width: 280px;
-    filter: drop-shadow(0 8px 16px rgba(74, 103, 223, 0.3));
-    opacity: 1;
-    transform: scale(1.03);
-}
-
-.livros.carrossel .livro img {
-    width: 200px;
-    opacity: 0.8;
 }
 
 .livro h3 {
@@ -158,19 +119,39 @@ h1 {
     transform: scale(1.05);
 }
 
-.veja-mais {
-    text-align: center;
-    color: #4A67DF;
-}
-
-.veja-mais img {
-    width: 100px;
-    padding: 0.8rem;
-}
-
 a {
     color: #000;
     text-decoration: none;
 }
 
+.btn-remover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    z-index: 5;
+}
 
+.btn-remover:hover {
+    background-color: #d96d6d;
+    transform: scale(1.1);
+}
+
+.mensagem-vazio {
+    grid-column: 1/-1;
+    text-align: center;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 3rem;
+}

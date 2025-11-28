@@ -166,3 +166,24 @@ h1 {
     font-size: 0.85rem;
     font-weight: 500;
 }
+
+.botoes {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+
+.favoritar button:hover {
+    background-color: #ff4d4d;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+
+.ler button:hover {
+    background-color: #3651c9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 103, 223, 0.4);
+}

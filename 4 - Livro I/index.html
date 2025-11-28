@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="..//Logo-Bibliotec.png">
     <title>Página Inicial</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,7 +18,7 @@
             <ul>
                 <li><a href="..//3 - Sobre Nós/index.html">QUEM SOMOS</a></li>
                 <li><a href="..//2 - Principal/index.html">NOSSO ACERVO</a></li>
-                <li><a href="#">FAVORITOS</a></li>
+                <li><a href="..//5 -Favoritos/index.html">FAVORITOS</a></li>
             </ul>
         </nav>
         <div class="perfil">
@@ -52,13 +53,11 @@
 
                     <div class="botoes">
                         <div class="favoritar"><button>❤️ Favoritar</button></div>
-                        <div class="ler"><button>📖 Ler</button></div>
+                        <div class="ler"><button>📖 Reservar</button></div>
                     </div>
                 </div>
             </div>
         </section>
-
-
     </main>
 
     <script>
@@ -73,12 +72,11 @@
                         document.body.innerHTML = `<h2>${livro.message}</h2>`;
                     } else {
                         document.querySelector("h1").textContent = livro.titulo;
-                        document.querySelector(".descricao p:nth-of-type(1)").textContent = livro.autor;
-                        document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.descricao;
+                        document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.autor;
+                        document.querySelector(".descricao p").textContent = livro.descricao;
                         document.querySelector(".livro img").src = livro.capa_url;
                         document.querySelector(".descricao h3").textContent = livro.titulo;
-                        document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas;
-                        document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma;
+
                     }
                 })
                 .catch(err => console.error("Erro ao buscar livro:", err));

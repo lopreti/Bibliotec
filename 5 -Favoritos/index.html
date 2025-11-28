@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="..//Logo-Bibliotec.png">
-    <title>Página Inicial</title>
+    <title>Favoritos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -28,32 +28,13 @@
 
     <main>
         <div class="barra-pesquisa">
-            <input type="text" placeholder="     🔍   Pesquise seu livro">
+            <input type="text" id="input-pesquisa" placeholder="     🔍   Pesquise seu livro" onkeyup="pesquisarLivros(this.value)">
         </div>
 
-        <h1>TOP LIVROS RECOMENDADOS</h1>
+        <h1>FAVORITOS</h1>
         <div class="traco-azul"></div>
 
-        <div id="container">
-            <span id="prev-btn" class="material-symbols-outlined">
-                chevron_left
-            </span>
-            <section class="livros">
-            </section>
-            <span id="next-btn" class="material-symbols-outlined">
-                chevron_right
-            </span>
-        </div>
-
-        <div class="veja-mais">
-            <p>Veja mais
-            <p>
-                <img id="veja-mais" src="..//img/vejamais.png" alt="">
-        </div>
-
-        <div class="mais-livros">
-            <div class="container"> 
-            </div>
+        <div class="livros" id="container-favoritos">
         </div>
     </main>
 
