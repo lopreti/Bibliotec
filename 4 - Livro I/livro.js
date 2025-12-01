@@ -182,12 +182,12 @@ function atualizarReservados(jaReservado, livroId) {
     const btnReservar = document.querySelector('.reservar button');
 
     if (jaReservado) {
-        btnReservar.innerHTML = 'Reservado';
-        btnReservar.style.backgroundColor = '#ff4d4d';
+        btnReservar.innerHTML = '📖 Reservado';
+        btnReservar.style.backgroundColor = '#3651c9';
         btnReservar.style.color = 'white';
         btnReservar.onclick = () => removerReserva(livroId);
     } else {
-        btnReservar.innerHTML = 'Reservar';
+        btnReservar.innerHTML = '📖 Reservar';
         btnReservar.style.backgroundColor = '';
         btnReservar.style.color = '';
         btnReservar.onclick = () => adicionarReservado(livroId);
