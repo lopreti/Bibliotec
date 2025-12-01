@@ -2,9 +2,6 @@ let todosOsLivros = [];
 let currentIndex = 0;
 const livrosPorPagina = 3;
 
-// --------------------------
-// FUNÇÃO: Restabelecer layout original
-// --------------------------
 function restaurarLayoutOriginal() {
     document.querySelector(".livros").classList.add("carrossel");
     document.querySelector(".livros").innerHTML = "";
@@ -13,9 +10,6 @@ function restaurarLayoutOriginal() {
     renderizarListaInferior();
 }
 
-// --------------------------
-// FUNÇÃO PRINCIPAL DO CARROSSEL
-// --------------------------
 function renderizarCarrousel() {
     const containerLivros = document.querySelector(".livros");
     containerLivros.classList.add('carrossel');
@@ -37,7 +31,7 @@ function renderizarCarrousel() {
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
-            <a href="../4 - Livro I/livro.html?id=${l.id || l.livro_id}">
+            <a href="../4 - Livro I/livro.html?id=${l.ID}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -47,21 +41,19 @@ function renderizarCarrousel() {
     });
 }
 
-// --------------------------
-// LISTA INFERIOR (MOSTRAR TODOS OS LIVROS EXCETO OS 3 DO CARROSSEL)
-// --------------------------
 function renderizarListaInferior() {
     const container = document.querySelector(".mais-livros .container");
     container.innerHTML = "";
 
-    if (todosOsLivros.length <= livrosPorPagina) return;
+    if (todosOsLivros.length === 0) {
+        container.innerHTML = `<p style='text-align: center; grid-column: 1/-1;'>Nenhum livro encontrado</p>`;
+        return;
+    }
 
-    const livrosInferiores = todosOsLivros.slice(livrosPorPagina);
-
-    livrosInferiores.forEach(l => {
+    todosOsLivros.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="..//4 - Livro I/livro.html?id=${l.id}">
+                <a href="../4 - Livro I/livro.html?id=${l.ID}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -71,18 +63,12 @@ function renderizarListaInferior() {
     });
 }
 
-// --------------------------
-// REMOVER LAYOUT DE CARROSSEL (para pesquisa)
-// --------------------------
 function aplicarLayoutPesquisa() {
     document.querySelector(".livros").classList.remove("carrossel");
     document.querySelector(".livros").innerHTML = "";
     document.querySelector(".mais-livros .container").innerHTML = "";
 }
 
-// --------------------------
-// PESQUISA
-// --------------------------
 function pesquisarLivros(termo) {
     const pesquisa = termo.toLowerCase().trim();
 
@@ -109,7 +95,7 @@ function pesquisarLivros(termo) {
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="..//4 - Livro I/livro.html?id=${l.id}">
+                <a href="../4 - Livro I/livro.html?id=${l.ID}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -119,14 +105,12 @@ function pesquisarLivros(termo) {
     });
 }
 
-// --------------------------
-// INICIALIZAR
-// --------------------------
 function inicializar() {
     fetch("http://localhost:3000/livros")
         .then(res => res.json())
         .then(livros => {
             todosOsLivros = livros;
+            console.log("Livros carregados:", todosOsLivros);
 
             renderizarCarrousel();
             renderizarListaInferior();
@@ -140,10 +124,17 @@ function inicializar() {
                 currentIndex = (currentIndex - 1 + todosOsLivros.length) % todosOsLivros.length;
                 renderizarCarrousel();
             });
-        });
+        })
+        .catch(err => console.error("Erro ao buscar livros:", err));
 
     document.querySelector(".barra-pesquisa input")
         .addEventListener("input", e => pesquisarLivros(e.target.value));
+    
+    document.getElementById('botao-veja-mais').addEventListener('click', () => {
+        console.log("Clicou no botão Ver mais");
+        const secao = document.getElementById('secao-mais-livros');
+        secao.scrollIntoView({ behavior: 'smooth' });
+    });
 }
 
 document.addEventListener("DOMContentLoaded", inicializar);

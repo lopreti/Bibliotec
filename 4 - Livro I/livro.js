@@ -11,15 +11,15 @@ if (id) {
                 document.body.innerHTML = `<h2>${livro.message}</h2>`;
             } else {
 
-                const livroId = livro.id || livro.livro_id;
+                const livroId = livro.ID || livro.id || livro.livro_id;
 
-                document.querySelector("h1").textContent = livro.titulo;
-                document.querySelector(".descricao p:nth-of-type(1)").textContent = livro.autor;
-                document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.descricao;
-                document.querySelector(".livro img").src = livro.capa_url;
-                document.querySelector(".descricao h3").textContent = livro.titulo;
-                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas;
-                document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma;
+                document.querySelector("#titulo-livro").textContent = livro.titulo;
+                document.querySelector("#autor-livro").textContent = livro.autor;
+                document.querySelector("#descricao-livro").textContent = livro.descricao;
+                document.querySelector("#capa-livro").src = livro.capa_url;
+                document.querySelector("#nome-livro").textContent = livro.titulo;
+                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.paginas || "N/A";
+                document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma || "Português";
 
                 verificarFavorito(livroId);
             }

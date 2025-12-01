@@ -123,6 +123,20 @@ a {
 .mais-livros{
     margin-top: 150px;
     width: 100%;
-    height: 900px;
-    background-color:  #4a68df49;
+    padding: 3rem 2rem;
+    background-color: #4a68df49;
+}
+
+.mais-livros h2 {
+    text-align: center;
+    color: #4A67DF;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.mais-livros .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
 }
