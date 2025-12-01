@@ -1,0 +1,102 @@
+.barra-pesquisa {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.barra-pesquisa input {
+    width: 50%;
+    max-width: 600px;
+    height: 40px;
+    border-radius: 25px;
+    border: 2px solid #bcbcbc;
+    font-size: 15px;
+    box-shadow: 0 0 4px #ccc;
+}
+
+h1 {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 2.5rem;
+}
+
+.traco-azul {
+    width: 300px;
+    height: 2px;
+    background-color: #4A67DF;
+    margin: 0.5rem auto 2rem;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px #4A67DF;
+}
+
+.livros {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 4rem;
+    justify-items: center;
+    padding: 3rem 2rem;
+}
+
+
+.livro {
+    text-align: center;
+    transition: transform 0.3s;
+    position: relative;
+}
+
+.livro img {
+    width: 250px;
+    border-radius: 10px;
+}
+
+.livro h3 {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.livro p {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.livro:hover {
+    transform: scale(1.05);
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+.btn-remover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    z-index: 5;
+}
+
+.btn-remover:hover {
+    background-color: #d96d6d;
+    transform: scale(1.1);
+}
+
+.mensagem-vazio {
+    grid-column: 1/-1;
+    text-align: center;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 3rem;
+}
