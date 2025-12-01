@@ -25,6 +25,29 @@ if (id) {
                 document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas;
                 document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma;
 
+                // ----------------------------------------------------------------------
+                // 💡 CÓDIGO CORRIGIDO PARA EXIBIR CATEGORIAS COMO TAGS (SEM VÍRGULA)
+                // ----------------------------------------------------------------------
+                const categoriasContainer = document.getElementById("categorias-livro");
+                const categoriasString = livro.categorias; // CORRIGIDO para 'categorias' (plural)
+
+                if (categoriasString && categoriasString.trim() !== '') {
+                    // 1. Divide a string de categorias usando a vírgula e espaço como separador
+                    const categoriasArray = categoriasString.split(', ');
+                    let htmlContent = '';
+
+                    // 2. Constrói um <span> para cada categoria, eliminando a vírgula
+                    categoriasArray.forEach(categoria => {
+                        // Cada <span> será estilizado como uma tag pelo seu livro.css
+                        htmlContent += `<span>${categoria}</span> `;
+                    });
+
+                    // 3. Insere os spans no HTML
+                    categoriasContainer.innerHTML = htmlContent.trim();
+                } else {
+                    categoriasContainer.textContent = "Não classificado";
+                }
+
                 verificarFavorito(livroId);
                 verificarReservado(livroId);
             }
