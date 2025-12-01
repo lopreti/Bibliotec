@@ -31,7 +31,7 @@ function renderizarCarrousel() {
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
-            <a href="../4 - Livro I/livro.html?id=${l.ID}">
+            <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -53,7 +53,7 @@ function renderizarListaInferior() {
     todosOsLivros.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="../4 - Livro I/livro.html?id=${l.ID}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>

@@ -7,22 +7,26 @@ const userId = 1;
 //  CARREGAR DADOS DO LIVRO
 // =========================
 
+console.log("ID da URL:", id);
+
 if (id) {
     fetch(`http://localhost:3000/livros/${id}`)
         .then(res => res.json())
         .then(livro => {
+            console.log("Livro recebido:", livro);
             if (livro.message) {
                 document.body.innerHTML = `<h2>${livro.message}</h2>`;
             } else {
 
                 const livroId = livro.ID || livro.id || livro.livro_id;
+                console.log("Preenchendo dados do livro:", livroId);
 
                 document.querySelector("#titulo-livro").textContent = livro.titulo;
                 document.querySelector("#autor-livro").textContent = livro.autor;
                 document.querySelector("#descricao-livro").textContent = livro.descricao;
                 document.querySelector("#capa-livro").src = livro.capa_url;
                 document.querySelector("#nome-livro").textContent = livro.titulo;
-                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.paginas || "N/A";
+                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas || "N/A";
                 document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma || "Português";
 
                 verificarFavorito(livroId);
@@ -31,6 +35,7 @@ if (id) {
         })
         .catch(err => console.error("Erro ao buscar livro:", err));
 } else {
+    console.log("Nenhum ID foi passado na URL");
     document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
 }
 
