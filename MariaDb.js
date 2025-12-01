@@ -45,7 +45,7 @@ app.get("/livros", async (req, res) => {
                 l.livro_id, l.titulo, l.autor, l.capa_url, l.descricao, l.publicado_ano, l.quant_paginas, l.idioma
             ORDER BY
                 l.livro_id;
-        `;
+        `.trim();
         
         const rows = await conn.query(query);
         res.json(rows);
