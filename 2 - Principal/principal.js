@@ -37,6 +37,7 @@ function renderizarCarrousel() {
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
+<<<<<<< HEAD:2 - Principal/principal.js
             <a href="../4 - Livro I/livro.html?id=${l.id || l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
@@ -63,6 +64,10 @@ function renderizarListaInferior() {
             <div class="livro">
                 <a href="..//4 - Livro I/livro.html?id=${l.id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
+=======
+                <a href="..//4 - Livro I/index.html?id=${l.ID}">
+                    <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
+>>>>>>> origin/lavíz:2 - Principal/app.js
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
@@ -109,8 +114,13 @@ function pesquisarLivros(termo) {
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
+<<<<<<< HEAD:2 - Principal/principal.js
                 <a href="..//4 - Livro I/livro.html?id=${l.id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
+=======
+                <a href="..//4 - Livro I/index.html?id=${l.ID}">
+                    <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
+>>>>>>> origin/lavíz:2 - Principal/app.js
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>

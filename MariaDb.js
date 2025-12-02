@@ -15,122 +15,162 @@ const pool = mariadb.createPool({
     connectionLimit: 5
 });
 
-// ======================================================
-// LISTAR TODOS OS LIVROS
-// ======================================================
+// =======================================================
+// Rota GET para listar TODOS os livros (READ ALL)
+// URL: http://localhost:3000/livros
+// =======================================================
 app.get("/livros", async (req, res) => {
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        const rows = await conn.query("SELECT * FROM livros");
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ erro: err.message });
-    } finally {
-        if (conn) conn.release();
-    }
+  let conn;
+  try {
+    conn = await pool.getConnection(); 
+    const rows = await conn.query("SELECT * FROM livros");
+    res.json(rows);
+  } catch (err) {
+    console.error("Erro ao consultar o banco de dados:", err);
+    res.status(500).send("Erro interno do servidor: " + err.message);
+  } finally {
+    if (conn) conn.release();
+  }
 });
 
-// ======================================================
-// BUSCAR UM LIVRO PELO ID
-// ======================================================
+// =======================================================
+// Rota GET para buscar um livro por ID (READ ONE)
+// URL: http://localhost:3000/livros/1
+// =======================================================
 app.get("/livros/:id", async (req, res) => {
     const id = req.params.id;
 
-    let conn;
-    try {
-        conn = await pool.getConnection();
-        const rows = await conn.query("SELECT * FROM livros WHERE livro_id = ?", [id]);
-
-        if (rows.length === 0) {
-            return res.json({ message: "Livro não encontrado" });
-        }
-
-        res.json(rows[0]);
-    } catch (err) {
-        res.status(500).json({ erro: err.message });
-    } finally {
-        if (conn) conn.release();
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query("SELECT * FROM livros WHERE ID = ? LIMIT 1", [id]);
+    
+    if (rows.length === 0) {
+      res.status(404).json({ message: `Livro com ID ${id} não encontrado.` });
+    } else {
+      res.json(rows[0]);
     }
-});
-
-app.get('/favoritos/:usuario_id', async (req, res) => {
-    const { usuario_id } = req.params;
-    let conn;
-
-    try {
-        conn = await pool.getConnection();
-
-        const sql = `
-            SELECT 
-                f.livro_id,
-                l.titulo,
-                l.autor,
-                l.capa_url
-            FROM favoritos f
-            JOIN livros l ON f.livro_id = l.livro_id
-            WHERE f.usuario_id = ?;
-        `;
-
-        const rows = await conn.query(sql, [usuario_id]);
-
-        res.json(rows);
-    } catch (error) {
-        console.error('Erro ao buscar favoritos:', error);
-        res.status(500).json({ message: 'Erro no servidor' });
-    } finally {
-        if (conn) conn.release();
-    }
+  } catch (err) {
+    console.error("Erro ao buscar livro por ID:", err);
+    res.status(500).send("Erro interno do servidor: " + err.message);
+  } finally {
+    if (conn) conn.release();
+  }
 });
 
 
-// ======================================================
-// ADICIONAR FAVORITO
-// ======================================================
-app.post("/favoritos", async (req, res) => {
-    const { usuario_id, livro_id } = req.body;
+// =======================================================
+// Rota POST para inserir um novo livro (CREATE)
+// URL: http://localhost:3000/livros
+// =======================================================
+app.post("/livros", async (req, res) => {
+  const { titulo, autor, descricao, capa_url, publicado_ano } = req.body; 
 
-    let conn;
-    try {
-        conn = await pool.getConnection();
+  if (!titulo || !autor) {
+    return res.status(400).send("Título e autor são obrigatórios.");
+  }
 
-        await conn.query(
-            "INSERT INTO favoritos (usuario_id, livro_id) VALUES (?, ?)",
-            [usuario_id, livro_id]
-        );
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    
+    const result = await conn.query(
+      "INSERT INTO livros (titulo, autor, descricao, capa_url, publicado_ano) VALUES (?, ?, ?, ?, ?)", 
+      [titulo, autor, descricao, capa_url, publicado_ano]
+    );
 
-        res.json({ message: "Favorito adicionado!" });
-    } catch (err) {
-        res.status(500).json({ erro: err.message });
-    } finally {
-        if (conn) conn.release();
-    }
+    res.status(201).json({
+      message: "Livro inserido com sucesso!",
+      id_inserido: result.insertId,
+    });
+  } catch (err) {
+    console.error("Erro ao inserir livro:", err);
+    res.status(500).send("Erro interno do servidor ao inserir livro: " + err.message);
+  } finally {
+    if (conn) conn.release();
+  }
 });
 
-// ======================================================
-// REMOVER FAVORITO
-// ======================================================
-app.delete("/favoritos/:userId/:livroId", async (req, res) => {
-    const userId = req.params.userId;
-    const livroId = req.params.livroId;
+// =======================================================
+// Rota PUT para atualizar um livro por ID (UPDATE)
+// URL: http://localhost:3000/livros/1
+// =======================================================
+app.put("/livros/:id", async (req, res) => {
+  const id = req.params.id;
+  const { titulo, autor, descricao, capa_url, publicado_ano } = req.body; 
 
-    let conn;
-    try {
-        conn = await pool.getConnection();
+  if (isNaN(id)) return res.status(400).send("ID inválido.");
+  if (!titulo && !autor && !descricao && !capa_url && !publicado_ano) return res.status(400).send("Nenhum dado de atualização fornecido.");
 
-        await conn.query(
-            "DELETE FROM favoritos WHERE usuario_id = ? AND livro_id = ?",
-            [userId, livroId]
-        );
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const fields = [];
+    const values = [];
 
-        res.json({ message: "Favorito removido!" });
-    } catch (err) {
-        res.status(500).json({ erro: err.message });
-    } finally {
-        if (conn) conn.release();
+    if (titulo) { fields.push("titulo = ?"); values.push(titulo); }
+    if (autor) { fields.push("autor = ?"); values.push(autor); }
+    if (descricao) { fields.push("descricao = ?"); values.push(descricao); }
+    if (capa_url) { fields.push("capa_url = ?"); values.push(capa_url); }
+    if (publicado_ano) { fields.push("publicado_ano = ?"); values.push(publicado_ano); }
+
+    if (fields.length === 0) return res.status(400).send("Nenhum campo válido para atualização encontrado.");
+
+    values.push(id); 
+    const query = `UPDATE livros SET ${fields.join(", ")} WHERE ID = ?`;
+    const result = await conn.query(query, values);
+
+    if (result.affectedRows === 0) {
+      res.status(404).json({ message: `Livro com ID ${id} não encontrado ou nenhum dado alterado.` });
+    } else {
+      res.status(200).json({ 
+        message: `Livro com ID ${id} atualizado com sucesso.`,
+        campos_atualizados: result.affectedRows 
+      });
     }
+  } catch (err) {
+    console.error("Erro ao atualizar livro:", err);
+    res.status(500).send("Erro interno do servidor ao atualizar livro: " + err.message);
+  } finally {
+    if (conn) conn.release();
+  }
 });
 
+// =======================================================
+// Rota DELETE para excluir um livro por ID (DELETE)
+// URL: http://localhost:3000/livros/1
+// =======================================================
+app.delete("/livros/:id", async (req, res) => {
+  const id = req.params.id;
+
+  if (isNaN(id)) return res.status(400).send("ID inválido. O ID deve ser um número.");
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+
+    const result = await conn.query(
+      "DELETE FROM livros WHERE ID = ?", 
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      res.status(404).json({ message: `Livro com ID ${id} não encontrado.` });
+    } else {
+      res.status(200).json({ message: `Livro com ID ${id} excluído com sucesso.` });
+    }
+  } catch (err) {
+    console.error("Erro ao excluir livro:", err);
+    res.status(500).send("Erro interno do servidor ao excluir livro: " + err.message);
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+// =======================================================
+// Iniciar servidor
+// =======================================================
 app.listen(3000, () => {
-    console.log("API rodando em http://localhost:3000");
+    console.log("API rodando em: http://localhost:3000/livros");
+    console.log("Servidor Express iniciado na porta 3000.");
 });
