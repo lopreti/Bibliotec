@@ -186,28 +186,32 @@ app.delete("/favoritos/:userId/:livroId", async (req, res) => {
 // LOGIN
 // ======================================================
 app.post('/login', async (req, res) => {
-    const { login, senha } = req.body;
+    const { identifier, email, senha } = req.body;
     let conn;
 
-    if (!login || !senha) {
+    // identifier: pode ser email ou CPF. Mantemos compatibilidade com o campo `email`.
+    const idValue = identifier || email;
+
+    if (!idValue || !senha) {
         return res.status(400).json({ 
             success: false, 
-            message: 'Login e senha são obrigatórios' 
+            message: 'Identificador (e-mail ou CPF) e senha são obrigatórios' 
         });
     }
 
     try {
         conn = await pool.getConnection();
 
+        // Busca por email OU cpf igual ao identificador informado
         const rows = await conn.query(
-            'SELECT usuario_id, login FROM usuarios WHERE login = ? AND senha = ?',
-            [login, senha]
+            'SELECT usuario_id, nome, email, cpf FROM usuarios WHERE (email = ? OR cpf = ?) AND senha = ?',
+            [idValue, idValue, senha]
         );
 
         if (rows.length === 0) {
             return res.status(401).json({ 
                 success: false, 
-                message: 'Login ou senha incorretos' 
+                message: 'Identificador ou senha incorretos' 
             });
         }
 
@@ -215,7 +219,8 @@ app.post('/login', async (req, res) => {
         res.json({
             success: true,
             usuario_id: usuario.usuario_id,
-            login: usuario.login,
+            nome: usuario.nome,
+            email: usuario.email,
             message: 'Login realizado com sucesso!'
         });
 
@@ -224,6 +229,67 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ 
             success: false, 
             message: 'Erro no servidor' 
+        });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+// ======================================================
+// CADASTRO
+// ======================================================
+app.post('/cadastro', async (req, res) => {
+    const { nome, email, cpf, senha } = req.body;
+    let conn;
+
+    // Validações
+    if (!nome || !email || !cpf || !senha) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Nome, e-mail, CPF e senha são obrigatórios' 
+        });
+    }
+
+    if (senha.length < 8) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'A senha deve ter no mínimo 8 caracteres' 
+        });
+    }
+
+    try {
+        conn = await pool.getConnection();
+
+        // Verifica se o email ou CPF já existe
+        const usuarioExistente = await conn.query(
+            'SELECT usuario_id FROM usuarios WHERE email = ? OR cpf = ?',
+            [email, cpf]
+        );
+
+        if (usuarioExistente.length > 0) {
+            return res.status(409).json({ 
+                success: false, 
+                message: 'E-mail ou CPF já cadastrado' 
+            });
+        }
+
+        // Insere o novo usuário (colunas: nome, email, cpf, senha)
+        await conn.query(
+            'INSERT INTO usuarios (nome, email, cpf, senha) VALUES (?, ?, ?, ?)',
+            [nome, email, cpf, senha]
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Cadastro realizado com sucesso!'
+        });
+
+    } catch (error) {
+        console.error('Erro ao cadastrar usuário:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erro no servidor ao realizar o cadastro',
+            error: error.message
         });
     } finally {
         if (conn) conn.release();
