@@ -6,10 +6,37 @@ async function carregarLayout() {
         document.body.insertAdjacentHTML("afterbegin", layout);
 
         // Após carregar o navbar, atualiza as iniciais do usuário
-        atualizarIniciaisUsuario();
+            atualizarIniciaisUsuario();
+
+            // Inicializa tema (botão global no navbar)
+            setupNavbarTheme();
 
     } catch (erro) {
         console.error("Erro ao carregar o layout:", erro);
+    }
+}
+
+function setupNavbarTheme() {
+    try {
+        const btn = document.getElementById('btn-dark-mode');
+        const saved = localStorage.getItem('theme') || 'light';
+        document.body.classList.toggle('dark', saved === 'dark');
+
+        if (!btn) return;
+
+        const updateIcon = () => {
+            btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        };
+
+        btn.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcon();
+        });
+
+        updateIcon();
+    } catch (e) {
+        console.error('Erro ao inicializar tema do navbar:', e);
     }
 }
 

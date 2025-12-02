@@ -133,6 +133,16 @@ function pesquisarLivros(termo) {
 }
 
 function inicializar() {
+    // === Theme init ===
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    const btnTheme = document.getElementById('btn-dark-mode');
+    if (btnTheme) {
+        btnTheme.addEventListener('click', toggleTheme);
+        updateButtonIcon();
+    }
+
     fetch("http://localhost:3000/livros")
         .then(res => res.json())
         .then(livros => {
@@ -162,6 +172,28 @@ function inicializar() {
         const secao = document.getElementById('secao-mais-livros');
         secao.scrollIntoView({ behavior: 'smooth' });
     });
+}
+
+// ------------------ Theme helpers ------------------
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+    updateButtonIcon();
+}
+
+function toggleTheme() {
+    const isDark = document.body.classList.contains('dark');
+    applyTheme(isDark ? 'light' : 'dark');
+}
+
+function updateButtonIcon() {
+    const btn = document.getElementById('btn-dark-mode');
+    if (!btn) return;
+    btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
 }
 
 document.addEventListener("DOMContentLoaded", inicializar);
