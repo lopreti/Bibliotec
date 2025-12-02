@@ -106,35 +106,33 @@ app.get("/livros/:id", async (req, res) => {
 });
 
 app.get('/favoritos/:usuario_id', async (req, res) => {
-    const { usuario_id } = req.params;
-    let conn;
+    const { usuario_id } = req.params;
+    let conn;
 
-    try {
-        conn = await pool.getConnection();
+    try {
+        conn = await pool.getConnection();
 
-        const sql = `
-            SELECT 
-                f.livro_id,
-                l.titulo,
-                l.autor,
-                l.capa_url
-            FROM favoritos f
-            JOIN livros l ON f.livro_id = l.livro_id
-            WHERE f.usuario_id = ?;
-        `;
+        const sql = `
+            SELECT 
+                f.livro_id,
+                l.titulo,
+                l.autor,
+                l.capa_url
+            FROM favoritos f
+            LEFT JOIN livros l ON f.livro_id = l.livro_id
+            WHERE f.usuario_id = ?;
+        `;
 
-        const rows = await conn.query(sql, [usuario_id]);
+        const rows = await conn.query(sql, [usuario_id]);
 
-        res.json(rows);
-    } catch (error) {
-        console.error('Erro ao buscar favoritos:', error);
-        res.status(500).json({ message: 'Erro no servidor' });
-    } finally {
-        if (conn) conn.release();
-    }
+        res.json(rows || []);
+    } catch (error) {
+        console.error('Erro ao buscar favoritos:', error);
+        res.status(500).json({ message: 'Erro no servidor' });
+    } finally {
+        if (conn) conn.release();
+    }
 });
-
-
 // ======================================================
 // ADICIONAR FAVORITO
 // ======================================================
