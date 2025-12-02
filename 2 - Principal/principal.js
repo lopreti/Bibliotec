@@ -39,6 +39,7 @@ function renderizarCarrousel() {
         livrosParaMostrar.push(todosOsLivros[index]);
     }
 
+    // ...
     livrosParaMostrar.forEach((l, posicao) => {
         const classeDestaque = posicao === 1 ? 'destaque' : '';
 
@@ -49,9 +50,10 @@ function renderizarCarrousel() {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+                
         `;
     });
+// ...
 }
 
 function renderizarListaInferior() {
@@ -71,9 +73,10 @@ function renderizarListaInferior() {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+               
         `;
     });
+// ...
 }
 
 function aplicarLayoutPesquisa() {
@@ -114,6 +117,7 @@ function pesquisarLivros(termo) {
         return;
     }
 
+    // ...
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
@@ -122,9 +126,10 @@ function pesquisarLivros(termo) {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+               
         `;
     });
+// ...
 }
 
 function inicializar() {
