@@ -2,20 +2,27 @@ let todosOsLivros = [];
 let currentIndex = 0;
 const livrosPorPagina = 3;
 
-// --------------------------
-// FUNÇÃO: Restabelecer layout original
-// --------------------------
 function restaurarLayoutOriginal() {
     document.querySelector(".livros").classList.add("carrossel");
     document.querySelector(".livros").innerHTML = "";
-    document.querySelector(".mais-livros .container").innerHTML = "";
+    
+    // Mostra o carrossel e o botão "Ver mais" novamente
+    document.getElementById('container').style.display = 'flex';
+    document.getElementById('botao-veja-mais').style.display = 'block';
+    document.getElementById('secao-mais-livros').style.display = 'block';
+    document.getElementById('secao-mais-livros').style.marginTop = '150px';
+    
     renderizarCarrousel();
     renderizarListaInferior();
+    
+    // Reattach evento do botão "Ver mais"
+    document.getElementById('botao-veja-mais').addEventListener('click', () => {
+        console.log("Clicou no botão Ver mais");
+        const secao = document.getElementById('secao-mais-livros');
+        secao.scrollIntoView({ behavior: 'smooth' });
+    });
 }
 
-// --------------------------
-// FUNÇÃO PRINCIPAL DO CARROSSEL
-// --------------------------
 function renderizarCarrousel() {
     const containerLivros = document.querySelector(".livros");
     containerLivros.classList.add('carrossel');
@@ -32,67 +39,65 @@ function renderizarCarrousel() {
         livrosParaMostrar.push(todosOsLivros[index]);
     }
 
+    // ...
     livrosParaMostrar.forEach((l, posicao) => {
         const classeDestaque = posicao === 1 ? 'destaque' : '';
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
-<<<<<<< HEAD:2 - Principal/principal.js
-            <a href="../4 - Livro I/livro.html?id=${l.id || l.livro_id}">
+            <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+                
         `;
     });
+// ...
 }
 
-// --------------------------
-// LISTA INFERIOR (MOSTRAR TODOS OS LIVROS EXCETO OS 3 DO CARROSSEL)
-// --------------------------
 function renderizarListaInferior() {
     const container = document.querySelector(".mais-livros .container");
     container.innerHTML = "";
 
-    if (todosOsLivros.length <= livrosPorPagina) return;
+    if (todosOsLivros.length === 0) {
+        container.innerHTML = `<p style='text-align: center; grid-column: 1/-1;'>Nenhum livro encontrado</p>`;
+        return;
+    }
 
-    const livrosInferiores = todosOsLivros.slice(livrosPorPagina);
-
-    livrosInferiores.forEach(l => {
+    todosOsLivros.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="..//4 - Livro I/livro.html?id=${l.id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
-=======
-                <a href="..//4 - Livro I/index.html?id=${l.ID}">
-                    <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
->>>>>>> origin/lavíz:2 - Principal/app.js
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+               
         `;
     });
+// ...
 }
 
-// --------------------------
-// REMOVER LAYOUT DE CARROSSEL (para pesquisa)
-// --------------------------
 function aplicarLayoutPesquisa() {
-    document.querySelector(".livros").classList.remove("carrossel");
-    document.querySelector(".livros").innerHTML = "";
-    document.querySelector(".mais-livros .container").innerHTML = "";
+    // Esconde o carrossel e o botão "Ver mais"
+    document.getElementById('container').style.display = 'none';
+    document.getElementById('botao-veja-mais').style.display = 'none';
+    // Mostra a seção "Todos os Livros"
+    const secaoMaisLivros = document.getElementById('secao-mais-livros');
+    secaoMaisLivros.style.display = 'block';
+    secaoMaisLivros.style.marginTop = '0';
 }
 
-// --------------------------
-// PESQUISA
-// --------------------------
 function pesquisarLivros(termo) {
     const pesquisa = termo.toLowerCase().trim();
 
     if (pesquisa === "") {
         currentIndex = 0;
+        // Restaura carrossel
+        document.getElementById('container').style.display = 'flex';
+        document.getElementById('botao-veja-mais').style.display = 'block';
+        document.getElementById('secao-mais-livros').style.display = 'none';
         restaurarLayoutOriginal();
         return;
     }
@@ -104,39 +109,35 @@ function pesquisarLivros(termo) {
 
     aplicarLayoutPesquisa();
 
-    const container = document.querySelector(".livros");
+    const container = document.querySelector(".mais-livros .container");
+    container.innerHTML = "";
 
     if (filtrados.length === 0) {
-        container.innerHTML = `<p style='text-align: center;'>Nenhum livro encontrado</p>`;
+        container.innerHTML = `<p style='text-align: center; grid-column: 1/-1;'>Nenhum livro encontrado</p>`;
         return;
     }
 
+    // ...
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-<<<<<<< HEAD:2 - Principal/principal.js
-                <a href="..//4 - Livro I/livro.html?id=${l.id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
-=======
-                <a href="..//4 - Livro I/index.html?id=${l.ID}">
-                    <img src="${urlCapa}" alt="Capa do livro ${l.titulo}">
->>>>>>> origin/lavíz:2 - Principal/app.js
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-            </div>
+               
         `;
     });
+// ...
 }
 
-// --------------------------
-// INICIALIZAR
-// --------------------------
 function inicializar() {
     fetch("http://localhost:3000/livros")
         .then(res => res.json())
         .then(livros => {
             todosOsLivros = livros;
+            console.log("Livros carregados:", todosOsLivros);
 
             renderizarCarrousel();
             renderizarListaInferior();
@@ -150,10 +151,17 @@ function inicializar() {
                 currentIndex = (currentIndex - 1 + todosOsLivros.length) % todosOsLivros.length;
                 renderizarCarrousel();
             });
-        });
+        })
+        .catch(err => console.error("Erro ao buscar livros:", err));
 
     document.querySelector(".barra-pesquisa input")
         .addEventListener("input", e => pesquisarLivros(e.target.value));
+    
+    document.getElementById('botao-veja-mais').addEventListener('click', () => {
+        console.log("Clicou no botão Ver mais");
+        const secao = document.getElementById('secao-mais-livros');
+        secao.scrollIntoView({ behavior: 'smooth' });
+    });
 }
 
 document.addEventListener("DOMContentLoaded", inicializar);

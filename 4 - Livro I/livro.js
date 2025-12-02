@@ -7,23 +7,50 @@ const userId = 1;
 //  CARREGAR DADOS DO LIVRO
 // =========================
 
+console.log("ID da URL:", id);
+
 if (id) {
     fetch(`http://localhost:3000/livros/${id}`)
         .then(res => res.json())
         .then(livro => {
+            console.log("Livro recebido:", livro);
             if (livro.message) {
                 document.body.innerHTML = `<h2>${livro.message}</h2>`;
             } else {
 
-                const livroId = livro.id || livro.livro_id;
+                const livroId = livro.ID || livro.id || livro.livro_id;
+                console.log("Preenchendo dados do livro:", livroId);
 
-                document.querySelector("h1").textContent = livro.titulo;
-                document.querySelector(".descricao p:nth-of-type(1)").textContent = livro.autor;
-                document.querySelector(".descricao p:nth-of-type(2)").textContent = livro.descricao;
-                document.querySelector(".livro img").src = livro.capa_url;
-                document.querySelector(".descricao h3").textContent = livro.titulo;
-                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas;
-                document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma;
+                document.querySelector("#titulo-livro").textContent = livro.titulo;
+                document.querySelector("#autor-livro").textContent = livro.autor;
+                document.querySelector("#descricao-livro").textContent = livro.descricao;
+                document.querySelector("#capa-livro").src = livro.capa_url;
+                document.querySelector("#nome-livro").textContent = livro.titulo;
+                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas || "N/A";
+                document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma || "Português";
+
+                // ----------------------------------------------------------------------
+                // 💡 CÓDIGO CORRIGIDO PARA EXIBIR CATEGORIAS COMO TAGS (SEM VÍRGULA)
+                // ----------------------------------------------------------------------
+                const categoriasContainer = document.getElementById("categorias-livro");
+                const categoriasString = livro.categorias; // CORRIGIDO para 'categorias' (plural)
+
+                if (categoriasString && categoriasString.trim() !== '') {
+                    // 1. Divide a string de categorias usando a vírgula e espaço como separador
+                    const categoriasArray = categoriasString.split(', ');
+                    let htmlContent = '';
+
+                    // 2. Constrói um <span> para cada categoria, eliminando a vírgula
+                    categoriasArray.forEach(categoria => {
+                        // Cada <span> será estilizado como uma tag pelo seu livro.css
+                        htmlContent += `<span>${categoria}</span> `;
+                    });
+
+                    // 3. Insere os spans no HTML
+                    categoriasContainer.innerHTML = htmlContent.trim();
+                } else {
+                    categoriasContainer.textContent = "Não classificado";
+                }
 
                 verificarFavorito(livroId);
                 verificarReservado(livroId);
@@ -31,6 +58,7 @@ if (id) {
         })
         .catch(err => console.error("Erro ao buscar livro:", err));
 } else {
+    console.log("Nenhum ID foi passado na URL");
     document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
 }
 
@@ -177,12 +205,12 @@ function atualizarReservados(jaReservado, livroId) {
     const btnReservar = document.querySelector('.reservar button');
 
     if (jaReservado) {
-        btnReservar.innerHTML = 'Reservado';
-        btnReservar.style.backgroundColor = '#ff4d4d';
+        btnReservar.innerHTML = '📖 Reservado';
+        btnReservar.style.backgroundColor = '#3651c9';
         btnReservar.style.color = 'white';
         btnReservar.onclick = () => removerReserva(livroId);
     } else {
-        btnReservar.innerHTML = 'Reservar';
+        btnReservar.innerHTML = '📖 Reservar';
         btnReservar.style.backgroundColor = '';
         btnReservar.style.color = '';
         btnReservar.onclick = () => adicionarReservado(livroId);
