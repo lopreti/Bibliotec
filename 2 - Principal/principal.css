@@ -18,6 +18,8 @@
     position: relative;
     height: auto;
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -64,7 +66,8 @@ h1 {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 2rem;
     justify-items: center;
-    padding: 6rem 2rem;
+    padding: 2rem;
+    max-width: 1200px;
 }
 
 .livro {
@@ -121,10 +124,11 @@ a {
 }
 
 .mais-livros{
-    margin-top: 150px;
+    margin-top: 2rem;
     width: 100%;
     padding: 3rem 2rem;
     background-color: #4a68df49;
+    min-height: 400px;
 }
 
 .mais-livros h2 {

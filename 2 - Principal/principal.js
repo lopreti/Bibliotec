@@ -5,9 +5,22 @@ const livrosPorPagina = 3;
 function restaurarLayoutOriginal() {
     document.querySelector(".livros").classList.add("carrossel");
     document.querySelector(".livros").innerHTML = "";
-    document.querySelector(".mais-livros .container").innerHTML = "";
+    
+    // Mostra o carrossel e o botão "Ver mais" novamente
+    document.getElementById('container').style.display = 'flex';
+    document.getElementById('botao-veja-mais').style.display = 'block';
+    document.getElementById('secao-mais-livros').style.display = 'block';
+    document.getElementById('secao-mais-livros').style.marginTop = '150px';
+    
     renderizarCarrousel();
     renderizarListaInferior();
+    
+    // Reattach evento do botão "Ver mais"
+    document.getElementById('botao-veja-mais').addEventListener('click', () => {
+        console.log("Clicou no botão Ver mais");
+        const secao = document.getElementById('secao-mais-livros');
+        secao.scrollIntoView({ behavior: 'smooth' });
+    });
 }
 
 function renderizarCarrousel() {
@@ -64,9 +77,13 @@ function renderizarListaInferior() {
 }
 
 function aplicarLayoutPesquisa() {
-    document.querySelector(".livros").classList.remove("carrossel");
-    document.querySelector(".livros").innerHTML = "";
-    document.querySelector(".mais-livros .container").innerHTML = "";
+    // Esconde o carrossel e o botão "Ver mais"
+    document.getElementById('container').style.display = 'none';
+    document.getElementById('botao-veja-mais').style.display = 'none';
+    // Mostra a seção "Todos os Livros"
+    const secaoMaisLivros = document.getElementById('secao-mais-livros');
+    secaoMaisLivros.style.display = 'block';
+    secaoMaisLivros.style.marginTop = '0';
 }
 
 function pesquisarLivros(termo) {
@@ -74,6 +91,10 @@ function pesquisarLivros(termo) {
 
     if (pesquisa === "") {
         currentIndex = 0;
+        // Restaura carrossel
+        document.getElementById('container').style.display = 'flex';
+        document.getElementById('botao-veja-mais').style.display = 'block';
+        document.getElementById('secao-mais-livros').style.display = 'none';
         restaurarLayoutOriginal();
         return;
     }
@@ -85,17 +106,18 @@ function pesquisarLivros(termo) {
 
     aplicarLayoutPesquisa();
 
-    const container = document.querySelector(".livros");
+    const container = document.querySelector(".mais-livros .container");
+    container.innerHTML = "";
 
     if (filtrados.length === 0) {
-        container.innerHTML = `<p style='text-align: center;'>Nenhum livro encontrado</p>`;
+        container.innerHTML = `<p style='text-align: center; grid-column: 1/-1;'>Nenhum livro encontrado</p>`;
         return;
     }
 
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="../4 - Livro I/livro.html?id=${l.ID}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
