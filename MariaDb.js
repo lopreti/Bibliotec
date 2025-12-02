@@ -132,6 +132,54 @@ app.delete("/favoritos/:userId/:livroId", async (req, res) => {
 });
 
 // ======================================================
+// LOGIN
+// ======================================================
+app.post('/login', async (req, res) => {
+    const { login, senha } = req.body;
+    let conn;
+
+    if (!login || !senha) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Login e senha são obrigatórios' 
+        });
+    }
+
+    try {
+        conn = await pool.getConnection();
+
+        const rows = await conn.query(
+            'SELECT usuario_id, login FROM usuarios WHERE login = ? AND senha = ?',
+            [login, senha]
+        );
+
+        if (rows.length === 0) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Login ou senha incorretos' 
+            });
+        }
+
+        const usuario = rows[0];
+        res.json({
+            success: true,
+            usuario_id: usuario.usuario_id,
+            login: usuario.login,
+            message: 'Login realizado com sucesso!'
+        });
+
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erro no servidor' 
+        });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+// ======================================================
 // RESERVADOS (baseado na tabela `reservas`)
 // ======================================================
 
