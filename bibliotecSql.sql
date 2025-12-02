@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.categorias: ~3 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.categorias: ~2 rows (aproximadamente)
 INSERT INTO `categorias` (`id`, `nome`) VALUES
 	(1, 'Ficção'),
 	(2, 'Romance'),
@@ -106,19 +106,20 @@ CREATE TABLE IF NOT EXISTS `reservas` (
 -- Copiando estrutura para tabela bibliotec.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `usuario_id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `senha` varchar(50) NOT NULL,
+  `nome` varchar(250) NOT NULL,
+  `CPF` int(11) NOT NULL,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~1 rows (aproximadamente)
-INSERT INTO `usuarios` (`usuario_id`, `login`, `senha`) VALUES
-	(1, 'isabella', 'senha12345');
+INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
+	(1, 'isabella', 'senha12345', '', 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
-
