@@ -1,6 +1,6 @@
 let todosOsLivrosReservados = [];
 
-const userId = 1;
+const userId = localStorage.getItem('usuarioId') || 1;
 
 window.addEventListener('load', () => {
     carregarReservados();
