@@ -1,12 +1,12 @@
 document.getElementById('btnBotao').addEventListener('click', async () => {
-    const login = document.querySelector('input[type="text"]').value.trim();
+    const identifier = document.getElementById('identifier').value.trim();
     const senha = document.querySelector('input[type="password"]').value.trim();
 
-    console.log('Login:', login);
+    console.log('Identifier:', identifier);
     console.log('Senha:', senha);
 
     // Validação básica
-    if (!login || !senha) {
+    if (!identifier || !senha) {
         alert('Por favor, preencha todos os campos!');
         return;
     }
@@ -20,7 +20,7 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                login: login,
+                identifier: identifier,
                 senha: senha
             })
         });
@@ -28,16 +28,16 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         console.log('Response status:', response.status);
         
         const data = await response.json();
-        
+
         console.log('Response data:', data);
 
         if (response.ok && data.success) {
-            // Armazena o usuário no localStorage
+            // Armazena o usuário no localStorage (nome usado para iniciais)
             localStorage.setItem('usuarioId', data.usuario_id);
-            localStorage.setItem('usuarioLogin', data.login);
-            
+            localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
+
             console.log('Login bem-sucedido, redirecionando...');
-            
+
             // Redireciona para página principal
             window.location.href = '../2 - Principal/principal.html';
         } else {
