@@ -1,0 +1,89 @@
+/* ===== ESTILO GLOBAL ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eef3f7;
+}
+
+/* ===== CARD DO FORM ===== */
+.container {
+    width: 900px;
+    background: #fff;
+    padding: 3rem 2.5rem;
+    border-radius: 28px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* ===== LOGO ===== */
+.container img {
+    width: 70px;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+/* ===== INPUTS ===== */
+input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    margin: 0.7rem 0;
+    border: 1.5px solid #d3d9e3;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background: #f7f9fc;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #3763dd;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(55, 99, 221, 0.2);
+}
+
+/* ===== BOTÃO ===== */
+button {
+    width: 100%;
+    padding: 0.9rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 12px;
+    background: #3763dd;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 4px 12px rgba(55, 99, 221, 0.35);
+}
+
+button:hover {
+    background: #274dc1;
+    box-shadow: 0 6px 20px rgba(55, 99, 221, 0.45);
+}
+
+/* ===== TEXTO DO LOGIN ===== */
+p {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+p a {
+    color: #3763dd;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
