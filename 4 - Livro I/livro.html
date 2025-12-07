@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="..//Logo-Bibliotec.png">
+    <title>Página Inicial</title>
+    <link rel="stylesheet" href="livro.css">
+    <link rel="stylesheet" href="/NavBar/navbar.css">
+</head>
+
+<body>
+    <main>
+        <h1 id="titulo-livro"></h1>
+        <div class="traco-azul"></div>
+
+        <section class="livro-container">
+            <div class="livro">
+                <div class="lado-esquerdo">
+                    <img id="capa-livro" src="" alt="Capa do livro">
+
+                    <div class="informacoes">
+                        <h3>Informações Técnicas</h3>
+                        <p>Quantidade de páginas: <span>205</span></p>
+                        <p>Idioma: <span>Português</span></p>
+                        <p>Categoria: <span id="categorias-livro"></span></p>
+                    </div>
+                </div>
+
+                <div class="descricao">
+                    <h3 id="nome-livro">Crepúsculo</h3>
+                    <p id="autor-livro">Stephenie Meyer</p>
+                    <p id="descricao-livro">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc feugiat
+                        efficitur risus, vitae ultrices urna malesuada et.
+                    </p>
+
+                    <div class="botoes">
+                        <div class="favoritar"><button>❤️ Favoritar</button></div>
+                        <div class="reservar"><button>📖 Reservar</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="livro.js"></script>
+    <script src="/NavBar/navbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

@@ -1,63 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
-}
-
-body {
-    background-color: #f7f7f7;
-    color: #000;
-}
-
-/* --- NAVBAR --- */
-.navbar {
-    width: 100%;
-    height: 85px;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 10;
-}
-
-.logo img {
-    width: 75px;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 6rem;
-}
-
-.navbar ul li a {
-    text-decoration: none;
-    font-weight: 700;
-    color: #000;
-    transition: 0.3s;
-}
-
-.perfil-inicial {
-    width: 55px;
-    height: 55px;
-    background-color: #b6b6f8;
-    color: #fff;
-    font-weight: 700;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-}
-
-/* --- CONTEÚDO PRINCIPAL --- */
-
 h1 {
     text-align: center;
     font-weight: 700;
@@ -122,7 +62,7 @@ h1 {
 }
 
 /* estilo dos botões permanece */
-.favoritar button, .ler button {
+.favoritar button, .reservar button {
     border: 2px solid #000;
     background-color: #fff;
     border-radius: 12px;
@@ -133,7 +73,7 @@ h1 {
     transition: 0.3s ease;
 }
 
-.favoritar button:hover, .ler button:hover {
+.favoritar button:hover, .reservar button:hover {
     background-color: #000;
     color: #fff;
 }
@@ -165,4 +105,25 @@ h1 {
     padding: 0.3rem 0.8rem;
     font-size: 0.85rem;
     font-weight: 500;
+}
+
+.botoes {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+
+.favoritar button:hover {
+    background-color: #ff4d4d;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+}
+
+
+.reservar button:hover {
+    background-color: #3651c9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 103, 223, 0.4);
 }
