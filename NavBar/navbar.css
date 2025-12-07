@@ -84,33 +84,4 @@
 .perfil-menu button:hover { background: rgba(0,0,0,0.04); }
 
 .perfil-menu button.logout { color: #e74c3c; }
-
-
-/* cores da tela */
-/*
-body.dark {
-    background-color: #0f1115;
-    color: #e6eef8;
-}
-
-body.dark a { color: #ffdfdf; }
-
-#btn-dark-mode {
-    position: absolute;
-    top: 14px;
-    right: 110px;
-    z-index: 1200;
-    background: rgba(255,255,255,0.06);
-    color: inherit;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-body.dark #btn-dark-mode {
-    background: rgba(255,255,255,0.02);
-    border-color: rgba(111,134,255,0.9);
-}
-
-*/
+ 

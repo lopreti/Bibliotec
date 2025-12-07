@@ -146,42 +146,4 @@ a {
 }
 
 /* Dark theme */
-/*
-body.dark {
-    background-color: #0f1115;
-    color: #e6eef8;
-}
-
-body.dark .barra-pesquisa input {
-    background-color: #121317;
-    border-color: #33384a;
-    color: #e6eef8;
-    box-shadow: none;
-}
-
-body.dark .traco-azul {
-    background-color: #6f86ff;
-    box-shadow: none;
-}
-
-body.dark a { color: #dfe8ff; }
-
-#btn-dark-mode {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 1200;
-    background: rgba(255,255,255,0.06);
-    color: inherit;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-body.dark #btn-dark-mode {
-    background: rgba(255,255,255,0.02);
-    border-color: rgba(111,134,255,0.9);
-}
-
-*/
+/* Dark theme removed */
