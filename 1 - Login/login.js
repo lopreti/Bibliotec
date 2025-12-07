@@ -1,3 +1,16 @@
+// clicar no enter e ja envia as respostas
+const identifier = document.getElementById("identifier");
+const senha = document.getElementById("senha");
+const btn = document.getElementById("btnBotao");
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        btn.click();     
+    }
+});
+
+
 document.getElementById('btnBotao').addEventListener('click', async () => {
     const identifier = document.getElementById('identifier').value.trim();
     const senha = document.querySelector('input[type="password"]').value.trim();
@@ -46,7 +59,7 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
             localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
 
             console.log('Login bem-sucedido, redirecionando...');
-            
+
             window.location.href = '../2 - Principal/principal.html';
         } else {
             Toast.fire(data.message || 'Erro ao fazer login. Verifique suas credenciais.');

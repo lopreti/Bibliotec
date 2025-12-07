@@ -1,9 +1,10 @@
-/* ===== ESTILO GLOBAL ===== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Inter", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 body {
@@ -14,7 +15,6 @@ body {
     background: #eef3f7;
 }
 
-/* ===== CARD DO FORM ===== */
 .container {
     width: 900px;
     background: #fff;
@@ -24,14 +24,12 @@ body {
     text-align: center;
 }
 
-/* ===== LOGO ===== */
 .container img {
     width: 70px;
     margin-bottom: 1.5rem;
     opacity: 0.9;
 }
 
-/* ===== INPUTS ===== */
 input {
     width: 100%;
     padding: 0.9rem 1rem;
@@ -50,7 +48,6 @@ input:focus {
     box-shadow: 0 0 0 3px rgba(55, 99, 221, 0.2);
 }
 
-/* ===== BOTÃO ===== */
 button {
     width: 100%;
     padding: 0.9rem;
@@ -71,7 +68,6 @@ button:hover {
     box-shadow: 0 6px 20px rgba(55, 99, 221, 0.45);
 }
 
-/* ===== TEXTO DO LOGIN ===== */
 p {
     margin-top: 1rem;
     font-size: 0.95rem;
