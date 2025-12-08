@@ -53,7 +53,7 @@ function setupPerfilMenu() {
                 // Limpa dados de sessão/localStorage e redireciona para a página de login
                 localStorage.removeItem('usuarioLogin');
                 // Caso precise limpar mais itens, adicionar aqui
-                window.location.href = '/1 - Login/login.html';
+                window.location.href = '../1 - Login/login.html';
             });
         }
     } catch (e) {
