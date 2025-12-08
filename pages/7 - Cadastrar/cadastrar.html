@@ -5,23 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cadastrar.css">
-    <link rel="icon" type="image/x-icon" href="..//Logo-Bibliotec.png">
+    <link rel="icon" type="image/x-icon" href="../Logo-Bibliotec.png">
     <title>Página de Cadastro</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
-        <img src="..//img/icone.png" alt="">
-        <div class="inputsEntrada">
+        <img src="../../img/icone.png" alt="Logo">
+
+        <form id="formCadastro">
             <input type="text" id="nome" placeholder="Digite seu nome e sobrenome" required>
             <input type="email" id="email" placeholder="Digite seu e-mail" required>
             <input type="text" id="cpf" placeholder="Digite seu CPF" required>
             <input type="password" id="senha" placeholder="Digite sua senha (mínimo 8 caracteres)" required>
-            <button id="btnBotao">CADASTRAR</button>
-            <p>Já tem cadastro? <a href="../1 - Login/login.html">Clique aqui para fazer login</a></p>
-        </div>
+
+            <button id="btnBotao">Cadastrar</button>
+        </form>
+        <p>Já tem cadastro? <a href="../1 - Login/login.html">Clique aqui</a></p>
     </div>
-    
-    <script src="cadastrar.js"></script>
+
+    <script src="cadastrar.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
+
 </html>

@@ -373,34 +373,6 @@ app.delete('/reservados/:userId/:livroId', async (req, res) => {
     }
 });
 
-// =======================================================
-// Rota DELETE
-// =======================================================
-app.delete("/livros/:id", async (req, res) => {
-  const id = req.params.id;
-  if (isNaN(id)) return res.status(400).send("ID inválido.");
-
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const result = await conn.query("DELETE FROM livros WHERE livro_id = ?", [id]);
-
-    if (result.affectedRows === 0) {
-      res.status(404).json({ message: `Livro com ID ${id} não encontrado.` });
-    } else {
-      res.status(200).json({ message: `Livro excluído com sucesso.` });
-    }
-  } catch (err) {
-    console.error("Erro ao excluir livro:", err);
-    res.status(500).send("Erro ao excluir: " + err.message);
-  } finally {
-    if (conn) conn.release();
-  }
-});
-
-// =======================================================
-// Iniciar servidor
-// =======================================================
 app.listen(3000, () => {
     console.log("API rodando em http://localhost:3000");
 });
