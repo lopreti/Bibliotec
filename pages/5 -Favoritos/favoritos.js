@@ -1,4 +1,3 @@
-
 let todosOsLivrosFavoritos = [];
 
 const userId = localStorage.getItem('usuarioId') || 1;

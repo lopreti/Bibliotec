@@ -1,6 +1,9 @@
 let todosOsLivros = [];
 let currentIndex = 0;
 const livrosPorPagina = 3;
+let originalTitulo = '';
+let originalMaisLivrosBg = '';
+let originalSectionH2Display = '';
 
 function restaurarLayoutOriginal() {
     document.querySelector(".livros").classList.add("carrossel");
@@ -21,6 +24,14 @@ function restaurarLayoutOriginal() {
         const secao = document.getElementById('secao-mais-livros');
         secao.scrollIntoView({ behavior: 'smooth' });
     });
+    // Restaurar título e fundo original
+    const titulo = document.querySelector('h1');
+    if (titulo && originalTitulo) titulo.textContent = originalTitulo;
+    const secaoMais = document.getElementById('secao-mais-livros');
+    if (secaoMais && originalMaisLivrosBg) secaoMais.style.backgroundColor = originalMaisLivrosBg;
+    // Restaurar exibição do cabeçalho da seção "Todos os livros"
+    const h2sec = document.querySelector('.mais-livros h2');
+    if (h2sec && originalSectionH2Display) h2sec.style.display = originalSectionH2Display;
 }
 
 function renderizarCarrousel() {
@@ -87,6 +98,14 @@ function aplicarLayoutPesquisa() {
     const secaoMaisLivros = document.getElementById('secao-mais-livros');
     secaoMaisLivros.style.display = 'block';
     secaoMaisLivros.style.marginTop = '0';
+    // Remove o fundo colorido ao mostrar resultados da pesquisa
+    secaoMaisLivros.style.backgroundColor = 'transparent';
+    // Ajusta o título para indicar que são todos os livros
+    const titulo = document.querySelector('h1');
+    if (titulo) titulo.textContent = 'TODOS OS LIVROS';
+    // Esconde o cabeçalho da seção inferior para evitar duplicidade
+    const h2sec = document.querySelector('.mais-livros h2');
+    if (h2sec) h2sec.style.display = 'none';
 }
 
 function pesquisarLivros(termo) {
@@ -133,6 +152,8 @@ function pesquisarLivros(termo) {
 }
 
 function inicializar() {
+    // Theme support removed: dark-mode initialization deleted per request.
+
     fetch("http://localhost:3000/livros")
         .then(res => res.json())
         .then(livros => {
@@ -141,6 +162,15 @@ function inicializar() {
 
             renderizarCarrousel();
             renderizarListaInferior();
+
+            // Guarda título e fundo originais para restaurar depois
+            const tituloEl = document.querySelector('h1');
+            if (tituloEl) originalTitulo = tituloEl.textContent;
+            const secaoMais = document.getElementById('secao-mais-livros');
+            if (secaoMais) originalMaisLivrosBg = window.getComputedStyle(secaoMais).backgroundColor;
+            // Guarda display original do h2 da seção "mais livros"
+            const h2sec = document.querySelector('.mais-livros h2');
+            if (h2sec) originalSectionH2Display = window.getComputedStyle(h2sec).display;
 
             document.getElementById('next-btn').addEventListener("click", () => {
                 currentIndex = (currentIndex + 1) % todosOsLivros.length;
