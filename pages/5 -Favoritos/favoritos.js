@@ -1,139 +1,81 @@
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
+
+let todosOsLivrosFavoritos = [];
 
 const userId = localStorage.getItem('usuarioId') || 1;
 
-// =========================
-//  CARREGAR DADOS DO LIVRO
-// =========================
+window.addEventListener('load', () => {
+    carregarFavoritos();
+});
 
-console.log("ID da URL:", id);
-
-if (id) {
-    fetch(`http://localhost:3000/livros/${id}`)
-        .then(res => res.json())
-        .then(livro => {
-            console.log("Livro recebido:", livro);
-            if (livro.message) {
-                document.body.innerHTML = `<h2>${livro.message}</h2>`;
-            } else {
-
-                const livroId = livro.ID || livro.id || livro.livro_id;
-                console.log("Preenchendo dados do livro:", livroId);
-
-                document.querySelector("#titulo-livro").textContent = livro.titulo;
-                document.querySelector("#autor-livro").textContent = livro.autor;
-                document.querySelector("#descricao-livro").textContent = livro.descricao;
-                document.querySelector("#capa-livro").src = livro.capa_url;
-                document.querySelector("#nome-livro").textContent = livro.titulo;
-                document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas || "N/A";
-                document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma || "Português";
-
-                // ----------------------------------------------------------------------
-                // 💡 CÓDIGO CORRIGIDO PARA EXIBIR CATEGORIAS COMO TAGS (SEM VÍRGULA)
-                // ----------------------------------------------------------------------
-                const categoriasContainer = document.getElementById("categorias-livro");
-                const categoriasString = livro.categorias; // CORRIGIDO para 'categorias' (plural)
-
-                if (categoriasString && categoriasString.trim() !== '') {
-                    // 1. Divide a string de categorias usando a vírgula e espaço como separador
-                    const categoriasArray = categoriasString.split(', ');
-                    let htmlContent = '';
-
-                    // 2. Constrói um <span> para cada categoria, eliminando a vírgula
-                    categoriasArray.forEach(categoria => {
-                        // Cada <span> será estilizado como uma tag pelo seu livro.css
-                        htmlContent += `<span>${categoria}</span> `;
-                    });
-
-                    // 3. Insere os spans no HTML
-                    categoriasContainer.innerHTML = htmlContent.trim();
-                } else {
-                    categoriasContainer.textContent = "Não classificado";
-                }
-
-                verificarFavorito(livroId);
-                verificarReservado(livroId);
-            }
-        })
-        .catch(err => console.error("Erro ao buscar livro:", err));
-} else {
-    console.log("Nenhum ID foi passado na URL");
-    document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
-}
-
-
-
-// =========================
-//  FAVORITOS
-// =========================
-
-function verificarFavorito(livroId) {
+function carregarFavoritos() {
     fetch(`http://localhost:3000/favoritos/${userId}`)
-        .then(res => res.json())
-        .then(favoritos => {
-            const jaFavoritado = favoritos.some(f => f.livro_id == livroId);
-            atualizarBotaoFavorito(jaFavoritado, livroId);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor');
+            }
+            return response.json();
         })
-        .catch(err => {
-            console.error("Erro ao verificar favorito:", err);
-            atualizarBotaoFavorito(false, livroId);
-        });
-}
-
-function atualizarBotaoFavorito(jaFavoritado, livroId) {
-    const btnFavoritar = document.querySelector('.favoritar button');
-
-    if (jaFavoritado) {
-        btnFavoritar.innerHTML = '🤍 Favoritado';
-        btnFavoritar.style.backgroundColor = '#ff4d4d';
-        btnFavoritar.style.color = 'white';
-        btnFavoritar.onclick = () => removerFavorito(livroId);
-    } else {
-        btnFavoritar.innerHTML = '❤️ Favoritar';
-        btnFavoritar.style.backgroundColor = '';
-        btnFavoritar.style.color = '';
-        btnFavoritar.onclick = () => adicionarFavorito(livroId);
-    }
-}
-
-function adicionarFavorito(livroId) {
-    const btnFavoritar = document.querySelector('.favoritar button');
-    btnFavoritar.disabled = true;
-    btnFavoritar.innerHTML = 'Adicionando...';
-
-    fetch('http://localhost:3000/favoritos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            usuario_id: userId,
-            livro_id: livroId
-        })
-    })
-        .then(res => res.json())
         .then(data => {
-            Swal.fire({
-                title: data.message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            btnFavoritar.disabled = false;
-            verificarFavorito(livroId);
+            console.log('Favoritos carregados:', data); // Debug
+            todosOsLivrosFavoritos = data;
+            renderizarFavoritos(data);
         })
-        .catch(err => {
-            console.error("Erro ao adicionar favorito:", err);
-            Swal.fire({
-                icon: "warning",
-                title: "Erro ao adicionar aos favoritos",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            btnFavoritar.disabled = false;
-            atualizarBotaoFavorito(false, livroId);
+        .catch(error => {
+            console.error('Erro ao carregar favoritos:', error);
+            document.getElementById('container-favoritos').innerHTML =
+                '<p class="mensagem-vazio">Erro ao carregar favoritos. Verifique se o servidor está rodando.</p>';
         });
 }
 
+function renderizarFavoritos(livros) {
+    const container = document.getElementById('container-favoritos');
+
+    if (!livros || livros.length === 0) {
+        container.innerHTML = '<p class="mensagem-vazio">Você ainda não tem livros favoritos</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+
+    livros.forEach(livro => {
+        container.innerHTML += `
+            <div class="livro" id="livro-${livro.livro_id}">
+                <button class="btn-remover" onclick="removerFavorito(${livro.livro_id})" title="Remover dos favoritos">
+                    ❤️
+                </button>
+                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}">
+                    <img src="${livro.capa_url}" alt="Capa do livro ${livro.titulo}">
+                </a>
+                <h3>${livro.titulo}</h3>
+                <p>${livro.autor}</p>
+            </div>
+        `;
+    });
+}
+
+function pesquisarLivros(pesquisa) {
+    const pesquisaBusca = pesquisa.toLowerCase().trim();
+
+    if (pesquisaBusca === "") {
+        renderizarFavoritos(todosOsLivrosFavoritos);
+        return;
+    }
+
+    const livrosFiltrados = todosOsLivrosFavoritos.filter(livro => {
+        const titulo = livro.titulo.toLowerCase();
+        const autor = livro.autor.toLowerCase();
+        return titulo.includes(pesquisaBusca) || autor.includes(pesquisaBusca);
+    });
+
+    const container = document.getElementById('container-favoritos');
+
+    if (livrosFiltrados.length === 0) {
+        container.innerHTML = '<p class="mensagem-vazio">Nenhum livro encontrado</p>';
+        return;
+    }
+
+    renderizarFavoritos(livrosFiltrados);
+}
 function removerFavorito(livroId) {
     Swal.fire({
         title: "Deseja remover este livro dos favoritos?",
@@ -144,160 +86,37 @@ function removerFavorito(livroId) {
     }).then((result) => {
         if (!result.isConfirmed) return;
 
-        const btnFavoritar = document.querySelector('.favoritar button');
-        btnFavoritar.disabled = true;
-        btnFavoritar.innerHTML = 'Removendo...';
-
         fetch(`http://localhost:3000/favoritos/${userId}/${livroId}`, {
             method: 'DELETE'
         })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(data => {
+                console.log(data.message);
+
+                // REMOVE DO ARRAY LOCAL
+                todosOsLivrosFavoritos = todosOsLivrosFavoritos.filter(
+                    fav => fav.livro_id !== livroId
+                );
+
+                // ATUALIZA A LISTA NA TELA
+                renderizarFavoritos(todosOsLivrosFavoritos);
 
                 Swal.fire({
-                    title: data.message || "Removido dos favoritos!",
+                    title: "Removido dos favoritos!",
                     icon: "success",
                     timer: 1500,
                     showConfirmButton: false
                 });
-
-                btnFavoritar.disabled = false;
-                btnFavoritar.innerHTML = 'Favoritar';
-
-                atualizarBotaoFavorito(false, livroId);
             })
-            .catch(err => {
-                console.error("Erro ao remover favorito:", err);
-
+            .catch(error => {
+                console.error('Erro ao remover favorito:', error);
+                
                 Swal.fire({
-                    title: "Erro ao remover dos favoritos",
+                    title: "Erro ao remover favorito",
                     icon: "error",
                     timer: 1500,
                     showConfirmButton: false
                 });
-
-                btnFavoritar.disabled = false;
-                atualizarBotaoFavorito(true, livroId);
-            });
-    });
-}
-
-
-
-// =========================
-//  RESERVADOS
-// =========================
-
-function verificarReservado(livroId) {
-    fetch(`http://localhost:3000/reservados/${userId}`)
-        .then(res => res.json())
-        .then(reservados => {
-            const jaReservado = reservados.some(r => r.livro_id == livroId);
-            atualizarReservados(jaReservado, livroId);
-        })
-        .catch(err => {
-            console.error("Erro ao verificar reservado:", err);
-            atualizarReservados(false, livroId);
-        });
-}
-
-function atualizarReservados(jaReservado, livroId) {
-    const btnReservar = document.querySelector('.reservar button');
-
-    if (jaReservado) {
-        btnReservar.innerHTML = '📖 Reservado';
-        btnReservar.style.backgroundColor = '#3651c9';
-        btnReservar.style.color = 'white';
-        btnReservar.onclick = () => removerReserva(livroId);
-    } else {
-        btnReservar.innerHTML = '📖 Reservar';
-        btnReservar.style.backgroundColor = '';
-        btnReservar.style.color = '';
-        btnReservar.onclick = () => adicionarReservado(livroId);
-    }
-}
-
-function adicionarReservado(livroId) {
-    const btnReservar = document.querySelector('.reservar button');
-    btnReservar.disabled = true;
-    btnReservar.innerHTML = 'Adicionando...';
-
-    fetch('http://localhost:3000/reservados', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            usuario_id: userId,
-            livro_id: livroId
-        })
-    })
-        .then(res => res.json())
-        .then(data => {
-            Swal.fire({
-                title: data.message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            btnReservar.disabled = false;
-            verificarReservado(livroId);
-        })
-        .catch(err => {
-            console.error("Erro ao adicionar reservado:", err);
-            Swal.fire({
-                icon: "warning",
-                title: "Erro ao adicionar aos reservados",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            btnReservar.disabled = false;
-            atualizarReservados(false, livroId);
-        });
-}
-
-function removerReserva(livroId) {
-    Swal.fire({
-        title: "Deseja remover este livro dos reservados?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sim, remover",
-        cancelButtonText: "Não",
-    }).then((result) => {
-        if (!result.isConfirmed) return;
-
-        const btnReservar = document.querySelector('.reservar button');
-        btnReservar.disabled = true;
-        btnReservar.innerHTML = 'Removendo...';
-
-        fetch(`http://localhost:3000/reservados/${userId}/${livroId}`, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then(data => {
-
-                Swal.fire({
-                    title: data.message || "Removido dos reservados!",
-                    icon: "success",
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-
-                btnReservar.disabled = false;
-                btnReservar.innerHTML = 'Reservar';
-
-                atualizarReservados(false, livroId);
-            })
-            .catch(err => {
-                console.error("Erro ao remover reservado:", err);
-
-                Swal.fire({
-                    title: "Erro ao remover dos reservados",
-                    icon: "error",
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-
-                btnReservar.disabled = false;
-                atualizarReservados(true, livroId);
             });
     });
 }
