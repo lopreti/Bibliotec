@@ -1,15 +1,11 @@
 async function carregarLayout() {
-
     try {
         const response = await fetch('/NavBar/navbar.html');
-        const layout = await response.text(); 
+        const layout = await response.text();
         document.body.insertAdjacentHTML("afterbegin", layout);
 
-        // Após carregar o navbar, atualiza as iniciais do usuário
-            atualizarIniciaisUsuario();
-
-            // Inicializa menu de perfil (logout)
-            setupPerfilMenu();
+        atualizarIniciaisUsuario();
+        setupPerfilMenu();
 
     } catch (erro) {
         console.error("Erro ao carregar o layout:", erro);
@@ -21,15 +17,15 @@ function setupPerfilMenu() {
         const perfilWrap = document.querySelector('.perfil');
         if (!perfilWrap) return;
 
-        // Não duplicar menu caso já exista
         if (perfilWrap.querySelector('.perfil-menu')) return;
 
         const menu = document.createElement('div');
         menu.className = 'perfil-menu';
         menu.innerHTML = `
+            <button id="btn-infos" class="infos">Ver Informações</button>
             <button id="btn-logout" class="logout">Sair</button>
         `;
-
+        
         perfilWrap.appendChild(menu);
 
         const iniciais = document.getElementById('perfil-iniciais');
@@ -41,18 +37,23 @@ function setupPerfilMenu() {
             });
         }
 
-        // Fecha ao clicar fora
         document.addEventListener('click', () => {
             menu.classList.remove('show');
         });
 
-        // Logout
+        const btnInfos = document.getElementById('btn-infos');
+        if (btnInfos) {
+            btnInfos.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.remove('show');
+                abrirPopupInformacoes();
+            });
+        }
+
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) {
             btnLogout.addEventListener('click', () => {
-                // Limpa dados de sessão/localStorage e redireciona para a página de login
                 localStorage.removeItem('usuarioLogin');
-                // Caso precise limpar mais itens, adicionar aqui
                 window.location.href = '../1 - Login/login.html';
             });
         }
@@ -61,34 +62,78 @@ function setupPerfilMenu() {
     }
 }
 
-// setupNavbarTheme removed: dark-mode controls were deleted per request.
+function abrirPopupInformacoes() {
+    const overlay = document.createElement('div');
+    overlay.id = 'popup-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    `;
+
+    const popup = document.createElement('div');
+    popup.id = 'popup-informacoes';
+    popup.style.cssText = `
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        min-width: 400px;
+        max-width: 90%;
+        position: relative;
+    `;
+
+    popup.innerHTML = `
+        <button id="fechar-popup" style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 5px 10px;
+        ">&times;</button>
+        
+        <h2 style="margin-top: 0; margin-bottom: 20px; color: #333;">Informações do seu perfil</h2>
+    `;
+
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+
+    document.getElementById('fechar-popup').addEventListener('click', () => {
+        overlay.remove();
+    });
+}
 
 function atualizarIniciaisUsuario() {
     const usuarioLogin = localStorage.getItem('usuarioLogin');
-    
+
     if (usuarioLogin) {
-        // Divide o nome em partes
         const partes = usuarioLogin.trim().split(' ');
-        
-        // Pega a primeira letra do primeiro nome e do segundo nome (se existir)
         let iniciais = partes[0][0].toUpperCase();
-        
+
         if (partes.length > 1) {
             iniciais += partes[1][0].toUpperCase();
-        } else {
-            // Se houver só um nome, pega a segunda letra
-            if (partes[0].length > 1) {
-                iniciais += partes[0][1].toUpperCase();
-            }
+        } else if (partes[0].length > 1) {
+            iniciais += partes[0][1].toUpperCase();
         }
-        
-        // Atualiza o elemento das iniciais
+
         setTimeout(() => {
             const perfilIniciais = document.getElementById('perfil-iniciais');
             if (perfilIniciais) {
                 perfilIniciais.textContent = iniciais;
             }
-        }, 100); // Pequeno delay para garantir que o DOM foi carregado
+        }, 100);
     }
 }
 

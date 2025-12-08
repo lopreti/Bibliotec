@@ -82,7 +82,7 @@ form.addEventListener("submit", async function (e) {
 
         if (response.ok && data.success) {
             Swal.fire({
-                title: "Cadastro realizado com sucesso! Você será redirecionado para a página de login.",
+                title: "Cadastro realizado com sucesso!",
                 icon: "success",
                 timer: 1500,
                 showConfirmButton: false
