@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 
-const userId = 1;
+const userId = localStorage.getItem('usuarioId') || 1;
 
 // =========================
 //  CARREGAR DADOS DO LIVRO

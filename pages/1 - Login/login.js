@@ -18,14 +18,13 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
     console.log('Identifier:', identifier);
     console.log('Senha:', senha);
 
-
     const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-    });
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+});
 
     // Validação básica
     if (!identifier || !senha) {
@@ -59,13 +58,28 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
             localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
 
             console.log('Login bem-sucedido, redirecionando...');
+            Toast.fire({
+                icon: "sucess",
+                timer: 1500,
+                showConfirmButton: false
+            });
 
             window.location.href = '../2 - Principal/principal.html';
         } else {
-            Toast.fire(data.message || 'Erro ao fazer login. Verifique suas credenciais.');
+            Toast.fire({
+                title: (data.message || 'Erro ao fazer login. Verifique suas credenciais.'),
+                icon: "error",
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
     } catch (error) {
         console.error('Erro completo:', error);
-        Toast.fire('Erro ao conectar com o servidor. Verifique se ele está rodando.');
+        Swal.fire({
+            title: ('Erro ao conectar com o servidor. Verifique se ele está rodando.'),
+            icon: "error",
+            timer: 1500,
+            showConfirmButton: false
+        });
     }
 });
