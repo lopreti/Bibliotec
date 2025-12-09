@@ -114,21 +114,13 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `CPF` int(11) NOT NULL,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-<<<<<<< HEAD
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+)
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~3 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
 	(2, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', 1234567890),
 	(3, 'teste@example.com', 'password123', 'Teste Usuario', 2147483647),
 	(4, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', 2147483647);
-=======
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- Copiando dados para a tabela bibliotec.usuarios: ~1 rows (aproximadamente)
-INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
-	(1, 'isabella', 'senha12345', '', 0);
->>>>>>> origin/lopreti
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
