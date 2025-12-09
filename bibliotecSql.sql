@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           12.0.2-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           11.8.2-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.11.0.7065
+-- HeidiSQL Versão:              12.10.0.7000
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.categorias: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.categorias: ~3 rows (aproximadamente)
 INSERT INTO `categorias` (`id`, `nome`) VALUES
 	(1, 'Ficção'),
 	(2, 'Romance'),
@@ -42,9 +42,16 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   KEY `FK_favoritos_livro` (`livro_id`),
   CONSTRAINT `FK_favoritos_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_favoritos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.favoritos: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.favoritos: ~6 rows (aproximadamente)
+INSERT INTO `favoritos` (`id`, `usuario_id`, `livro_id`) VALUES
+	(36, 1, 1),
+	(37, 1, 1),
+	(38, 1, 3),
+	(39, 1, 2),
+	(40, 1, 2),
+	(46, 3, 2);
 
 -- Copiando estrutura para tabela bibliotec.livros
 CREATE TABLE IF NOT EXISTS `livros` (
@@ -99,11 +106,11 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   KEY `FK_reservas_livro` (`livro_id`),
   CONSTRAINT `FK_reservas_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_reservas_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.reservas: ~1 rows (aproximadamente)
 INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `criado_em`) VALUES
-	(4, 4, 2, NULL, NULL, NULL, NULL);
+	(7, 3, 1, NULL, NULL, NULL, NULL);
 
 -- Copiando estrutura para tabela bibliotec.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
@@ -111,16 +118,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `email` varchar(50) NOT NULL,
   `senha` varchar(50) NOT NULL,
   `nome` varchar(250) NOT NULL,
-  `CPF` int(11) NOT NULL,
+  `CPF` varchar(11) NOT NULL,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.usuarios: ~3 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.usuarios: ~4 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
-	(2, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', 1234567890),
-	(3, 'teste@example.com', 'password123', 'Teste Usuario', 2147483647),
-	(4, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', 2147483647);
+	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890'),
+	(2, 'teste@example.com', 'password123', 'Teste Usuario', '12345678901'),
+	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900'),
+	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
