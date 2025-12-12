@@ -85,3 +85,24 @@
 
 .perfil-menu button.logout { color: #e74c3c; }
  
+
+.info-section {
+    color: rgb(0, 0, 0);
+    padding: 16px;
+}
+
+.info-label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 15px;
+    margin-bottom: 3px;
+    color: rgb(36, 36, 36);
+}
+li a:hover {
+    background-color: #627df565;
+    padding: 1.2rem;
+    border-radius: 20px;
+}
