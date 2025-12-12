@@ -8,7 +8,7 @@ h1 {
 
 .livro-container {
     background-color: #fafafa;
-    box-shadow:0 2px 50px rgba(0, 0, 0, 0.15) ;
+    box-shadow: 0 2px 50px rgba(0, 0, 0, 0.15);
     border-radius: 40px;
     width: 85%;
     height: 650px;
@@ -62,7 +62,8 @@ h1 {
 }
 
 /* estilo dos botões permanece */
-.favoritar button, .reservar button {
+.favoritar button,
+.reservar button {
     border: 2px solid #000;
     background-color: #fff;
     border-radius: 12px;
@@ -73,7 +74,8 @@ h1 {
     transition: 0.3s ease;
 }
 
-.favoritar button:hover, .reservar button:hover {
+.favoritar button:hover,
+.reservar button:hover {
     background-color: #000;
     color: #fff;
 }
@@ -96,7 +98,8 @@ h1 {
     font-weight: 500;
 }
 
-.informacoes span, .informacoes button {
+.informacoes span,
+.informacoes button {
     display: inline-block;
     border: none;
     background-color: #f0f0f8;
@@ -126,4 +129,24 @@ h1 {
     background-color: #3651c9;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(74, 103, 223, 0.4);
+}
+
+.seta-voltar {
+    position: absolute;
+    top: 120px;
+    left: 60px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 50px rgba(0, 0, 0, 0.15);
+    border-radius: 40px;
+    padding: 1rem 1rem;
+}
+
+.seta-voltar:hover {
+    background-color: #f0f0f8;
+    cursor: pointer;
+}
+
+.seta-voltar .material-symbols-outlined {
+    font-weight: 500;
+    color: #000000;
 }
