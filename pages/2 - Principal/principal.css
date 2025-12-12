@@ -26,7 +26,7 @@
 #prev-btn,
 #next-btn {
     position: absolute;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 60px;
@@ -35,11 +35,11 @@
 }
 
 #prev-btn {
-    left: 0;
+    left: 28rem;
 }
 
 #next-btn {
-    right: 0;
+    right: 28rem;
 }
 
 #veja-mais{
@@ -66,6 +66,7 @@ h1 {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 2rem;
     justify-items: center;
+    align-items: center;
     padding: 2rem;
     max-width: 1200px;
 }
