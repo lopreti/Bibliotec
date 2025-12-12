@@ -156,6 +156,7 @@ function abrirPopupInformacoes() {
     });
 }
 
+
 function atualizarIniciaisUsuario() {
     const usuarioLogin = localStorage.getItem('usuarioLogin');
 

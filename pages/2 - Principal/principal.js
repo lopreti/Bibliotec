@@ -44,13 +44,15 @@ function renderizarCarrousel() {
         return;
     }
 
+    // Limita aos 3 primeiros livros do banco
+    const primeiros3 = todosOsLivros.slice(0, 3);
+    
     let livrosParaMostrar = [];
-    for (let i = 0; i < livrosPorPagina; i++) {
-        const index = (currentIndex + i) % todosOsLivros.length;
-        livrosParaMostrar.push(todosOsLivros[index]);
+    for (let i = 0; i < Math.min(3, primeiros3.length); i++) {
+        const index = (currentIndex + i) % primeiros3.length;
+        livrosParaMostrar.push(primeiros3[index]);
     }
 
-    // ...
     livrosParaMostrar.forEach((l, posicao) => {
         const classeDestaque = posicao === 1 ? 'destaque' : '';
 
@@ -61,10 +63,8 @@ function renderizarCarrousel() {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-                
         `;
     });
-// ...
 }
 
 function renderizarListaInferior() {
