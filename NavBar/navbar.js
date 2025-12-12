@@ -61,7 +61,6 @@ function setupPerfilMenu() {
     }
 }
 
-// setupNavbarTheme removed: dark-mode controls were deleted per request.
 
 function atualizarIniciaisUsuario() {
     const usuarioLogin = localStorage.getItem('usuarioLogin');
