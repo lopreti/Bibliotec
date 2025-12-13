@@ -53,7 +53,7 @@ function renderizarCarrousel() {
             const classeDestaque = posicao === Math.floor(buffer.length / 2) ? 'destaque' : '';
             containerLivros.innerHTML += `
                 <div class="livro ${classeDestaque}">
-                    <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                    <a href="../4 - Livro I/livro.html?id=${l.livro_id}&from=principal">
                         <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                     </a>
                     <h3>${l.titulo}</h3>
@@ -76,13 +76,16 @@ function renderizarCarrousel() {
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
-                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}&from=principal">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
             </div>`;
     });
+
+    // Re-anexa handlers para salvar contexto caso o usuário clique em um livro
+    attachLivroLinksPrincipal();
 }
 
 function renderizarListaInferior() {
@@ -97,7 +100,7 @@ function renderizarListaInferior() {
     todosOsLivros.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}&from=principal">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -158,7 +161,7 @@ function pesquisarLivros(termo) {
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
-                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}&from=principal">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
@@ -220,6 +223,45 @@ function inicializar() {
         const secao = document.getElementById('secao-mais-livros');
         secao.scrollIntoView({ behavior: 'smooth' });
     });
+
+    // Se houver um valor de restauração de scroll (quando vindo de um livro), aplica-o
+    const restore = sessionStorage.getItem('restoreScroll');
+    if (restore) {
+        try {
+            const y = parseInt(restore, 10);
+            window.scrollTo({ top: y, behavior: 'instant' });
+        } catch (e) { /* ignore */ }
+        sessionStorage.removeItem('restoreScroll');
+    }
+
+    // Anexa handlers nas âncoras para armazenar o contexto atual antes de navegar para a página do livro
+    function attachLivroLinks() {
+        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
+            a.addEventListener('click', () => {
+                sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
+            });
+        });
+        // Re-anexa handlers após renderizar a lista inferior
+        attachLivroLinksPrincipal();
+        // Re-anexa handlers após render de pesquisa
+        attachLivroLinksPrincipal();
+    }
+
+    // Helper para anexar handlers que salvam contexto antes de navegar ao livro
+    function attachLivroLinksPrincipal() {
+        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
+            // evita múltiplos listeners
+            a.replaceWith(a.cloneNode(true));
+        });
+        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
+            a.addEventListener('click', () => {
+                sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
+            });
+        });
+    }
+
+    // Chame após renderizações
+    attachLivroLinks();
 }
 
 document.addEventListener("DOMContentLoaded", inicializar);

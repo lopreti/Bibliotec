@@ -18,6 +18,11 @@ function carregarReservados() {
             console.log('Favoritos carregados:', data); // Debug
             todosOsLivrosReservados = data;
             renderizarReservados(data);
+            const restore = sessionStorage.getItem('restoreScroll');
+            if (restore) {
+                try { window.scrollTo({ top: parseInt(restore, 10), behavior: 'instant' }); } catch (e) {}
+                sessionStorage.removeItem('restoreScroll');
+            }
         })
         .catch(error => {
             console.error('Erro ao carregar favoritos:', error);
@@ -42,13 +47,20 @@ function renderizarReservados(livros) {
                 <button class="btn-remover" onclick="removerReserva(${livro.livro_id})" title="Remover dos Reservados">
                     📖
                 </button>
-                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}">
+                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}&from=reservados">
                     <img src="${livro.capa_url}" alt="Capa do livro ${livro.titulo}">
                 </a>
                 <h3>${livro.titulo}</h3>
                 <p>${livro.autor}</p>
             </div>
         `;
+    });
+
+    // Attach link click handlers to store return context and scroll position
+    document.querySelectorAll('#container-reservados a').forEach(a => {
+        a.addEventListener('click', () => {
+            sessionStorage.setItem('returnContext', JSON.stringify({ from: 'reservados', scrollY: window.scrollY }));
+        });
     });
 }
 

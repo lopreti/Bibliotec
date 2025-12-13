@@ -3,6 +3,79 @@ const id = params.get('id');
 
 const userId = localStorage.getItem('usuarioId');
 
+// Função para navegar de volta para a página de origem preservando posição
+function voltarParaPágina() {
+    // Primeiro tenta usar o contexto armazenado na sessão (mais confiável)
+    const stored = sessionStorage.getItem('returnContext');
+    if (stored) {
+        try {
+            const ctx = JSON.parse(stored);
+            const targetMap = {
+                principal: '/pages/2 - Principal/principal.html',
+                favoritos: '/pages/5 -Favoritos/favoritos.html',
+                reservados: '/pages/6-Reservados/reservados.html'
+            };
+            const target = targetMap[ctx.from] || document.referrer || '/pages/2 - Principal/principal.html';
+
+            // preserva posição
+            if (ctx.scrollY != null) {
+                sessionStorage.setItem('restoreScroll', String(ctx.scrollY));
+            }
+
+            // limpa o contexto para que não seja reaplicado depois
+            sessionStorage.removeItem('returnContext');
+
+            // navega
+            window.location.href = target;
+            return;
+        } catch (e) {
+            // fallback para os próximos métodos
+            console.error('Erro ao parsear returnContext', e);
+        }
+    }
+
+    // Se o parâmetro 'from' veio na URL, usa ele
+    const fromParam = params.get('from');
+    if (fromParam) {
+        const targetMap = {
+            principal: '/pages/2 - Principal/principal.html',
+            favoritos: '/pages/5 -Favoritos/favoritos.html',
+            reservados: '/pages/6-Reservados/reservados.html'
+        };
+
+        const target = targetMap[fromParam] || null;
+        if (target) {
+            // tenta preservar scroll (se houver valor previamente salvo)
+            const maybeRestore = sessionStorage.getItem('returnContext');
+            if (maybeRestore) {
+                try {
+                    const ctx = JSON.parse(maybeRestore);
+                    if (ctx.scrollY != null) sessionStorage.setItem('restoreScroll', String(ctx.scrollY));
+                } catch (e) { }
+            }
+            window.location.href = target;
+            return;
+        }
+    }
+
+    // Se houver referrer para uma página interna, volta para ela
+    if (document.referrer) {
+        const ref = document.referrer;
+        // se o referrer é uma das páginas do app, navega para ele
+        if (ref.includes('/pages/2 - Principal') || ref.includes('/pages/5 -Favoritos') || ref.includes('/pages/6-Reservados')) {
+            window.location.href = ref;
+            return;
+        }
+    }
+
+    // fallback: usa history.back() se possível, senão vai para a principal
+    if (history.length > 1) {
+        history.back();
+    } else {
+        window.location.href = '/pages/2 - Principal/principal.html';
+    }
+}
+
 function promptLogin(actionName) {
     Swal.fire({
         title: `Você precisa estar logado para ${actionName}.`,
@@ -74,6 +147,16 @@ if (id) {
 } else {
     console.log("Nenhum ID foi passado na URL");
     document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
+}
+
+// Handler do botão voltar (seta)
+const setaVoltar = document.querySelector('.seta-voltar');
+if (setaVoltar) {
+    setaVoltar.style.cursor = 'pointer';
+    setaVoltar.addEventListener('click', (e) => {
+        e.preventDefault();
+        voltarParaPágina();
+    });
 }
 
 

@@ -18,6 +18,12 @@ function carregarFavoritos() {
             console.log('Favoritos carregados:', data); // Debug
             todosOsLivrosFavoritos = data;
             renderizarFavoritos(data);
+                // Restaurar posição de scroll quando volta de um livro
+                const restore = sessionStorage.getItem('restoreScroll');
+                if (restore) {
+                    try { window.scrollTo({ top: parseInt(restore, 10), behavior: 'instant' }); } catch (e) {}
+                    sessionStorage.removeItem('restoreScroll');
+                }
         })
         .catch(error => {
             console.error('Erro ao carregar favoritos:', error);
@@ -42,13 +48,20 @@ function renderizarFavoritos(livros) {
                 <button class="btn-remover" onclick="removerFavorito(${livro.livro_id})" title="Remover dos favoritos">
                     ❤️
                 </button>
-                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}">
+                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}&from=favoritos">
                     <img src="${livro.capa_url}" alt="Capa do livro ${livro.titulo}">
                 </a>
                 <h3>${livro.titulo}</h3>
                 <p>${livro.autor}</p>
             </div>
         `;
+    });
+
+    // Attach link click handlers to store return context and scroll position
+    document.querySelectorAll('#container-favoritos a').forEach(a => {
+        a.addEventListener('click', () => {
+            sessionStorage.setItem('returnContext', JSON.stringify({ from: 'favoritos', scrollY: window.scrollY }));
+        });
     });
 }
 
