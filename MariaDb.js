@@ -5,6 +5,15 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+const path = require('path');
+// Servir arquivos estáticos do projeto para facilitar desenvolvimento
+app.use(express.static(path.join(__dirname)));
+
+// Log simples de todas as requisições para facilitar depuração
+app.use((req, res, next) => {
+    console.log(new Date().toISOString(), req.method, req.url);
+    next();
+});
 
 // Conexão com o banco
 const pool = mariadb.createPool({
@@ -371,6 +380,43 @@ app.delete('/reservados/:userId/:livroId', async (req, res) => {
     } finally {
         if (conn) conn.release();
     }
+});
+
+// ======================================================
+// BUSCAR INFORMAÇÕES DO USUÁRIO
+// ======================================================
+app.get('/usuarios/:usuario_id', async (req, res) => {
+    const { usuario_id } = req.params;
+    let conn;
+
+    console.log('Rota chamada: GET /usuarios/', usuario_id);
+    try {
+        conn = await pool.getConnection();
+
+        const rows = await conn.query(
+            'SELECT usuario_id, nome, email, cpf FROM usuarios WHERE usuario_id = ?',
+            [usuario_id]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+
+        res.json(rows[0]);
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).json({ message: 'Erro no servidor' });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+// Capturar erros globais para não fechar o processo sem log
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled Rejection:', reason);
 });
 
 app.listen(3000, () => {

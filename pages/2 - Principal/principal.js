@@ -1,5 +1,5 @@
 let todosOsLivros = [];
-let currentIndex = 0;
+let currentIndex = 0; // índice do item central dentro da janela (buffer) exibida
 const livrosPorPagina = 3;
 let originalTitulo = '';
 let originalMaisLivrosBg = '';
@@ -44,26 +44,44 @@ function renderizarCarrousel() {
         return;
     }
 
-    // Limita aos 3 primeiros livros do banco
-    const primeiros3 = todosOsLivros.slice(0, 3);
-    
-    let livrosParaMostrar = [];
-    for (let i = 0; i < Math.min(3, primeiros3.length); i++) {
-        const index = (currentIndex + i) % primeiros3.length;
-        livrosParaMostrar.push(primeiros3[index]);
+    // Janela / buffer com os primeiros 5 (ou menos) livros usados para o carrossel
+    const buffer = todosOsLivros.slice(0, Math.min(5, todosOsLivros.length));
+
+    // Se houver menos de 3 no buffer, mostramos todos
+    if (buffer.length <= 3) {
+        buffer.forEach((l, posicao) => {
+            const classeDestaque = posicao === Math.floor(buffer.length / 2) ? 'destaque' : '';
+            containerLivros.innerHTML += `
+                <div class="livro ${classeDestaque}">
+                    <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                        <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
+                    </a>
+                    <h3>${l.titulo}</h3>
+                    <p>${l.autor}</p>
+                </div>`;
+        });
+        return;
     }
 
-    livrosParaMostrar.forEach((l, posicao) => {
-        const classeDestaque = posicao === 1 ? 'destaque' : '';
+    // Buffer tem >=3 (normalmente 5). currentIndex representa o índice CENTRAL dentro do buffer
+    // Garantir que currentIndex esteja dentro do buffer
+    currentIndex = ((currentIndex % buffer.length) + buffer.length) % buffer.length;
+
+    // Os índices visíveis são: centro-1, centro, centro+1 (circular dentro do buffer)
+    const offsets = [-1, 0, 1];
+    offsets.forEach((offset, posicao) => {
+        const idx = ((currentIndex + offset + buffer.length) % buffer.length);
+        const l = buffer[idx];
+        const classeDestaque = offset === 0 ? 'destaque' : '';
 
         containerLivros.innerHTML += `
             <div class="livro ${classeDestaque}">
-            <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
+                <a href="../4 - Livro I/livro.html?id=${l.livro_id}">
                     <img src="${l.capa_url}" alt="Capa do livro ${l.titulo}">
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-        `;
+            </div>`;
     });
 }
 
@@ -160,6 +178,13 @@ function inicializar() {
             todosOsLivros = livros;
             console.log("Livros carregados:", todosOsLivros);
 
+                // Inicializa o índice central do carrossel: se houver >=5 livros, centralizamos no 3º (índice 2)
+                if (todosOsLivros.length >= 5) {
+                    currentIndex = 2;
+                } else {
+                    currentIndex = Math.floor(todosOsLivros.length / 2);
+                }
+
             renderizarCarrousel();
             renderizarListaInferior();
 
@@ -173,12 +198,15 @@ function inicializar() {
             if (h2sec) originalSectionH2Display = window.getComputedStyle(h2sec).display;
 
             document.getElementById('next-btn').addEventListener("click", () => {
-                currentIndex = (currentIndex + 1) % todosOsLivros.length;
+                // Avança o centro dentro do buffer de até 5 itens
+                const bufferLen = Math.min(5, todosOsLivros.length);
+                currentIndex = (currentIndex + 1) % bufferLen;
                 renderizarCarrousel();
             });
 
             document.getElementById('prev-btn').addEventListener("click", () => {
-                currentIndex = (currentIndex - 1 + todosOsLivros.length) % todosOsLivros.length;
+                const bufferLen = Math.min(5, todosOsLivros.length);
+                currentIndex = (currentIndex - 1 + bufferLen) % bufferLen;
                 renderizarCarrousel();
             });
         })

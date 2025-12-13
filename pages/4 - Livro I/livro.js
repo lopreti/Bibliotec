@@ -1,7 +1,21 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 
-const userId = localStorage.getItem('usuarioId') || 1;
+const userId = localStorage.getItem('usuarioId');
+
+function promptLogin(actionName) {
+    Swal.fire({
+        title: `Você precisa estar logado para ${actionName}.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Entrar',
+        cancelButtonText: 'Cancelar'
+    }).then(result => {
+        if (result.isConfirmed) {
+            window.location.href = '/pages/1 - Login/login.html';
+        }
+    });
+}
 
 // =========================
 //  CARREGAR DADOS DO LIVRO
@@ -69,6 +83,12 @@ if (id) {
 // =========================
 
 function verificarFavorito(livroId) {
+    if (!userId) {
+        // Não está logado: deixa botão disponível para redirecionar ao login
+        atualizarBotaoFavorito(false, livroId);
+        return;
+    }
+
     fetch(`http://localhost:3000/favoritos/${userId}`)
         .then(res => res.json())
         .then(favoritos => {
@@ -93,11 +113,19 @@ function atualizarBotaoFavorito(jaFavoritado, livroId) {
         btnFavoritar.innerHTML = '❤️ Favoritar';
         btnFavoritar.style.backgroundColor = '';
         btnFavoritar.style.color = '';
-        btnFavoritar.onclick = () => adicionarFavorito(livroId);
+        if (!userId) {
+            btnFavoritar.onclick = () => promptLogin('favoritar este livro');
+        } else {
+            btnFavoritar.onclick = () => adicionarFavorito(livroId);
+        }
     }
 }
 
 function adicionarFavorito(livroId) {
+    if (!userId) {
+        promptLogin('favoritar este livro');
+        return;
+    }
     const btnFavoritar = document.querySelector('.favoritar button');
     btnFavoritar.disabled = true;
     btnFavoritar.innerHTML = 'Adicionando...';
@@ -189,6 +217,11 @@ function removerFavorito(livroId) {
 // =========================
 
 function verificarReservado(livroId) {
+    if (!userId) {
+        atualizarReservados(false, livroId);
+        return;
+    }
+
     fetch(`http://localhost:3000/reservados/${userId}`)
         .then(res => res.json())
         .then(reservados => {
@@ -213,11 +246,19 @@ function atualizarReservados(jaReservado, livroId) {
         btnReservar.innerHTML = '📖 Reservar';
         btnReservar.style.backgroundColor = '';
         btnReservar.style.color = '';
-        btnReservar.onclick = () => adicionarReservado(livroId);
+        if (!userId) {
+            btnReservar.onclick = () => promptLogin('reservar este livro');
+        } else {
+            btnReservar.onclick = () => adicionarReservado(livroId);
+        }
     }
 }
 
 function adicionarReservado(livroId) {
+    if (!userId) {
+        promptLogin('reservar este livro');
+        return;
+    }
     const btnReservar = document.querySelector('.reservar button');
     btnReservar.disabled = true;
     btnReservar.innerHTML = 'Adicionando...';

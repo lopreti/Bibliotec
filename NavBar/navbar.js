@@ -16,7 +16,22 @@ function setupPerfilMenu() {
     try {
         const perfilWrap = document.querySelector('.perfil');
         if (!perfilWrap) return;
+        // Se já existe um botão de entrar, não recria
+        if (perfilWrap.querySelector('.entrar')) return;
 
+        const usuarioLogin = localStorage.getItem('usuarioLogin');
+
+        // Se o usuário NÃO está logado, mostra botão "Entrar"
+        if (!usuarioLogin) {
+            perfilWrap.innerHTML = `<button id="btn-entrar" class="entrar">Entrar</button>`;
+            const btnEntrar = document.getElementById('btn-entrar');
+            if (btnEntrar) btnEntrar.addEventListener('click', () => {
+                window.location.href = '/pages/1 - Login/login.html';
+            });
+            return;
+        }
+
+        // Usuário logado: cria menu com Informações e Logout
         if (perfilWrap.querySelector('.perfil-menu')) return;
 
         const menu = document.createElement('div');
@@ -62,7 +77,8 @@ function setupPerfilMenu() {
 
                     if (result.isConfirmed) {
                         localStorage.removeItem('usuarioLogin');
-                        window.location.href = '../1 - Login/login.html';
+                        localStorage.removeItem('usuarioId');
+                        window.location.href = '/pages/1 - Login/login.html';
                     }
                 });
             });
@@ -119,19 +135,19 @@ function abrirPopupInformacoes() {
 
         <div class="info-section">
             <div class="info-label">Nome de Usuário:</div>
-            <div class="info-value">-</div>
+            <div class="info-value" id="info-nome">Carregando...</div>
         </div>
         <div class="info-section">
             <div class="info-label">CPF:</div>
-            <div class="info-value">-</div>
+            <div class="info-value" id="info-cpf">Carregando...</div>
         </div>
         <div class="info-section">
             <div class="info-label">Email:</div>
-            <div class="info-value">-</div>
+            <div class="info-value" id="info-email">Carregando...</div>
         </div>
         <div class="info-section">
             <div class="info-label">Telefone:</div>
-            <div class="info-value">-</div>
+            <div class="info-value" id="info-telefone">-</div>
         </div>
     `;
 
@@ -154,6 +170,103 @@ function abrirPopupInformacoes() {
     popup.addEventListener('click', (e) => {
         e.stopPropagation();
     });
+
+    // BUSCAR DADOS DO USUÁRIO E PREENCHER
+    (async () => {
+        try {
+            const usuarioId = localStorage.getItem('usuarioId');
+            if (!usuarioId) {
+                Swal.fire({ icon: 'warning', title: 'Você não está logado', text: 'Faça login para ver suas informações.' });
+                overlay.remove();
+                return;
+            }
+
+            // Log útil para diagnosticar diferenças entre navegadores
+            console.log('INFO de localização:', { href: location.href, protocol: location.protocol, origin: location.origin, hostname: location.hostname });
+
+            // Tentamos múltiplos candidatos de base para lidar com diferenças de resolução entre navegadores
+            const candidates = [];
+            // Se a página está servida por um host (ex: http://localhost:3000/...), usamos caminho relativo primeiro
+            if (location.hostname) candidates.push('');
+            // Hosts comuns a tentar
+            candidates.push('http://localhost:3000');
+            candidates.push('http://127.0.0.1:3000');
+
+            let resp = null;
+            let usedUrl = null;
+
+            for (const base of candidates) {
+                const candidateUrl = `${base}/usuarios/${usuarioId}`.replace('//usuarios', '/usuarios');
+                console.log('Tentando URL:', candidateUrl);
+                try {
+                    // Usamos GET direto porque queremos o corpo; em caso de 404 tentamos próximos candidatos
+                    const r = await fetch(candidateUrl, { method: 'GET' });
+                    console.log('Resposta de', candidateUrl, r.status);
+                    if (r.status === 200) {
+                        resp = r;
+                        usedUrl = candidateUrl;
+                        break;
+                    }
+                    // Se recebeu 404, tenta próximo candidato antes de reportar erro
+                    if (r.status === 404) {
+                        const body = await r.text().catch(() => '');
+                        console.warn('404 de', candidateUrl, body.slice(0, 200));
+                        continue;
+                    }
+                    // Para outros códigos, guarda a resposta e deixa o fluxo tratar
+                    resp = r;
+                    usedUrl = candidateUrl;
+                    break;
+                } catch (e) {
+                    console.warn('Erro ao tentar', candidateUrl, e.message || e);
+                    // tenta próximo candidato
+                }
+            }
+
+            if (!resp) {
+                throw new Error('Nenhuma URL disponível para buscar dados do usuário');
+            }
+
+            if (!resp.ok) {
+                // tenta extrair mensagem clara do corpo
+                let body = '';
+                try { body = await resp.text(); } catch (e) { /* ignore */ }
+                console.error('Resposta inesperada ao buscar usuário:', resp.status, body);
+
+                if (resp.status === 404) {
+                    // corpo pode estar em JSON { message: '...' } ou ser HTML
+                    try {
+                        const json = JSON.parse(body);
+                        Swal.fire({ icon: 'warning', title: 'Não encontrado', text: json.message || 'Usuário não encontrado.' });
+                    } catch (e) {
+                        Swal.fire({ icon: 'warning', title: 'Não encontrado', text: 'Usuário não encontrado.' });
+                    }
+                    overlay.remove();
+                    return;
+                }
+
+                throw new Error(`Falha ao obter dados do usuário (status ${resp.status})`);
+            }
+
+            const data = await resp.json();
+
+            const elNome = document.getElementById('info-nome');
+            const elCpf = document.getElementById('info-cpf');
+            const elEmail = document.getElementById('info-email');
+            const elTelefone = document.getElementById('info-telefone');
+
+            if (elNome) elNome.textContent = data.nome || '-';
+            if (elCpf) elCpf.textContent = data.cpf || '-';
+            if (elEmail) elEmail.textContent = data.email || '-';
+            // telefone may not exist in DB
+            if (elTelefone) elTelefone.textContent = data.telefone || '-';
+
+        } catch (err) {
+            console.error('Erro ao carregar informações do usuário:', err);
+            Swal.fire({ icon: 'error', title: 'Erro', text: 'Não foi possível carregar suas informações.' });
+            overlay.remove();
+        }
+    })();
 }
 
 

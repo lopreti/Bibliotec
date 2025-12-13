@@ -84,6 +84,19 @@
 .perfil-menu button:hover { background: rgba(0,0,0,0.04); }
 
 .perfil-menu button.logout { color: #e74c3c; }
+
+/* Botão entrar no lugar das iniciais quando não logado */
+.perfil .entrar {
+    background: transparent;
+    border: 2px solid #4A67DF;
+    color: #4A67DF;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.perfil .entrar:hover { background: rgba(74,103,223,0.08); }
  
 
 .info-section {
@@ -95,6 +108,7 @@
 }
 
 .info-label {
+    margin-bottom: 10px;
     font-size: 16px;
     font-weight: 500;
 }
