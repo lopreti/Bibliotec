@@ -34,6 +34,21 @@ function restaurarLayoutOriginal() {
     if (h2sec && originalSectionH2Display) h2sec.style.display = originalSectionH2Display;
 }
 
+// Helper global para anexar handlers que salvam contexto antes de navegar ao livro
+function attachLivroLinksPrincipal() {
+    // Remove listeners antigos clonando os elementos para evitar duplicação
+    document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
+        const newA = a.cloneNode(true);
+        a.parentNode.replaceChild(newA, a);
+    });
+    // Anexa listener para salvar contexto de retorno
+    document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
+        a.addEventListener('click', () => {
+            sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
+        });
+    });
+}
+
 function renderizarCarrousel() {
     const containerLivros = document.querySelector(".livros");
     containerLivros.classList.add('carrossel');
@@ -60,6 +75,8 @@ function renderizarCarrousel() {
                     <p>${l.autor}</p>
                 </div>`;
         });
+        // Anexa handlers para os links mesmo quando temos <=3 itens
+        attachLivroLinksPrincipal();
         return;
     }
 
@@ -105,10 +122,11 @@ function renderizarListaInferior() {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-               
+                </div>
         `;
     });
-// ...
+    // Re-anexa handlers após renderizar a lista inferior
+    attachLivroLinksPrincipal();
 }
 
 function aplicarLayoutPesquisa() {
@@ -166,9 +184,11 @@ function pesquisarLivros(termo) {
                 </a>
                 <h3>${l.titulo}</h3>
                 <p>${l.autor}</p>
-               
+                </div>
         `;
     });
+    // Re-anexa handlers após render de pesquisa
+    attachLivroLinksPrincipal();
 // ...
 }
 
@@ -234,34 +254,8 @@ function inicializar() {
         sessionStorage.removeItem('restoreScroll');
     }
 
-    // Anexa handlers nas âncoras para armazenar o contexto atual antes de navegar para a página do livro
-    function attachLivroLinks() {
-        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
-            a.addEventListener('click', () => {
-                sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
-            });
-        });
-        // Re-anexa handlers após renderizar a lista inferior
-        attachLivroLinksPrincipal();
-        // Re-anexa handlers após render de pesquisa
-        attachLivroLinksPrincipal();
-    }
-
-    // Helper para anexar handlers que salvam contexto antes de navegar ao livro
-    function attachLivroLinksPrincipal() {
-        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
-            // evita múltiplos listeners
-            a.replaceWith(a.cloneNode(true));
-        });
-        document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
-            a.addEventListener('click', () => {
-                sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
-            });
-        });
-    }
-
     // Chame após renderizações
-    attachLivroLinks();
+    attachLivroLinksPrincipal();
 }
 
 document.addEventListener("DOMContentLoaded", inicializar);

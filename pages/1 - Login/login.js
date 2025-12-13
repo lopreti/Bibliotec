@@ -10,7 +10,6 @@ document.addEventListener("keydown", function (e) {
     }
 });
 
-
 document.getElementById('btnBotao').addEventListener('click', async () => {
     const identifier = document.getElementById('identifier').value.trim();
     const senha = document.querySelector('input[type="password"]').value.trim();
@@ -19,16 +18,19 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
     console.log('Senha:', senha);
 
     const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-});
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+    });
 
     // Validação básica
     if (!identifier || !senha) {
-        Toast.fire('Por favor, preencha todos os campos!');
+        Toast.fire({
+            title: 'Por favor, preencha todos os campos!',
+            icon: 'warning'
+        });
         return;
     }
 
@@ -53,22 +55,50 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         console.log('Response data:', data);
 
         if (response.ok && data.success) {
-            // Armazena o usuário no localStorage (nome usado para iniciais)
+            // Armazena os dados do usuário no localStorage
             localStorage.setItem('usuarioId', data.usuario_id);
             localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
+            
+            // ========== PARTE IMPORTANTE: Salvar dados completos do usuário ==========
+            localStorage.setItem('usuario', JSON.stringify({
+                usuario_id: data.usuario_id,
+                nome: data.nome,
+                email: data.email,
+                CPF: data.CPF,
+                is_admin: data.is_admin
+            }));
+            
+            // Se tiver token, salva também
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
 
             console.log('Login bem-sucedido, redirecionando...');
+            
             Toast.fire({
-                icon: "sucess",
+                title: 'Login realizado com sucesso!',
+                icon: 'success',
                 timer: 1500,
                 showConfirmButton: false
             });
 
-            window.location.href = '../2 - Principal/principal.html';
+            // ========== REDIRECIONAR BASEADO NO TIPO DE USUÁRIO ==========
+            setTimeout(() => {
+                if (data.is_admin === 1 || data.is_admin === true) {
+                    // Se for admin, vai para painel administrativo
+                    console.log('Usuário é admin, redirecionando para painel admin');
+                    window.location.href = '../8 - Adm/adm.html';
+                } else {
+                    // Se for usuário comum, vai para página principal
+                    console.log('Usuário comum, redirecionando para página principal');
+                    window.location.href = '../2 - Principal/principal.html';
+                }
+            }, 1500);
+
         } else {
             Toast.fire({
                 title: (data.message || 'Erro ao fazer login. Verifique suas credenciais.'),
-                icon: "error",
+                icon: 'error',
                 timer: 1500,
                 showConfirmButton: false
             });
@@ -76,8 +106,8 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
     } catch (error) {
         console.error('Erro completo:', error);
         Swal.fire({
-            title: ('Erro ao conectar com o servidor. Verifique se ele está rodando.'),
-            icon: "error",
+            title: 'Erro ao conectar com o servidor. Verifique se ele está rodando.',
+            icon: 'error',
             timer: 1500,
             showConfirmButton: false
         });
