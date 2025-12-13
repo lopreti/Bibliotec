@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           11.8.2-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           12.0.2-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.10.0.7000
+-- HeidiSQL Versão:              12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -44,13 +44,8 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   CONSTRAINT `FK_favoritos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.favoritos: ~8 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.favoritos: ~10 rows (aproximadamente)
 INSERT INTO `favoritos` (`id`, `usuario_id`, `livro_id`) VALUES
-	(36, 1, 1),
-	(37, 1, 1),
-	(38, 1, 3),
-	(39, 1, 2),
-	(40, 1, 2),
 	(46, 3, 2),
 	(48, 4, 2),
 	(49, 4, 1),
@@ -154,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   CONSTRAINT `FK_reservas_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.reservas: ~2 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.reservas: ~10 rows (aproximadamente)
 INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `criado_em`) VALUES
 	(7, 3, 1, NULL, NULL, NULL, NULL),
 	(10, 4, 1, NULL, NULL, NULL, NULL),
@@ -171,20 +166,21 @@ INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `usuario_id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
-  `senha` varchar(50) NOT NULL,
+  `senha` varchar(255) NOT NULL,
   `nome` varchar(250) NOT NULL,
   `CPF` varchar(11) NOT NULL,
+  `is_admin` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~5 rows (aproximadamente)
-INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
-	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890'),
-	(2, 'teste@example.com', 'password123', 'Teste Usuario', '12345678901'),
-	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900'),
-	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109'),
-	(5, 'lopretis@gmail.com', '12345678', 'isabella lopreti', '78965412300');
+INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`) VALUES
+	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890', 0),
+	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900', 0),
+	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109', 0),
+	(5, 'lopretis@gmail.com', '12345678', 'isabella lopreti', '78965412300', 0),
+	(6, 'admin@biblioteca.com', 'admin123', 'Admin Master', '999999999', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
