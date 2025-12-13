@@ -1,3 +1,6 @@
+/* ======================================================
+   RESET E ESTILOS GLOBAIS
+   ====================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +19,9 @@ body {
   padding: 20px;
 }
 
-/* HEADER */
+/* ======================================================
+   HEADER E BOTÃO DE LOGOUT
+   ====================================================== */
 header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -62,7 +67,9 @@ header h1 {
   color: #667eea;
 }
 
-/* NAVEGAÇÃO */
+/* ======================================================
+   NAVEGAÇÃO (MENU)
+   ====================================================== */
 nav {
   background-color: white;
   padding: 15px 20px;
@@ -97,7 +104,9 @@ nav {
   color: white;
 }
 
-/* MAIN */
+/* ======================================================
+   ESTILOS PRINCIPAIS (MAIN) E ANIMAÇÃO
+   ====================================================== */
 main {
   background-color: white;
   padding: 30px;
@@ -106,9 +115,9 @@ main {
   min-height: 500px;
 }
 
-.admin-only {
-  display: none;
-}
+/* .admin-only {
+    display: none;
+} */
 
 .secao {
   animation: fadeIn 0.3s;
@@ -132,8 +141,12 @@ h2 {
   font-weight: 600;
 }
 
-/* BOTÕES */
-.btn-adicionar {
+/* ======================================================
+   ESTILOS DOS BOTÕES
+   ====================================================== */
+
+/* Botão de Ação Principal (Adicionar, Salvar) */
+.btn-adicionar, .btn-salvar {
   background-color: #27ae60;
   color: white;
   border: none;
@@ -145,12 +158,30 @@ h2 {
   transition: all 0.3s;
 }
 
-.btn-adicionar:hover {
+.btn-adicionar:hover, .btn-salvar:hover {
   background-color: #229954;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
 }
 
+/* Botões Secundários */
+.btn-cancelar {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-cancelar:hover {
+  background-color: #7f8c8d;
+}
+
+/* Botões de Ação na Tabela/Lista */
 .btn-editar-item {
   background-color: #3498db;
   color: white;
@@ -181,6 +212,22 @@ h2 {
   background-color: #c0392b;
 }
 
+.btn-detalhes {
+  background-color: #9b59b6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.btn-detalhes:hover {
+  background-color: #8e44ad;
+}
+
+/* Botões Específicos de Usuário */
 .btn-tornar-admin {
   background-color: #27ae60;
   color: white;
@@ -211,54 +258,9 @@ h2 {
   background-color: #e67e22;
 }
 
-.btn-salvar {
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s;
-}
-
-.btn-salvar:hover {
-  background-color: #229954;
-}
-
-.btn-cancelar {
-  background-color: #95a5a6;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s;
-}
-
-.btn-cancelar:hover {
-  background-color: #7f8c8d;
-}
-
-.btn-detalhes {
-  background-color: #9b59b6;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.3s;
-}
-
-.btn-detalhes:hover {
-  background-color: #8e44ad;
-}
-
-/* FILTROS */
+/* ======================================================
+   FILTROS E INPUTS DE BUSCA
+   ====================================================== */
 .filtros {
   display: flex;
   gap: 15px;
@@ -288,7 +290,9 @@ h2 {
   background-color: white;
 }
 
-/* CONTAINERS */
+/* ======================================================
+   LISTAS (USUÁRIOS, LIVROS, RESERVAS)
+   ====================================================== */
 #usuarios-container,
 #livros-container,
 #reservas-container {
@@ -348,7 +352,9 @@ h2 {
   flex-wrap: wrap;
 }
 
-/* BADGES */
+/* ======================================================
+   BADGES DE STATUS E PERMISSÃO
+   ====================================================== */
 .admin-badge {
   background-color: #27ae60;
   color: white;
@@ -405,7 +411,9 @@ h2 {
   font-weight: bold;
 }
 
-/* MODAL */
+/* ======================================================
+   MODAIS (Pop-ups de Formulário)
+   ====================================================== */
 .modal {
   display: none;
   position: fixed;
@@ -492,7 +500,9 @@ h2 {
   margin-top: 25px;
 }
 
-/* PERFIL */
+/* ======================================================
+   SEÇÃO PERFIL DO USUÁRIO
+   ====================================================== */
 .perfil-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -519,7 +529,10 @@ h2 {
   margin-top: 15px;
 }
 
-/* RETIRADAS */
+/* ======================================================
+   FORMS ESPECÍFICOS (RETIRADAS E DETALHES)
+   ====================================================== */
+/* Retiradas */
 .form-retirada {
   max-width: 600px;
 }
@@ -536,7 +549,7 @@ h2 {
   font-size: 14px;
 }
 
-/* DETALHES DO LIVRO */
+/* Detalhes do Livro */
 #detalhes-livro-content {
   margin: 20px 0;
 }
@@ -550,10 +563,12 @@ h2 {
 #detalhes-livro-content strong {
   color: #2c3e50;
   display: inline-block;
-  width: 150px;
+  width: 150px; /* Alinhamento dos rótulos */
 }
 
-/* LOADING E MENSAGENS */
+/* ======================================================
+   MENSAGENS DE FEEDBACK E ESTADO VAZIO
+   ====================================================== */
 .loading {
   text-align: center;
   padding: 40px;
@@ -590,7 +605,9 @@ h2 {
   margin-bottom: 10px;
 }
 
-/* RESPONSIVO */
+/* ======================================================
+   RESPONSIVIDADE (MEDIA QUERIES)
+   ====================================================== */
 @media (max-width: 768px) {
   .perfil-container {
     grid-template-columns: 1fr;

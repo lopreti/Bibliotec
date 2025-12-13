@@ -88,7 +88,7 @@ form.addEventListener("submit", async function (e) {
                 showConfirmButton: false
             });
             setTimeout(() => {
-                window.location.href = '../1 - Login/login.html';
+                window.location.href = '/pages/1 - Login/login.html';
             }, 1500);
 
         } else {

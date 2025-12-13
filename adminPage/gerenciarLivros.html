@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Gerenciar Livros</title>
+    <link rel="stylesheet" href="/adminPage/adm.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Painel Administrativo - Biblioteca</h1>
+            <div class="header-info">
+                <span id="nome-admin">Admin</span>
+                <button onclick="logout()" class="btn-logout">Sair</button>
+            </div>
+        </header>
+
+        <nav id="menu-admin" class="admin-only">
+            <button onclick="window.location.href = '/adminPage/gerenciarUsuarios.html'" class="btn-menu">Gerenciar
+                Usuários</button>
+            <button onclick="window.location.href = '/adminPage/gerenciarLivros.html'" class="btn-menu active">Gerenciar
+                Livros</button>
+            <button onclick="window.location.href = '/adminPage/verReservas.html'" class="btn-menu">Ver
+                Reservas</button>
+            <button onclick="window.location.href = '/adminPage/meuPerfil.html'" class="btn-menu">Meu Perfil</button>
+        </nav>
+
+        <main>
+            <section id="secao-livros" class="secao admin-only">
+                <div class="secao-header">
+                    <h2>Gerenciar Livros</h2>
+                    <button onclick="abrirModalCadastrarLivro()" class="btn-adicionar">+ Cadastrar Novo Livro</button>
+                </div>
+
+                <div class="filtros">
+                    <input type="text" id="busca-livro" placeholder="Buscar por título ou autor..."
+                        onkeyup="filtrarLivros()">
+                    <select id="filtro-status" onchange="filtrarLivros()">
+                        <option value="todos">Todos os livros</option>
+                        <option value="ativos">Apenas ativos</option>
+                        <option value="inativos">Apenas inativos</option>
+                    </select>
+                </div>
+
+                <div id="livros-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-livro" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalLivro()">&times;</span>
+            <h2 id="modal-titulo">Cadastrar Novo Livro</h2>
+            <form id="form-livro" onsubmit="salvarLivro(event)">
+                <input type="hidden" id="livro-id">
+                <div class="form-group"> <label>Título:*</label> <input type="text" id="livro-titulo" required> </div>
+                <div class="form-group"> <label>Autor:*</label> <input type="text" id="livro-autor" required> </div>
+                <div class="form-group"> <label>Ano de Publicação:*</label> <input type="number" id="livro-ano"
+                        min="1000" max="2100" required> </div>
+                <div class="form-group"> <label>Categoria:*</label> <input type="text" id="livro-categoria" required>
+                </div>
+                <div class="form-group"> <label>Quantidade de Páginas:*</label> <input type="number"
+                        id="livro-quantidade" min="1" required> </div>
+                <div class="form-group"> <label>Idioma:*</label> <input type="text" id="livro-idioma" required> </div>
+                <div class="form-group"> <label>Capa URL:*</label> <input type="text" id="livro-capa-url" required>
+                </div>
+                <div class="form-group"> <label>Descrição:*</label> <textarea id="livro-descricao" rows="4"
+                        required></textarea> </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-salvar">Salvar</button>
+                    <button type="button" onclick="fecharModalLivro()" class="btn-cancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-detalhes-livro" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalDetalhes()">&times;</span>
+            <h2>Detalhes do Livro</h2>
+            <div id="detalhes-livro-content"></div>
+            <button onclick="fecharModalDetalhes()" class="btn-cancelar">Fechar</button>
+        </div>
+    </div>
+
+    <script src="/adminPage/adm.js"></script>
+    <script src="/adminPage/gerenciarLivros.js"></script>
+    <script>
+        // Inicializa o carregamento de dados ao carregar a página
+        document.addEventListener('DOMContentLoaded', carregarLivros);
+    </script>
+</body>
+
+</html>

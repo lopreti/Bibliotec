@@ -1,4 +1,4 @@
-// clicar no enter e ja envia as respostas
+// O listener para a tecla 'Enter' está correto
 const identifier = document.getElementById("identifier");
 const senha = document.getElementById("senha");
 const btn = document.getElementById("btnBotao");
@@ -11,11 +11,12 @@ document.addEventListener("keydown", function (e) {
 });
 
 document.getElementById('btnBotao').addEventListener('click', async () => {
-    const identifier = document.getElementById('identifier').value.trim();
-    const senha = document.querySelector('input[type="password"]').value.trim();
+    // Captura os valores do formulário
+    const identifierValue = document.getElementById('identifier').value.trim();
+    const senhaValue = document.querySelector('input[type="password"]').value.trim();
 
-    console.log('Identifier:', identifier);
-    console.log('Senha:', senha);
+    console.log('Identifier:', identifierValue);
+    console.log('Senha:', senhaValue);
 
     const Toast = Swal.mixin({
         toast: true,
@@ -26,7 +27,7 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
     });
 
     // Validação básica
-    if (!identifier || !senha) {
+    if (!identifierValue || !senhaValue) {
         Toast.fire({
             title: 'Por favor, preencha todos os campos!',
             icon: 'warning'
@@ -43,8 +44,9 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                identifier: identifier,
-                senha: senha
+                // Usamos identifierValue e senhaValue na requisição
+                identifier: identifierValue,
+                senha: senhaValue
             })
         });
 
@@ -57,9 +59,9 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         if (response.ok && data.success) {
             // Armazena os dados do usuário no localStorage
             localStorage.setItem('usuarioId', data.usuario_id);
-            localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
+            localStorage.setItem('usuarioLogin', data.nome || data.email || identifierValue);
             
-            // ========== PARTE IMPORTANTE: Salvar dados completos do usuário ==========
+            // Salvar dados completos do usuário
             localStorage.setItem('usuario', JSON.stringify({
                 usuario_id: data.usuario_id,
                 nome: data.nome,
@@ -85,13 +87,16 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
             // ========== REDIRECIONAR BASEADO NO TIPO DE USUÁRIO ==========
             setTimeout(() => {
                 if (data.is_admin === 1 || data.is_admin === true) {
-                    // Se for admin, vai para painel administrativo
+                    // Se for admin, vai para o painel administrativo
+                    // USAMOS 'gerenciarLivros.html' pois 'adm.html' não existe na sua lista
                     console.log('Usuário é admin, redirecionando para painel admin');
-                    window.location.href = '../8 - Adm/adm.html';
+                    window.location.href = '/adminPage/gerenciarUsuarios.html'; 
                 } else {
                     // Se for usuário comum, vai para página principal
+                    // USAMOS CAMINHO ABSOLUTO para evitar problemas de "../"
                     console.log('Usuário comum, redirecionando para página principal');
-                    window.location.href = '../2 - Principal/principal.html';
+                    window.location.href = '/pages/2 - Principal/principal.html'; 
+
                 }
             }, 1500);
 
@@ -108,7 +113,8 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         Swal.fire({
             title: 'Erro ao conectar com o servidor. Verifique se ele está rodando.',
             icon: 'error',
-            timer: 1500,
+            // Aumentei o timer para dar tempo de ler a mensagem de erro crítico
+            timer: 3000, 
             showConfirmButton: false
         });
     }

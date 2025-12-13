@@ -1,10 +1,15 @@
 let todosOsLivrosReservados = [];
 
-const userId = localStorage.getItem('usuarioId') || 1;
+const userId = localStorage.getItem('usuarioId');
 
-window.addEventListener('load', () => {
-    carregarReservados();
-});
+if (!userId) {
+    document.getElementById('container-reservados').innerHTML =
+        '<p class="mensagem-vazio">Você precisa estar logado para ver seus reservados.</p>';
+} else {
+    window.addEventListener('load', () => {
+        carregarReservados();
+    });
+}
 
 function carregarReservados() {
     fetch(`http://localhost:3000/reservados/${userId}`)
@@ -15,17 +20,20 @@ function carregarReservados() {
             return response.json();
         })
         .then(data => {
-            console.log('Favoritos carregados:', data); // Debug
+            console.log('Reservados carregados:', data); // Debug
             todosOsLivrosReservados = data;
             renderizarReservados(data);
+
             const restore = sessionStorage.getItem('restoreScroll');
             if (restore) {
-                try { window.scrollTo({ top: parseInt(restore, 10), behavior: 'instant' }); } catch (e) {}
+                try {
+                    window.scrollTo({ top: parseInt(restore, 10), behavior: 'instant' });
+                } catch (e) {}
                 sessionStorage.removeItem('restoreScroll');
             }
         })
         .catch(error => {
-            console.error('Erro ao carregar favoritos:', error);
+            console.error('Erro ao carregar reservados:', error);
             document.getElementById('container-reservados').innerHTML =
                 '<p class="mensagem-vazio">Erro ao carregar reservados. Verifique se o servidor está rodando.</p>';
         });
@@ -47,7 +55,7 @@ function renderizarReservados(livros) {
                 <button class="btn-remover" onclick="removerReserva(${livro.livro_id})" title="Remover dos Reservados">
                     📖
                 </button>
-                <a href="..//4 - Livro I/livro.html?id=${livro.livro_id}&from=reservados">
+                <a href="../4 - Livro I/livro.html?id=${livro.livro_id}&from=reservados">
                     <img src="${livro.capa_url}" alt="Capa do livro ${livro.titulo}">
                 </a>
                 <h3>${livro.titulo}</h3>
@@ -56,10 +64,12 @@ function renderizarReservados(livros) {
         `;
     });
 
-    // Attach link click handlers to store return context and scroll position
     document.querySelectorAll('#container-reservados a').forEach(a => {
         a.addEventListener('click', () => {
-            sessionStorage.setItem('returnContext', JSON.stringify({ from: 'reservados', scrollY: window.scrollY }));
+            sessionStorage.setItem(
+                'returnContext',
+                JSON.stringify({ from: 'reservados', scrollY: window.scrollY })
+            );
         });
     });
 }
@@ -73,20 +83,21 @@ function pesquisarLivros(pesquisa) {
     }
 
     const livrosFiltrados = todosOsLivrosReservados.filter(livro => {
-        const titulo = livro.titulo.toLowerCase();
-        const autor = livro.autor.toLowerCase();
-        return titulo.includes(pesquisaBusca) || autor.includes(pesquisaBusca);
+        return (
+            livro.titulo.toLowerCase().includes(pesquisaBusca) ||
+            livro.autor.toLowerCase().includes(pesquisaBusca)
+        );
     });
 
-    const container = document.getElementById('container-reservados');
-
     if (livrosFiltrados.length === 0) {
-        container.innerHTML = '<p class="mensagem-vazio">Nenhum livro encontrado</p>';
+        document.getElementById('container-reservados').innerHTML =
+            '<p class="mensagem-vazio">Nenhum livro encontrado</p>';
         return;
     }
 
     renderizarReservados(livrosFiltrados);
 }
+
 function removerReserva(livroId) {
     Swal.fire({
         title: "Deseja remover este livro dos reservados?",
@@ -104,12 +115,10 @@ function removerReserva(livroId) {
             .then(data => {
                 console.log(data.message);
 
-                // REMOVE DO ARRAY LOCAL
                 todosOsLivrosReservados = todosOsLivrosReservados.filter(
-                    fav => fav.livro_id !== livroId
+                    livro => livro.livro_id !== livroId
                 );
 
-                // ATUALIZA A LISTA NA TELA
                 renderizarReservados(todosOsLivrosReservados);
 
                 Swal.fire({
@@ -120,10 +129,9 @@ function removerReserva(livroId) {
                 });
             })
             .catch(error => {
-                console.error('Erro ao remover favorito:', error);
-                
+                console.error('Erro ao remover reserva:', error);
                 Swal.fire({
-                    title: "Erro ao remover favorito",
+                    title: "Erro ao remover reserva",
                     icon: "error",
                     timer: 1500,
                     showConfirmButton: false
