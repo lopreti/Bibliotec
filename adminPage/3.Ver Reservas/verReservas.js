@@ -36,7 +36,6 @@ function mostrarReservas(reservas) {
         let statusTexto = 'PENDENTE';
         let statusClasse = 'status-pendente';
 
-        // Ajuste para tratar todos os status corretamente
         switch (reserva.status) {
             case 'reservado':
                 statusTexto = 'RESERVADO';
