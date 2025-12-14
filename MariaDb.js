@@ -608,7 +608,7 @@ app.post('/login', async (req, res) => {
 
         const rows = await conn.query(
 
-            'SELECT usuario_id, nome, email, CPF, is_admin FROM usuarios WHERE (email = ? OR CPF = ?) AND senha = ?',
+            'SELECT usuario_id, nome, email, CPF as cpf, telefone, is_admin FROM usuarios WHERE (email = ? OR CPF = ?) AND senha = ?',
 
             [idValue, idValue, senha]
 
@@ -648,6 +648,8 @@ app.post('/login', async (req, res) => {
 
             CPF: usuario.CPF,
 
+            telefone: usuario.telefone,
+            
             is_admin: usuario.is_admin,  // ← IMPORTANTE: retornar o campo is_admin
 
             message: 'Login realizado com sucesso!'
@@ -682,7 +684,7 @@ app.post('/login', async (req, res) => {
 
 app.post('/cadastro', async (req, res) => {
 
-    const { nome, email, cpf, senha } = req.body;
+    const { nome, email, cpf, telefone, senha } = req.body;
 
     let conn;
 
@@ -690,7 +692,7 @@ app.post('/cadastro', async (req, res) => {
 
     // Validações
 
-    if (!nome || !email || !cpf || !senha) {
+    if (!nome || !email || !cpf || !telefone || !senha) {
 
         return res.status(400).json({
 
@@ -754,9 +756,9 @@ app.post('/cadastro', async (req, res) => {
 
         await conn.query(
 
-            'INSERT INTO usuarios (nome, email, CPF, senha, is_admin) VALUES (?, ?, ?, ?, FALSE)',
+            'INSERT INTO usuarios (nome, email, CPF as cpf, telefone, senha, is_admin) VALUES (?, ?, ?, ?, FALSE)',
 
-            [nome, email, cpf, senha]
+            [nome, email, cpf, telefone, senha]
 
         );
 
@@ -841,51 +843,29 @@ app.get('/reservados/:usuario_id', async (req, res) => {
 // Adicionar uma reserva
 
 app.post('/reservados', async (req, res) => {
-
     const { usuario_id, livro_id } = req.body;
-
     let conn;
 
-
-
     try {
-
         conn = await pool.getConnection();
 
-
-
+        // ✅ CORRIGIDO: data_reserva -> data_retirada e status -> "reservado"
         await conn.query(
-
-            'INSERT INTO reservas (usuario_id, livro_id, data_reserva, status) VALUES (?, ?, NOW(), "pendente")',
-
+            'INSERT INTO reservas (usuario_id, livro_id, data_retirada, status) VALUES (?, ?, NOW(), "reservado")',
             [usuario_id, livro_id]
-
         );
 
-
-
         res.json({ message: 'Reserva adicionada!' });
-
     } catch (error) {
-
         // Ignora erro de duplicidade
-
         if (error.code && error.code.includes('ER_DUP_ENTRY')) {
-
             return res.status(200).json({ message: "Livro já está reservado por você." });
-
         }
-
         console.error('Erro ao adicionar reserva:', error);
-
         res.status(500).json({ message: 'Erro ao adicionar reserva' });
-
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
 
 
@@ -1385,9 +1365,8 @@ app.get('/usuarios/:usuario_id', async (req, res) => {
 
 
         const rows = await conn.query(
-
-            'SELECT usuario_id, nome, email, CPF, is_admin FROM usuarios WHERE usuario_id = ?',
-
+            'SELECT usuario_id, nome, email, CPF as cpf, telefone, is_admin FROM usuarios WHERE usuario_id = ?',
+            
             [usuario_id]
 
         );
@@ -1423,43 +1402,6 @@ app.get('/usuarios/:usuario_id', async (req, res) => {
 
 
 // LISTAR TODOS OS USUÁRIOS (para o admin)
-
-app.get('/usuarios', async (req, res) => {
-
-    let conn;
-
-
-
-    try {
-
-        conn = await pool.getConnection();
-
-
-
-        const rows = await conn.query(
-
-            'SELECT usuario_id, nome, email, CPF, is_admin FROM usuarios ORDER BY nome'
-
-        );
-
-
-
-        res.json(rows);
-
-    } catch (error) {
-
-        console.error('Erro ao listar usuários:', error);
-
-        res.status(500).json({ message: 'Erro no servidor' });
-
-    } finally {
-
-        if (conn) conn.release();
-
-    }
-
-});
-
 
 // ALTERAR SENHA
 

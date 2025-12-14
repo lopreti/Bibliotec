@@ -5,11 +5,20 @@ form.addEventListener("submit", async function (e) {
 
     const nome = document.getElementById('nome').value.trim();
     const email = document.getElementById('email').value.trim();
+    const telefone = document.getElementById('telefone').value.trim();
     const cpf = document.getElementById('cpf').value.trim();
     const senha = document.getElementById('senha').value.trim();
+    const confirmarSenha = document.getElementById('confirmarSenha').value.trim();
+
+    if (senha !== confirmarSenha) {
+        Toast.fire('As senhas não são iguais!');
+        return;
+    }
+
 
     console.log('Nome:', nome);
     console.log('Email:', email);
+    console.log('Telefone:', telefone);
     console.log('CPF:', cpf);
     console.log('Senha:', senha);
 
@@ -43,6 +52,10 @@ form.addEventListener("submit", async function (e) {
         return;
     }
 
+    if (!telefone) {
+        Toast.fire('Por favor, preencha o campo de telefone!');
+        return;
+    }
     const cpfDigits = cpf.replace(/\D/g, '');
     if (cpfDigits.length < 11) {
         Toast.fire('Por favor, informe um CPF válido (mínimo 11 dígitos)!');
@@ -70,6 +83,7 @@ form.addEventListener("submit", async function (e) {
             body: JSON.stringify({
                 nome: nome,
                 email: email,
+                telefone: telefone,
                 cpf: cpfDigits,
                 senha: senha
             })
