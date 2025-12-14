@@ -2,9 +2,14 @@ let todosOsLivrosFavoritos = [];
 
 const userId = localStorage.getItem('usuarioId') || 1;
 
-window.addEventListener('load', () => {
-    carregarFavoritos();
-});
+if (!userId) {
+    document.getElementById('container-favoritos').innerHTML =
+        '<p class="mensagem-vazio">Você precisa estar logado para ver seus favoritos.</p>';
+} else {
+    window.addEventListener('load', () => {
+        carregarFavoritos();
+    });
+}
 
 function carregarFavoritos() {
     fetch(`http://localhost:3000/favoritos/${userId}`)

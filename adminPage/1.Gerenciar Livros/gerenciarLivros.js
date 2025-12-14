@@ -228,3 +228,32 @@ function filtrarLivros() {
 
     document.addEventListener('DOMContentLoaded', carregarLivros);
 }
+
+function pesquisarLivros(pesquisa) {
+    const pesquisaBusca = pesquisa.toLowerCase().trim();
+
+    if (pesquisaBusca === "") {
+        mostrarLivros(todosLivros);
+        return;
+    }
+
+    const livrosFiltrados = todosLivros.filter(livro => {
+        const titulo = livro.titulo.toLowerCase();
+        const autor = livro.autor.toLowerCase();
+        
+        return titulo.includes(pesquisaBusca) || autor.includes(pesquisaBusca);
+    });
+
+    mostrarLivros(livrosFiltrados);
+}
+
+// Adiciona evento na barra de pesquisa quando a página carregar
+window.addEventListener('DOMContentLoaded', () => {
+    const barraPesquisa = document.querySelector('.barra-pesquisa input');
+    
+    if (barraPesquisa) {
+        barraPesquisa.addEventListener('input', (e) => {
+            pesquisarLivros(e.target.value);
+        });
+    }
+});
