@@ -90,7 +90,7 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                     // Se for admin, vai para o painel administrativo
                     // USAMOS 'gerenciarLivros.html' pois 'adm.html' não existe na sua lista
                     console.log('Usuário é admin, redirecionando para painel admin');
-                    window.location.href = '/adminPage/gerenciarUsuarios.html'; 
+                    window.location.href = '/adminPage/1.Gerenciar Livros/gerenciarLivros.html'; 
                 } else {
                     // Se for usuário comum, vai para página principal
                     // USAMOS CAMINHO ABSOLUTO para evitar problemas de "../"

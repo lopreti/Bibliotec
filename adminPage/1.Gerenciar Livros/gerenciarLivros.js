@@ -1,3 +1,12 @@
+// Configuração do Toast do SweetAlert2
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+});
+
 async function carregarLivros() {
     const container = document.getElementById('livros-container');
     container.innerHTML = '<div class="loading">Carregando livros...</div>';
@@ -37,9 +46,9 @@ function mostrarLivros(livros) {
             <span>Ano: ${livro.publicado_ano || 'N/A'} | Páginas: ${livro.quant_paginas || 'N/A'}</span>
           </div>
           <div class="livro-acoes">
-            <button onclick="verDetalhesLivro(${livro.livro_id})" class="btn-detalhes">Ver Detalhes</button>
-            <button onclick="editarLivro(${livro.livro_id})" class="btn-editar-item">Editar</button>
-            <button onclick="excluirLivro(${livro.livro_id})" class="btn-deletar">Excluir</button>
+            <button onclick="verDetalhesLivro(${livro.livro_id})" class="btn-detalhes">👁️Ver Detalhes</button>
+            <button onclick="editarLivro(${livro.livro_id})" class="btn-editar-item">✏️Editar</button>
+            <button onclick="excluirLivro(${livro.livro_id})" class="btn-deletar">🗑️Excluir</button>
           </div>
         `;
         container.appendChild(div);
@@ -78,7 +87,10 @@ async function editarLivro(livroId) {
         
     } catch (erro) {
         console.error('Erro:', erro);
-        alert('Erro ao carregar dados do livro.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Erro ao carregar dados do livro.'
+        });
     }
 }
 
@@ -112,13 +124,19 @@ async function salvarLivro(event) {
 
         if (!response.ok) throw new Error('Erro');
 
-        alert(livroId ? 'Livro atualizado!' : 'Livro cadastrado!');
+        Toast.fire({
+            icon: 'success',
+            title: livroId ? 'Livro atualizado!' : 'Livro cadastrado!'
+        });
         fecharModalLivro();
         carregarLivros();
 
     } catch (erro) {
         console.error('Erro:', erro);
-        alert('Erro ao salvar livro.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Erro ao salvar livro.'
+        });
     }
 }
 
@@ -152,7 +170,10 @@ async function verDetalhesLivro(livroId) {
         
     } catch (erro) {
         console.error('Erro:', erro);
-        alert('Erro ao carregar detalhes.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Erro ao carregar detalhes.'
+        });
     }
 }
 
@@ -162,7 +183,18 @@ function fecharModalDetalhes() {
 
 // RF12 - Excluir livro
 async function excluirLivro(livroId) {
-    if (!confirm('ATENÇÃO: Excluir este livro permanentemente?')) return;
+    const result = await Swal.fire({
+        title: 'ATENÇÃO',
+        text: 'Excluir este livro permanentemente?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
     
     try {
         const response = await fetch(`http://localhost:3000/livros/${livroId}`, {
@@ -171,12 +203,18 @@ async function excluirLivro(livroId) {
         
         if (!response.ok) throw new Error('Erro');
         
-        alert('Livro excluído!');
+        Toast.fire({
+            icon: 'success',
+            title: 'Livro excluído!'
+        });
         carregarLivros();
         
     } catch (erro) {
         console.error('Erro:', erro);
-        alert('Erro ao excluir livro.');
+        Toast.fire({
+            icon: 'error',
+            title: 'Erro ao excluir livro.'
+        });
     }
 }
 
