@@ -33,7 +33,7 @@
                 <button onclick="abrirModalCadastrarLivro()" class="btn-adicionar">+ Cadastrar Novo Livro</button>
             </div>
             <div class="barra-pesquisa">
-                <input type="text" placeholder="     🔍   Pesquise seu livro">
+            <input type="text" id="input-pesquisa" placeholder="     🔍   Pesquise seu livro" onkeyup="pesquisarLivros(this.value)">
             </div>
 
             <div id="livros-container"></div>

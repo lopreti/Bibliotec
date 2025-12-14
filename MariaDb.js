@@ -1346,6 +1346,25 @@ app.put('/retiradas/:id/devolucao', async (req, res) => {
 
 // ======================================================
 
+app.get('/usuarios', async (req, res) => {
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        const rows = await conn.query(
+            'SELECT usuario_id, nome, email, is_admin FROM usuarios'
+        );
+
+        res.json(rows);
+
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        res.status(500).json({ message: 'Erro no servidor' });
+    } finally {
+        if (conn) conn.release();
+    }
+});
 
 
 // BUSCAR INFORMAÇÕES DO USUÁRIO
