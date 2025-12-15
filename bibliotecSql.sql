@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           12.1.2-MariaDB - MariaDB Server
+-- Versão do servidor:           12.0.2-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.14.0.7165
+-- HeidiSQL Versão:              12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -199,7 +199,6 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `data_retirada` int(11) DEFAULT NULL,
   `data_devolucao` int(11) DEFAULT NULL,
   `confirmado_email` int(11) DEFAULT NULL,
-  `criado_em` int(11) DEFAULT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'reservado',
   PRIMARY KEY (`id_reservado`),
   KEY `FK_reservas_usuario` (`usuario_id`),
@@ -209,17 +208,17 @@ CREATE TABLE IF NOT EXISTS `reservas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.reservas: ~10 rows (aproximadamente)
-INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `criado_em`, `status`) VALUES
-	(7, 3, 1, NULL, NULL, NULL, NULL, 'reservado'),
-	(10, 4, 1, NULL, NULL, NULL, NULL, 'reservado'),
-	(11, 4, 29, NULL, NULL, NULL, NULL, 'reservado'),
-	(12, 4, 25, NULL, NULL, NULL, NULL, 'reservado'),
-	(14, 4, 27, NULL, NULL, NULL, NULL, 'reservado'),
-	(15, 4, 30, NULL, NULL, NULL, NULL, 'reservado'),
-	(16, 4, 38, NULL, NULL, NULL, NULL, 'reservado'),
-	(17, 4, 46, NULL, NULL, NULL, NULL, 'reservado'),
-	(18, 4, 58, NULL, NULL, NULL, NULL, 'reservado'),
-	(20, 4, 24, NULL, NULL, NULL, NULL, 'reservado');
+INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `status`) VALUES
+	(7, 3, 1, NULL, NULL, NULL, 'reservado'),
+	(10, 4, 1, NULL, NULL, NULL, 'reservado'),
+	(11, 4, 29, NULL, NULL, NULL, 'reservado'),
+	(12, 4, 25, NULL, NULL, NULL, 'reservado'),
+	(14, 4, 27, NULL, NULL, NULL, 'reservado'),
+	(15, 4, 30, NULL, NULL, NULL, 'reservado'),
+	(16, 4, 38, NULL, NULL, NULL, 'reservado'),
+	(17, 4, 46, NULL, NULL, NULL, 'reservado'),
+	(18, 4, 58, NULL, NULL, NULL, 'reservado'),
+	(20, 4, 24, NULL, NULL, NULL, 'reservado');
 
 -- Copiando estrutura para tabela bibliotec.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
@@ -229,18 +228,19 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `nome` varchar(250) NOT NULL,
   `CPF` varchar(11) NOT NULL,
   `is_admin` tinyint(1) DEFAULT 0,
+  `telefone` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~6 rows (aproximadamente)
-INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`) VALUES
-	(1, 'isabella@gmail.com', '82bc79eb224ea98d47f241bfa30d67c2346232c4c6a6e7be8d3dc69110f904cf', 'isabella lopreti', '01234567890', 0),
-	(3, 'lavinia@gmail.com', 'f583836223551ee2255d185addae4a54beb4e76818ec1ceaad1122b8b086b540', 'lavínia chaves', '12345678900', 0),
-	(4, 'lavi@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'laví chaves', '98765432109', 0),
-	(5, 'lopretis@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'isabella lopreti', '78965412300', 0),
-	(6, 'admin@bibliotec.com', '201bce2458f00a54130c695ca8d1658319b32206d495adf175847b57bd4a4151', 'Admin Master', '999999999', 1),
-	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0);
+INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`, `telefone`) VALUES
+	(1, 'isabella@gmail.com', '82bc79eb224ea98d47f241bfa30d67c2346232c4c6a6e7be8d3dc69110f904cf', 'isabella lopreti', '01234567890', 0, NULL),
+	(3, 'lavinia@gmail.com', 'f583836223551ee2255d185addae4a54beb4e76818ec1ceaad1122b8b086b540', 'lavínia chaves', '12345678900', 0, '11919895100'),
+	(4, 'lavi@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'laví chaves', '98765432109', 0, NULL),
+	(5, 'lopretis@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'isabella lopreti', '78965412300', 0, NULL),
+	(6, 'admin@bibliotec.com', '201bce2458f00a54130c695ca8d1658319b32206d495adf175847b57bd4a4151', 'Admin Master', '999999999', 1, NULL),
+	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
