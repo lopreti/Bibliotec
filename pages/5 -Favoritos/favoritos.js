@@ -1,6 +1,6 @@
 let todosOsLivrosFavoritos = [];
 
-const userId = localStorage.getItem('usuarioId') || 1;
+const userId = localStorage.getItem('usuarioId');
 
 if (!userId) {
     document.getElementById('container-favoritos').innerHTML =
@@ -20,10 +20,9 @@ function carregarFavoritos() {
             return response.json();
         })
         .then(data => {
-            console.log('Favoritos carregados:', data); // Debug
+            console.log('Favoritos carregados:', data);
             todosOsLivrosFavoritos = data;
             renderizarFavoritos(data);
-                // Restaurar posição de scroll quando volta de um livro
                 const restore = sessionStorage.getItem('restoreScroll');
                 if (restore) {
                     try { window.scrollTo({ top: parseInt(restore, 10), behavior: 'instant' }); } catch (e) {}
@@ -62,7 +61,6 @@ function renderizarFavoritos(livros) {
         `;
     });
 
-    // Attach link click handlers to store return context and scroll position
     document.querySelectorAll('#container-favoritos a').forEach(a => {
         a.addEventListener('click', () => {
             sessionStorage.setItem('returnContext', JSON.stringify({ from: 'favoritos', scrollY: window.scrollY }));
@@ -110,12 +108,10 @@ function removerFavorito(livroId) {
             .then(data => {
                 console.log(data.message);
 
-                // REMOVE DO ARRAY LOCAL
                 todosOsLivrosFavoritos = todosOsLivrosFavoritos.filter(
                     fav => fav.livro_id !== livroId
                 );
 
-                // ATUALIZA A LISTA NA TELA
                 renderizarFavoritos(todosOsLivrosFavoritos);
 
                 Swal.fire({

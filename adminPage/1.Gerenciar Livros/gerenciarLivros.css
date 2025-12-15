@@ -17,6 +17,16 @@ body {
     margin: 0;
     padding: 0;
 }
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+.secao-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
 .btn-detalhes,
 .btn-editar-item,
@@ -127,7 +137,7 @@ main {
     min-height: 500px;
     display: flex;
     justify-content: center;
-    align-items: center;    
+    align-items: center;
 }
 
 h2 {

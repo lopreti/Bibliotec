@@ -1,16 +1,10 @@
 let todasReservas = [];
 
-/* ======================
-   UTIL
-====================== */
 function formatarData(data) {
     if (!data) return '-';
     return new Date(data).toLocaleDateString('pt-BR');
 }
 
-/* ======================
-   RESERVAS (ADMIN)
-====================== */
 async function carregarReservas() {
     const container = document.getElementById('reservas-container');
     if (!container) return;
@@ -74,9 +68,7 @@ function mostrarReservas(reservas) {
     });
 }
 
-/* ======================
-   PERFIL ADMIN
-====================== */
+
 function setupPerfilMenuAdmin() {
     const perfilWrap = document.querySelector('.perfil');
     if (!perfilWrap || perfilWrap.querySelector('.perfil-menu')) return;
@@ -119,9 +111,6 @@ function setupPerfilMenuAdmin() {
     };
 }
 
-/* ======================
-   POPUP ADMIN
-====================== */
 function abrirPopupInformacoesAdmin() {
     const overlay = document.createElement('div');
     overlay.id = 'popup-overlay';
@@ -157,9 +146,6 @@ function abrirPopupInformacoesAdmin() {
     configurarAlteracaoSenha();
 }
 
-/* ======================
-   FETCH ADMIN
-====================== */
 async function carregarDadosAdmin() {
     const adminId = localStorage.getItem('adminId');
     if (!adminId) return;
@@ -203,9 +189,6 @@ function configurarAlteracaoSenha() {
     };
 }
 
-/* ======================
-   INIT
-====================== */
 document.addEventListener('DOMContentLoaded', () => {
     setupPerfilMenuAdmin();
     carregarReservas();

@@ -96,6 +96,10 @@
     cursor: pointer;
 }
 
+.swal2-container {
+    z-index: 9999 !important;
+}
+
 .perfil .entrar:hover { background: rgba(74,103,223,0.08); }
  
 

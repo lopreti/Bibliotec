@@ -29,11 +29,13 @@
 
     <main>
         <section id="secao-livros" class="secao admin-only">
+            <div class="secao-header">
                 <h2>Gerenciar Livros</h2>
                 <button onclick="abrirModalCadastrarLivro()" class="btn-adicionar">+ Cadastrar Novo Livro</button>
             </div>
             <div class="barra-pesquisa">
-            <input type="text" id="input-pesquisa" placeholder="     🔍   Pesquise seu livro" onkeyup="pesquisarLivros(this.value)">
+                <input type="text" id="input-pesquisa" placeholder="     🔍   Pesquise seu livro"
+                    onkeyup="pesquisarLivros(this.value)">
             </div>
 
             <div id="livros-container"></div>
@@ -83,4 +85,5 @@
     </script>
 
 </body>
+
 </html>

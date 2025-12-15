@@ -90,10 +90,111 @@ function setupPerfilMenu() {
 }
 
 // ============================================
-// SUBSTITUIR A FUNÇÃO abrirPopupInformacoes()
-// NO ARQUIVO: navbar-loader.js
+// FUNÇÃO PARA DELETAR CONTA
 // ============================================
+async function deletarConta() {
+    const usuarioId = localStorage.getItem('usuarioId');
 
+    if (!usuarioId) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Erro',
+            text: 'Usuário não identificado.'
+        });
+        return;
+    }
+
+    // Mostrar loading
+    Swal.fire({
+        title: 'Deletando conta...',
+        text: 'Por favor, aguarde.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        // Apenas URLs do backend (porta 3000)
+        const candidates = [
+            'http://localhost:3000',
+            'http://127.0.0.1:3000'
+        ];
+
+        let resp = null;
+        let successUrl = null;
+
+        for (const base of candidates) {
+            const candidateUrl = `${base}/usuarios/${usuarioId}`;
+            console.log('Tentando DELETE em:', candidateUrl);
+            try {
+                const r = await fetch(candidateUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('Resposta DELETE de', candidateUrl, r.status);
+
+                if (r.status === 200 || r.status === 204) {
+                    resp = r;
+                    successUrl = candidateUrl;
+                    console.log('✅ Conta deletada com sucesso via', successUrl);
+                    break;
+                }
+                if (r.status === 404) {
+                    console.warn('⚠️ Usuário não encontrado em', candidateUrl);
+                    continue;
+                }
+                // Outro status de erro
+                resp = r;
+                break;
+            } catch (e) {
+                console.warn('❌ Erro ao tentar deletar em', candidateUrl, e.message || e);
+            }
+        }
+
+        if (!resp) {
+            throw new Error('Não foi possível conectar ao servidor. Verifique se o backend está rodando na porta 3000.');
+        }
+
+        if (!resp.ok && resp.status !== 204) {
+            const errorBody = await resp.text().catch(() => '');
+            console.error('Erro do servidor:', errorBody);
+            throw new Error(`Falha ao deletar conta (status ${resp.status})`);
+        }
+
+        // Limpar dados do localStorage
+        localStorage.removeItem('usuarioLogin');
+        localStorage.removeItem('usuarioId');
+
+        // Mostrar mensagem de sucesso e redirecionar
+        await Swal.fire({
+            icon: 'success',
+            title: 'Conta deletada!',
+            text: 'Sua conta foi excluída com sucesso do banco de dados.',
+            timer: 2500,
+            showConfirmButton: false
+        });
+
+        // Redirecionar para login
+        window.location.href = '/pages/1 - Login/login.html';
+
+    } catch (err) {
+        console.error('❌ Erro ao deletar conta:', err);
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro ao deletar conta',
+            text: err.message || 'Não foi possível deletar a conta. Tente novamente.',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+// ============================================
+// POPUP DE INFORMAÇÕES COM BOTÃO DELETAR
+// ============================================
 function abrirPopupInformacoes() {
     const overlay = document.createElement('div');
     overlay.id = 'popup-overlay';
@@ -122,7 +223,6 @@ function abrirPopupInformacoes() {
         position: relative;
     `;
 
-    // ✅ Estilos melhorados para melhor visualização
     popup.innerHTML = `
         <button id="fechar-popup" style="
             position: absolute;
@@ -157,11 +257,28 @@ function abrirPopupInformacoes() {
                 <div class="info-value" id="info-telefone" style="color: #333; font-size: 16px;">Carregando...</div>
             </div>
         </div>
+
+       <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <button id="btn-deletar-conta" style="
+                color: ;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                width: 100%;
+                transition: background-color 0.2s;
+            " >
+                Deletar Conta
+            </button>
+        </div>
     `;
 
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
 
+    // FECHAR NO X
     document.getElementById('fechar-popup').addEventListener('click', () => {
         overlay.remove();
     });
@@ -176,15 +293,38 @@ function abrirPopupInformacoes() {
         e.stopPropagation();
     });
 
+    // BOTÃO DELETAR CONTA
+    document.getElementById('btn-deletar-conta').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Tem certeza?',
+            html: `
+                <p>Esta ação não pode ser desfeita!</p>
+                <p>Todos os seus dados serão permanentemente excluídos do banco de dados.</p>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sim, deletar minha conta',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                overlay.remove();
+                deletarConta();
+            }
+        });
+    });
+
     // BUSCAR DADOS DO USUÁRIO
     (async () => {
         try {
             const usuarioId = localStorage.getItem('usuarioId');
             if (!usuarioId) {
-                Swal.fire({ 
-                    icon: 'warning', 
-                    title: 'Você não está logado', 
-                    text: 'Faça login para ver suas informações.' 
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Você não está logado',
+                    text: 'Faça login para ver suas informações.'
                 });
                 overlay.remove();
                 return;
@@ -236,16 +376,16 @@ function abrirPopupInformacoes() {
                 if (resp.status === 404) {
                     try {
                         const json = JSON.parse(body);
-                        Swal.fire({ 
-                            icon: 'warning', 
-                            title: 'Não encontrado', 
-                            text: json.message || 'Usuário não encontrado.' 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Não encontrado',
+                            text: json.message || 'Usuário não encontrado.'
                         });
                     } catch (e) {
-                        Swal.fire({ 
-                            icon: 'warning', 
-                            title: 'Não encontrado', 
-                            text: 'Usuário não encontrado.' 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Não encontrado',
+                            text: 'Usuário não encontrado.'
                         });
                     }
                     overlay.remove();
@@ -258,29 +398,27 @@ function abrirPopupInformacoes() {
             const data = await resp.json();
             console.log('Dados recebidos:', data);
 
-            // ✅ CORRIGIDO: Usando os nomes corretos dos campos
             const elNome = document.getElementById('info-nome');
             const elCpf = document.getElementById('info-cpf');
             const elEmail = document.getElementById('info-email');
             const elTelefone = document.getElementById('info-telefone');
 
             if (elNome) elNome.textContent = data.nome || '-';
-            if (elCpf) elCpf.textContent = data.CPF || data.cpf || '-'; // Aceita CPF ou cpf
+            if (elCpf) elCpf.textContent = data.CPF || data.cpf || '-';
             if (elEmail) elEmail.textContent = data.email || '-';
             if (elTelefone) elTelefone.textContent = data.telefone || '-';
 
         } catch (err) {
             console.error('Erro ao carregar informações do usuário:', err);
-            Swal.fire({ 
-                icon: 'error', 
-                title: 'Erro', 
-                text: 'Não foi possível carregar suas informações.' 
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Não foi possível carregar suas informações.'
             });
             overlay.remove();
         }
     })();
 }
-
 
 function atualizarIniciaisUsuario() {
     const usuarioLogin = localStorage.getItem('usuarioLogin');
