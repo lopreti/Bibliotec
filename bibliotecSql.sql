@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~2 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`, `telefone`) VALUES
-	(10, 'admin@bibliotec.com', 'Admin123@', 'Administrador Master', '9999999999', 1, '11999999999'),
+	(10, 'admin@bibliotec.com', '$2b$10$n5vl88.dwC4HmUhM5igEFuZmCNDEGPMO.mazBan8JanLjUR2HQkTK', 'Administrador Master', '9999999999', 1, '11999999999'),
 	(11, 'laviniachaves@gmail.com', '$2b$10$BYBvD6Yxrin3q7EHmXX1AuvfXheDQH9YQlfkMyUmQjPCq3wTwpCma', 'Lavínia Chaves', '12345678912', 0, '11919895100');
 
 -- Copiando estrutura para trigger bibliotec.trg_livro_categoria_ai
