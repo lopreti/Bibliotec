@@ -12,6 +12,8 @@ app.use(cors());
 
 app.use(express.json());
 
+const bcrypt = require('bcrypt');
+
 const path = require('path');
 
 // Servir arquivos estáticos do projeto para facilitar desenvolvimento
@@ -571,230 +573,148 @@ app.delete("/favoritos/:userId/:livroId", async (req, res) => {
 // LOGIN
 
 app.post('/login', async (req, res) => {
-
     const { identifier, email, senha } = req.body;
 
     let conn;
 
-
-
-    // identifier: pode ser email ou CPF. Mantemos compatibilidade com o campo `email`.
-
+    // identifier pode ser email ou CPF
     const idValue = identifier || email;
 
-
-
     if (!idValue || !senha) {
-
         return res.status(400).json({
-
             success: false,
-
             message: 'Identificador (e-mail ou CPF) e senha são obrigatórios'
-
         });
-
     }
 
-
-
     try {
-
         conn = await pool.getConnection();
 
-
-
-        // ========== IMPORTANTE: Buscar o campo is_admin ==========
-
+        // 🔹 Buscar usuário SEM validar senha no SQL
         const rows = await conn.query(
-
-            'SELECT usuario_id, nome, email, CPF as cpf, telefone, is_admin FROM usuarios WHERE (email = ? OR CPF = ?) AND senha = ?',
-
-            [idValue, idValue, senha]
-
+            `SELECT 
+                usuario_id,
+                nome,
+                email,
+                CPF,
+                telefone,
+                senha,
+                is_admin
+             FROM usuarios
+             WHERE email = ? OR CPF = ?`,
+            [idValue, idValue]
         );
 
-
-
+        // Usuário não encontrado
         if (rows.length === 0) {
-
             return res.status(401).json({
-
                 success: false,
-
                 message: 'Identificador ou senha incorretos'
-
             });
-
         }
-
-
 
         const usuario = rows[0];
 
+        // 🔹 Comparar senha com bcrypt
+        const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
+        if (!senhaValida) {
+            return res.status(401).json({
+                success: false,
+                message: 'Identificador ou senha incorretos'
+            });
+        }
 
-        // ========== RETORNAR is_admin ==========
-
+        // 🔹 Login OK
         res.json({
-
             success: true,
-
             usuario_id: usuario.usuario_id,
-
             nome: usuario.nome,
-
             email: usuario.email,
-
             CPF: usuario.CPF,
-
             telefone: usuario.telefone,
-            
-            is_admin: usuario.is_admin,  // ← IMPORTANTE: retornar o campo is_admin
-
+            is_admin: usuario.is_admin,
             message: 'Login realizado com sucesso!'
-
         });
-
-
 
     } catch (error) {
-
         console.error('Erro ao fazer login:', error);
-
         res.status(500).json({
-
             success: false,
-
             message: 'Erro no servidor'
-
         });
-
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
+
 
 
 
 // CADASTRO
 
 app.post('/cadastro', async (req, res) => {
-
     const { nome, email, cpf, telefone, senha } = req.body;
-
     let conn;
 
-
-
-    // Validações
-
+    // 🔹 Validações
     if (!nome || !email || !cpf || !telefone || !senha) {
-
         return res.status(400).json({
-
             success: false,
-
-            message: 'Nome, e-mail, CPF e senha são obrigatórios'
-
+            message: 'Nome, e-mail, CPF, telefone e senha são obrigatórios'
         });
-
     }
-
-
 
     if (senha.length < 8) {
-
         return res.status(400).json({
-
             success: false,
-
             message: 'A senha deve ter no mínimo 8 caracteres'
-
         });
-
     }
-
-
 
     try {
-
         conn = await pool.getConnection();
 
-
-
-        // Verifica se o email ou CPF já existe
-
+        // 🔹 Verifica se email ou CPF já existem
         const usuarioExistente = await conn.query(
-
             'SELECT usuario_id FROM usuarios WHERE email = ? OR CPF = ?',
-
             [email, cpf]
-
         );
-
-
 
         if (usuarioExistente.length > 0) {
-
             return res.status(409).json({
-
                 success: false,
-
                 message: 'E-mail ou CPF já cadastrado'
-
             });
-
         }
 
+        // 🔹 Criptografar senha
+        const senhaHash = await bcrypt.hash(senha, 10);
 
-
-        // Insere o novo usuário (usuários normais não são admin por padrão)
-
+        // 🔹 Inserir usuário (não admin)
         await conn.query(
-
-            'INSERT INTO usuarios (nome, email, CPF as cpf, telefone, senha, is_admin) VALUES (?, ?, ?, ?, FALSE)',
-
-            [nome, email, cpf, telefone, senha]
-
+            `INSERT INTO usuarios 
+             (nome, email, CPF, telefone, senha, is_admin) 
+             VALUES (?, ?, ?, ?, ?, FALSE)`,
+            [nome, email, cpf, telefone, senhaHash]
         );
 
-
-
         res.status(201).json({
-
             success: true,
-
             message: 'Cadastro realizado com sucesso!'
-
         });
-
-
 
     } catch (error) {
-
         console.error('Erro ao cadastrar usuário:', error);
-
         res.status(500).json({
-
             success: false,
-
-            message: 'Erro no servidor ao realizar o cadastro',
-
-            error: error.message
-
+            message: 'Erro no servidor ao realizar o cadastro'
         });
-
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
+
 
 
 
