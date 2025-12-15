@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           12.0.2-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           12.1.2-MariaDB - MariaDB Server
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.11.0.7065
+-- HeidiSQL Versão:              12.14.0.7165
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -24,13 +24,26 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.categorias: ~3 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.categorias: ~16 rows (aproximadamente)
 INSERT INTO `categorias` (`id`, `nome`) VALUES
 	(1, 'Ficção'),
 	(2, 'Romance'),
-	(3, 'Fantasia');
+	(3, 'Fantasia'),
+	(4, 'Infantil'),
+	(5, 'Suspense'),
+	(6, 'Drama'),
+	(7, 'Distopia'),
+	(8, 'Terror'),
+	(9, 'Biografia'),
+	(10, 'Estratégia'),
+	(11, 'Clássico'),
+	(12, 'Ficção Científica'),
+	(13, 'Thriller'),
+	(14, 'Suspense Psicológico'),
+	(15, 'Ficção Histórica'),
+	(16, 'Romance / Fantasia');
 
 -- Copiando estrutura para tabela bibliotec.favoritos
 CREATE TABLE IF NOT EXISTS `favoritos` (
@@ -129,12 +142,54 @@ CREATE TABLE IF NOT EXISTS `livros_categorias` (
   CONSTRAINT `livros_categorias_ibfk_2` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.livros_categorias: ~4 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.livros_categorias: ~46 rows (aproximadamente)
 INSERT INTO `livros_categorias` (`livro_id`, `categoria_id`) VALUES
 	(1, 1),
 	(1, 2),
 	(2, 2),
-	(3, 2);
+	(3, 2),
+	(24, 2),
+	(25, 4),
+	(26, 3),
+	(27, 3),
+	(28, 5),
+	(29, 6),
+	(30, 2),
+	(31, 7),
+	(32, 3),
+	(33, 2),
+	(34, 2),
+	(35, 8),
+	(36, 1),
+	(37, 9),
+	(38, 3),
+	(39, 10),
+	(40, 5),
+	(41, 3),
+	(42, 3),
+	(44, 7),
+	(46, 11),
+	(47, 1),
+	(48, 1),
+	(49, 12),
+	(50, 6),
+	(52, 7),
+	(54, 5),
+	(55, 13),
+	(56, 2),
+	(57, 12),
+	(58, 14),
+	(59, 2),
+	(60, 7),
+	(61, 1),
+	(62, 12),
+	(63, 12),
+	(65, 3),
+	(66, 6),
+	(67, 5),
+	(68, 15),
+	(70, 3),
+	(71, 16);
 
 -- Copiando estrutura para tabela bibliotec.reservas
 CREATE TABLE IF NOT EXISTS `reservas` (
