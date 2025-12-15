@@ -1,4 +1,3 @@
-// O listener para a tecla 'Enter' está correto
 const identifier = document.getElementById("identifier");
 const senha = document.getElementById("senha");
 const btn = document.getElementById("btnBotao");
@@ -11,7 +10,6 @@ document.addEventListener("keydown", function (e) {
 });
 
 document.getElementById('btnBotao').addEventListener('click', async () => {
-    // Captura os valores do formulário
     const identifierValue = document.getElementById('identifier').value.trim();
     const senhaValue = document.querySelector('input[type="password"]').value.trim();
 
@@ -26,7 +24,6 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         timerProgressBar: true,
     });
 
-    // Validação básica
     if (!identifierValue || !senhaValue) {
         Toast.fire({
             title: 'Por favor, preencha todos os campos!',
@@ -57,22 +54,18 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
 
         if (response.ok && data.success) {
             
-            // ========== VERIFICAR SE É ADMIN ==========
             const isAdmin = data.is_admin === 1 || data.is_admin === true;
             
             if (isAdmin) {
-                // ✅ ADMIN: Salvar dados do admin
                 localStorage.setItem('adminId', data.usuario_id);
                 localStorage.setItem('adminLogin', data.nome || data.email || identifierValue);
                 
                 console.log('Admin logado! ID:', data.usuario_id);
                 
             } else {
-                // ✅ USUÁRIO COMUM: Salvar dados do usuário
                 localStorage.setItem('usuarioId', data.usuario_id);
                 localStorage.setItem('usuarioLogin', data.nome || data.email || identifierValue);
                 
-                // Salvar dados completos do usuário
                 localStorage.setItem('usuario', JSON.stringify({
                     usuario_id: data.usuario_id,
                     nome: data.nome,
@@ -84,7 +77,6 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 console.log('Usuário comum logado! ID:', data.usuario_id);
             }
             
-            // Se tiver token, salva também
             if (data.token) {
                 localStorage.setItem('token', data.token);
             }
@@ -98,14 +90,11 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 showConfirmButton: false
             });
 
-            // ========== REDIRECIONAR BASEADO NO TIPO DE USUÁRIO ==========
             setTimeout(() => {
                 if (isAdmin) {
-                    // Admin → Painel administrativo
                     console.log('Redirecionando admin para painel...');
                     window.location.href = '/adminPage/1.Gerenciar Livros/gerenciarLivros.html'; 
-                } else {
-                    // Usuário comum → Página principal
+                } else {l
                     console.log('Redirecionando usuário para página principal...');
                     window.location.href = '/pages/2 - Principal/principal.html'; 
                 }

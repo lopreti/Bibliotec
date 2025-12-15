@@ -111,9 +111,6 @@ h2 {
     gap: 8px;
 }
 
-/* =========================
-   PERFIL (NAVBAR)
-========================= */
 .perfil {
     position: relative;
 }
@@ -132,9 +129,6 @@ h2 {
     user-select: none;
 }
 
-/* =========================
-   MENU DROPDOWN
-========================= */
 .perfil-menu {
     position: absolute;
     right: 0;
@@ -177,9 +171,6 @@ h2 {
     color: #e74c3c;
 }
 
-/* =========================
-   POPUP OVERLAY
-========================= */
 #popup-overlay {
     position: fixed;
     inset: 0;
@@ -190,9 +181,6 @@ h2 {
     z-index: 9999;
 }
 
-/* =========================
-   POPUP ADMIN
-========================= */
 #popup-admin {
     background: #fff;
     padding: 28px;
@@ -213,9 +201,6 @@ h2 {
     color: #4A67DF;
 }
 
-/* =========================
-   BOTÃO FECHAR
-========================= */
 #fechar-popup {
     position: absolute;
     top: 12px;
@@ -231,9 +216,6 @@ h2 {
     color: #000;
 }
 
-/* =========================
-   INFO SECTIONS
-========================= */
 .info-section {
     background: #f7f8fc;
     padding: 14px;
@@ -246,9 +228,6 @@ h2 {
     color: #555;
 }
 
-/* =========================
-   INPUTS SENHA
-========================= */
 #popup-admin input {
     width: 100%;
     padding: 10px;
@@ -264,9 +243,6 @@ h2 {
     border-color: #4A67DF;
 }
 
-/* =========================
-   BOTÃO ALTERAR SENHA
-========================= */
 #btn-alterar-senha {
     width: 100%;
     background: #4A67DF;

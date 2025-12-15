@@ -1,6 +1,3 @@
-/* =======================
-   TOAST (SweetAlert)
-======================= */
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -9,14 +6,8 @@ const Toast = Swal.mixin({
     timerProgressBar: true,
 });
 
-/* =======================
-   VARIÁVEIS GLOBAIS
-======================= */
 let todosLivros = [];
 
-/* =======================
-   LIVROS
-======================= */
 async function carregarLivros() {
     const container = document.getElementById('livros-container');
     container.innerHTML = '<div class="loading">Carregando livros...</div>';
@@ -63,9 +54,6 @@ function mostrarLivros(livros) {
     });
 }
 
-/* =======================
-   CRUD LIVRO
-======================= */
 async function editarLivro(id) {
     try {
         const res = await fetch(`http://localhost:3000/livros/${id}`);
@@ -151,9 +139,6 @@ async function excluirLivro(id) {
     }
 }
 
-/* =======================
-   DETALHES
-======================= */
 async function verDetalhesLivro(id) {
     try {
         const res = await fetch(`http://localhost:3000/livros/${id}`);
@@ -185,9 +170,6 @@ function fecharModalDetalhes() {
     document.getElementById('modal-detalhes-livro').style.display = 'none';
 }
 
-/* =======================
-   PESQUISA
-======================= */
 function pesquisarLivros(texto) {
     const busca = texto.toLowerCase().trim();
 
@@ -263,9 +245,6 @@ function abrirPopupInformacoesAdmin() {
 }
 
 
-/* =======================
-   NAVBAR ADMIN (ÚNICA)
-======================= */
 function setupPerfilMenuAdmin() {
     const perfilWrap = document.querySelector('.perfil');
     const iniciais = document.getElementById('perfil-iniciais');
@@ -354,9 +333,6 @@ function configurarAlteracaoSenha() {
 }
 
 
-/* =======================
-   INIT
-======================= */
 document.addEventListener('DOMContentLoaded', () => {
     carregarLivros();
     setupPerfilMenuAdmin();

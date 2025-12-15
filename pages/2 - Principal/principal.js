@@ -1,6 +1,5 @@
 let todosOsLivros = [];
-let currentIndex = 0; // índice do item central dentro da janela (buffer) exibida
-const livrosPorPagina = 3;
+let currentIndex = 0; 
 let originalTitulo = '';
 let originalMaisLivrosBg = '';
 let originalSectionH2Display = '';
@@ -9,7 +8,6 @@ function restaurarLayoutOriginal() {
     document.querySelector(".livros").classList.add("carrossel");
     document.querySelector(".livros").innerHTML = "";
     
-    // Mostra o carrossel e o botão "Ver mais" novamente
     document.getElementById('container').style.display = 'flex';
     document.getElementById('botao-veja-mais').style.display = 'block';
     document.getElementById('secao-mais-livros').style.display = 'block';
@@ -18,13 +16,12 @@ function restaurarLayoutOriginal() {
     renderizarCarrousel();
     renderizarListaInferior();
     
-    // Reattach evento do botão "Ver mais"
     document.getElementById('botao-veja-mais').addEventListener('click', () => {
         console.log("Clicou no botão Ver mais");
         const secao = document.getElementById('secao-mais-livros');
         secao.scrollIntoView({ behavior: 'smooth' });
     });
-    // Restaurar título e fundo original
+
     const titulo = document.querySelector('h1');
     if (titulo && originalTitulo) titulo.textContent = originalTitulo;
     const secaoMais = document.getElementById('secao-mais-livros');
@@ -34,14 +31,12 @@ function restaurarLayoutOriginal() {
     if (h2sec && originalSectionH2Display) h2sec.style.display = originalSectionH2Display;
 }
 
-// Helper global para anexar handlers que salvam contexto antes de navegar ao livro
 function attachLivroLinksPrincipal() {
-    // Remove listeners antigos clonando os elementos para evitar duplicação
     document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
         const newA = a.cloneNode(true);
         a.parentNode.replaceChild(newA, a);
     });
-    // Anexa listener para salvar contexto de retorno
+
     document.querySelectorAll('.livros a, .mais-livros .container a').forEach(a => {
         a.addEventListener('click', () => {
             sessionStorage.setItem('returnContext', JSON.stringify({ from: 'principal', scrollY: window.scrollY }));
@@ -59,10 +54,8 @@ function renderizarCarrousel() {
         return;
     }
 
-    // Janela / buffer com os primeiros 5 (ou menos) livros usados para o carrossel
     const buffer = todosOsLivros.slice(0, Math.min(5, todosOsLivros.length));
 
-    // Se houver menos de 3 no buffer, mostramos todos
     if (buffer.length <= 3) {
         buffer.forEach((l, posicao) => {
             const classeDestaque = posicao === Math.floor(buffer.length / 2) ? 'destaque' : '';
@@ -75,16 +68,11 @@ function renderizarCarrousel() {
                     <p>${l.autor}</p>
                 </div>`;
         });
-        // Anexa handlers para os links mesmo quando temos <=3 itens
         attachLivroLinksPrincipal();
         return;
     }
-
-    // Buffer tem >=3 (normalmente 5). currentIndex representa o índice CENTRAL dentro do buffer
-    // Garantir que currentIndex esteja dentro do buffer
     currentIndex = ((currentIndex % buffer.length) + buffer.length) % buffer.length;
 
-    // Os índices visíveis são: centro-1, centro, centro+1 (circular dentro do buffer)
     const offsets = [-1, 0, 1];
     offsets.forEach((offset, posicao) => {
         const idx = ((currentIndex + offset + buffer.length) % buffer.length);
@@ -100,8 +88,7 @@ function renderizarCarrousel() {
                 <p>${l.autor}</p>
             </div>`;
     });
-
-    // Re-anexa handlers para salvar contexto caso o usuário clique em um livro
+ 
     attachLivroLinksPrincipal();
 }
 
@@ -125,24 +112,18 @@ function renderizarListaInferior() {
                 </div>
         `;
     });
-    // Re-anexa handlers após renderizar a lista inferior
     attachLivroLinksPrincipal();
 }
 
 function aplicarLayoutPesquisa() {
-    // Esconde o carrossel e o botão "Ver mais"
     document.getElementById('container').style.display = 'none';
     document.getElementById('botao-veja-mais').style.display = 'none';
-    // Mostra a seção "Todos os Livros"
     const secaoMaisLivros = document.getElementById('secao-mais-livros');
     secaoMaisLivros.style.display = 'block';
     secaoMaisLivros.style.marginTop = '0';
-    // Remove o fundo colorido ao mostrar resultados da pesquisa
     secaoMaisLivros.style.backgroundColor = 'transparent';
-    // Ajusta o título para indicar que são todos os livros
     const titulo = document.querySelector('h1');
     if (titulo) titulo.textContent = 'TODOS OS LIVROS';
-    // Esconde o cabeçalho da seção inferior para evitar duplicidade
     const h2sec = document.querySelector('.mais-livros h2');
     if (h2sec) h2sec.style.display = 'none';
 }
@@ -152,7 +133,6 @@ function pesquisarLivros(termo) {
 
     if (pesquisa === "") {
         currentIndex = 0;
-        // Restaura carrossel
         document.getElementById('container').style.display = 'flex';
         document.getElementById('botao-veja-mais').style.display = 'block';
         document.getElementById('secao-mais-livros').style.display = 'none';
@@ -175,7 +155,6 @@ function pesquisarLivros(termo) {
         return;
     }
 
-    // ...
     filtrados.forEach(l => {
         container.innerHTML += `
             <div class="livro">
@@ -187,13 +166,10 @@ function pesquisarLivros(termo) {
                 </div>
         `;
     });
-    // Re-anexa handlers após render de pesquisa
     attachLivroLinksPrincipal();
-// ...
 }
 
 function inicializar() {
-    // Theme support removed: dark-mode initialization deleted per request.
 
     fetch("http://localhost:3000/livros")
         .then(res => res.json())
@@ -201,7 +177,6 @@ function inicializar() {
             todosOsLivros = livros;
             console.log("Livros carregados:", todosOsLivros);
 
-                // Inicializa o índice central do carrossel: se houver >=5 livros, centralizamos no 3º (índice 2)
                 if (todosOsLivros.length >= 5) {
                     currentIndex = 2;
                 } else {
@@ -211,17 +186,14 @@ function inicializar() {
             renderizarCarrousel();
             renderizarListaInferior();
 
-            // Guarda título e fundo originais para restaurar depois
             const tituloEl = document.querySelector('h1');
             if (tituloEl) originalTitulo = tituloEl.textContent;
             const secaoMais = document.getElementById('secao-mais-livros');
             if (secaoMais) originalMaisLivrosBg = window.getComputedStyle(secaoMais).backgroundColor;
-            // Guarda display original do h2 da seção "mais livros"
             const h2sec = document.querySelector('.mais-livros h2');
             if (h2sec) originalSectionH2Display = window.getComputedStyle(h2sec).display;
 
             document.getElementById('next-btn').addEventListener("click", () => {
-                // Avança o centro dentro do buffer de até 5 itens
                 const bufferLen = Math.min(5, todosOsLivros.length);
                 currentIndex = (currentIndex + 1) % bufferLen;
                 renderizarCarrousel();
@@ -243,8 +215,7 @@ function inicializar() {
         const secao = document.getElementById('secao-mais-livros');
         secao.scrollIntoView({ behavior: 'smooth' });
     });
-
-    // Se houver um valor de restauração de scroll (quando vindo de um livro), aplica-o
+    
     const restore = sessionStorage.getItem('restoreScroll');
     if (restore) {
         try {
@@ -254,7 +225,6 @@ function inicializar() {
         sessionStorage.removeItem('restoreScroll');
     }
 
-    // Chame após renderizações
     attachLivroLinksPrincipal();
 }
 

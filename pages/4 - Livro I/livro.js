@@ -3,9 +3,7 @@ const id = params.get('id');
 
 const userId = localStorage.getItem('usuarioId');
 
-// Função para navegar de volta para a página de origem preservando posição
 function voltarParaPágina() {
-    // Primeiro tenta usar o contexto armazenado na sessão (mais confiável)
     const stored = sessionStorage.getItem('returnContext');
     if (stored) {
         try {
@@ -17,24 +15,19 @@ function voltarParaPágina() {
             };
             const target = targetMap[ctx.from] || document.referrer || '/pages/2 - Principal/principal.html';
 
-            // preserva posição
             if (ctx.scrollY != null) {
                 sessionStorage.setItem('restoreScroll', String(ctx.scrollY));
             }
 
-            // limpa o contexto para que não seja reaplicado depois
             sessionStorage.removeItem('returnContext');
 
-            // navega
             window.location.href = target;
             return;
         } catch (e) {
-            // fallback para os próximos métodos
             console.error('Erro ao parsear returnContext', e);
         }
     }
 
-    // Se o parâmetro 'from' veio na URL, usa ele
     const fromParam = params.get('from');
     if (fromParam) {
         const targetMap = {
@@ -45,7 +38,6 @@ function voltarParaPágina() {
 
         const target = targetMap[fromParam] || null;
         if (target) {
-            // tenta preservar scroll (se houver valor previamente salvo)
             const maybeRestore = sessionStorage.getItem('returnContext');
             if (maybeRestore) {
                 try {
@@ -58,17 +50,14 @@ function voltarParaPágina() {
         }
     }
 
-    // Se houver referrer para uma página interna, volta para ela
     if (document.referrer) {
         const ref = document.referrer;
-        // se o referrer é uma das páginas do app, navega para ele
         if (ref.includes('/pages/2 - Principal') || ref.includes('/pages/5 -Favoritos') || ref.includes('/pages/6-Reservados')) {
             window.location.href = ref;
             return;
         }
     }
 
-    // fallback: usa history.back() se possível, senão vai para a principal
     if (history.length > 1) {
         history.back();
     } else {
@@ -89,10 +78,6 @@ function promptLogin(actionName) {
         }
     });
 }
-
-// =========================
-//  CARREGAR DADOS DO LIVRO
-// =========================
 
 console.log("ID da URL:", id);
 
@@ -116,24 +101,17 @@ if (id) {
                 document.querySelector(".informacoes p:nth-of-type(1) span").textContent = livro.quant_paginas || "N/A";
                 document.querySelector(".informacoes p:nth-of-type(2) span").textContent = livro.idioma || "Português";
 
-                // ----------------------------------------------------------------------
-                // 💡 CÓDIGO CORRIGIDO PARA EXIBIR CATEGORIAS COMO TAGS (SEM VÍRGULA)
-                // ----------------------------------------------------------------------
                 const categoriasContainer = document.getElementById("categorias-livro");
-                const categoriasString = livro.categorias; // CORRIGIDO para 'categorias' (plural)
+                const categoriasString = livro.categorias;
 
                 if (categoriasString && categoriasString.trim() !== '') {
-                    // 1. Divide a string de categorias usando a vírgula e espaço como separador
                     const categoriasArray = categoriasString.split(', ');
                     let htmlContent = '';
 
-                    // 2. Constrói um <span> para cada categoria, eliminando a vírgula
                     categoriasArray.forEach(categoria => {
-                        // Cada <span> será estilizado como uma tag pelo seu livro.css
                         htmlContent += `<span>${categoria}</span> `;
                     });
 
-                    // 3. Insere os spans no HTML
                     categoriasContainer.innerHTML = htmlContent.trim();
                 } else {
                     categoriasContainer.textContent = "Não classificado";
@@ -149,7 +127,6 @@ if (id) {
     document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
 }
 
-// Handler do botão voltar (seta)
 const setaVoltar = document.querySelector('.seta-voltar');
 if (setaVoltar) {
     setaVoltar.style.cursor = 'pointer';
@@ -160,14 +137,8 @@ if (setaVoltar) {
 }
 
 
-
-// =========================
-//  FAVORITOS
-// =========================
-
 function verificarFavorito(livroId) {
     if (!userId) {
-        // Não está logado: deixa botão disponível para redirecionar ao login
         atualizarBotaoFavorito(false, livroId);
         return;
     }
@@ -292,12 +263,6 @@ function removerFavorito(livroId) {
             });
     });
 }
-
-
-
-// =========================
-//  RESERVADOS
-// =========================
 
 function verificarReservado(livroId) {
     if (!userId) {
