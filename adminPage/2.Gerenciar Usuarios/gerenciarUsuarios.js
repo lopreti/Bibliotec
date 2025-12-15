@@ -54,6 +54,9 @@ function mostrarUsuarios(usuarios) {
                 ${badge}
             </div>
             <div class="usuario-acoes">
+                <button class="btn-editar" onclick="abrirPopupEditarUsuario(${usuario.usuario_id})">
+                    Editar
+                </button>
                 <button class="btn-deletar" onclick="deletarUsuario(${usuario.usuario_id})">
                     Deletar
                 </button>
@@ -63,6 +66,165 @@ function mostrarUsuarios(usuarios) {
     });
 }
 
+/* =========================
+   EDITAR USUÁRIO
+========================= */
+async function abrirPopupEditarUsuario(usuarioId) {
+    try {
+        const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}`);
+        if (!response.ok) throw new Error();
+
+        const usuario = await response.json();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'popup-overlay';
+
+        const popup = document.createElement('div');
+        popup.id = 'popup-editar-usuario';
+
+        popup.innerHTML = `
+            <button id="fechar-popup">&times;</button>
+            <h2>Editar Usuário</h2>
+
+            <label for="edit-nome">Nome:</label>
+            <input type="text" id="edit-nome" value="${usuario.nome || ''}">
+
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email" value="${usuario.email || ''}">
+
+            <label for="edit-cpf">CPF:</label>
+            <input type="text" id="edit-cpf" value="${usuario.CPF || ''}" maxlength="14">
+
+            <label for="edit-telefone">Telefone:</label>
+            <input type="text" id="edit-telefone" value="${usuario.telefone || ''}" maxlength="15">
+
+            <div class="btn-container">
+                <button id="btn-cancelar-edicao">Cancelar</button>
+                <button id="btn-salvar-usuario">Salvar Alterações</button>
+            </div>
+        `;
+
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        // Fechar ao clicar no overlay
+        overlay.onclick = (e) => e.target === overlay && overlay.remove();
+        popup.onclick = (e) => e.stopPropagation();
+        
+        // Botão fechar (X)
+        document.getElementById('fechar-popup').onclick = () => overlay.remove();
+        
+        // Botão cancelar
+        document.getElementById('btn-cancelar-edicao').onclick = () => overlay.remove();
+
+        // Botão salvar
+        document.getElementById('btn-salvar-usuario').onclick = () => salvarEdicaoUsuario(usuarioId, overlay);
+
+        // Máscaras para CPF e Telefone
+        aplicarMascaraCPF();
+        aplicarMascaraTelefone();
+
+    } catch (erro) {
+        console.error(erro);
+        Toast.fire({ icon: 'error', title: 'Erro ao carregar dados do usuário' });
+    }
+}
+
+async function salvarEdicaoUsuario(usuarioId, overlay) {
+    const nome = document.getElementById('edit-nome').value.trim();
+    const email = document.getElementById('edit-email').value.trim();
+    const cpf = document.getElementById('edit-cpf').value.trim();
+    const telefone = document.getElementById('edit-telefone').value.trim();
+
+    // Validações básicas
+    if (!nome || !email) {
+        Swal.fire('Atenção', 'Nome e email são obrigatórios', 'warning');
+        return;
+    }
+
+    if (!validarEmail(email)) {
+        Swal.fire('Atenção', 'Email inválido', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nome,
+                email,
+                CPF: cpf,
+                telefone
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Erro ao atualizar usuário');
+        }
+
+        Toast.fire({ icon: 'success', title: 'Usuário atualizado com sucesso!' });
+        overlay.remove();
+        carregarUsuarios();
+
+    } catch (erro) {
+        console.error(erro);
+        Swal.fire('Erro', erro.message || 'Erro ao atualizar usuário', 'error');
+    }
+}
+
+/* =========================
+   MÁSCARAS
+========================= */
+function aplicarMascaraCPF() {
+    const input = document.getElementById('edit-cpf');
+    if (!input) return;
+
+    input.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (value.length > 6) {
+            value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+        } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+        }
+        
+        e.target.value = value;
+    });
+}
+
+function aplicarMascaraTelefone() {
+    const input = document.getElementById('edit-telefone');
+    if (!input) return;
+
+    input.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 10) {
+            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (value.length > 6) {
+            value = value.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+        } else if (value.length > 2) {
+            value = value.replace(/(\d{2})(\d{1,5})/, '($1) $2');
+        }
+        
+        e.target.value = value;
+    });
+}
+
+function validarEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+/* =========================
+   DELETAR USUÁRIO
+========================= */
 async function deletarUsuario(usuarioId) {
     const confirmacao = await Swal.fire({
         title: 'ATENÇÃO',
