@@ -1,3 +1,6 @@
+/* =======================
+   TOAST (SweetAlert)
+======================= */
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -6,8 +9,14 @@ const Toast = Swal.mixin({
     timerProgressBar: true,
 });
 
+/* =======================
+   VARIÁVEIS GLOBAIS
+======================= */
 let todosLivros = [];
 
+/* =======================
+   LIVROS
+======================= */
 async function carregarLivros() {
     const container = document.getElementById('livros-container');
     container.innerHTML = '<div class="loading">Carregando livros...</div>';
@@ -54,6 +63,22 @@ function mostrarLivros(livros) {
     });
 }
 
+/* =======================
+   CRUD LIVRO
+======================= */
+function abrirModalCadastrarLivro() {
+    document.getElementById('modal-titulo').textContent = 'Cadastrar Novo Livro';
+    document.getElementById('livro-id').value = '';
+    document.getElementById('livro-titulo').value = '';
+    document.getElementById('livro-autor').value = '';
+    document.getElementById('livro-ano').value = '';
+    document.getElementById('livro-quantidade').value = '';
+    document.getElementById('livro-idioma').value = '';
+    document.getElementById('livro-descricao').value = '';
+    document.getElementById('livro-capa-url').value = '';
+    document.getElementById('modal-livro').style.display = 'block';
+}
+
 async function editarLivro(id) {
     try {
         const res = await fetch(`http://localhost:3000/livros/${id}`);
@@ -84,12 +109,13 @@ async function salvarLivro(e) {
     const id = document.getElementById('livro-id').value;
 
     const dados = {
-        titulo: livro-titulo.value,
-        autor: livro-autor.value,
-        descricao: livro-descricao.value,
-        publicado_ano: livro-ano.value,
-        quant_paginas: livro-quantidade.value,
-        idioma: livro-idioma.value
+        titulo: document.getElementById('livro-titulo').value,
+        autor: document.getElementById('livro-autor').value,
+        descricao: document.getElementById('livro-descricao').value,
+        publicado_ano: document.getElementById('livro-ano').value,
+        quant_paginas: document.getElementById('livro-quantidade').value,
+        idioma: document.getElementById('livro-idioma').value,
+        capa_url: document.getElementById('livro-capa-url').value
     };
 
     try {
@@ -139,6 +165,9 @@ async function excluirLivro(id) {
     }
 }
 
+/* =======================
+   DETALHES
+======================= */
 async function verDetalhesLivro(id) {
     try {
         const res = await fetch(`http://localhost:3000/livros/${id}`);
@@ -170,6 +199,9 @@ function fecharModalDetalhes() {
     document.getElementById('modal-detalhes-livro').style.display = 'none';
 }
 
+/* =======================
+   PESQUISA
+======================= */
 function pesquisarLivros(texto) {
     const busca = texto.toLowerCase().trim();
 
@@ -245,6 +277,9 @@ function abrirPopupInformacoesAdmin() {
 }
 
 
+/* =======================
+   NAVBAR ADMIN (ÚNICA)
+======================= */
 function setupPerfilMenuAdmin() {
     const perfilWrap = document.querySelector('.perfil');
     const iniciais = document.getElementById('perfil-iniciais');
@@ -333,6 +368,9 @@ function configurarAlteracaoSenha() {
 }
 
 
+/* =======================
+   INIT
+======================= */
 document.addEventListener('DOMContentLoaded', () => {
     carregarLivros();
     setupPerfilMenuAdmin();
