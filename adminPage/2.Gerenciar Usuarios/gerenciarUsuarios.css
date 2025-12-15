@@ -79,7 +79,6 @@ main {
     align-items: center;
 }
 
-
 h2 {
     color: #2c3e50;
     font-size: 24px;
@@ -99,6 +98,42 @@ h2 {
 
 .btn-deletar:hover {
     background-color: #ff4d4d;
+    color: #fff;
+}
+
+.btn-editar {
+    border: 2px solid #4A67DF;
+    background-color: #fff;
+    color: #4A67DF;
+    border-radius: 12px;
+    padding: 0.4rem 0.6rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-right: 0.5rem;
+}
+
+.btn-editar:hover {
+    background-color: #4A67DF;
+    color: #fff;
+}
+
+.btn-editar {
+    border: 2px solid #4A67DF;
+    background-color: #fff;
+    color: #4A67DF;
+    border-radius: 12px;
+    padding: 0.4rem 0.6rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-right: 0.5rem;
+}
+
+.btn-editar:hover {
+    background-color: #4A67DF;
     color: #fff;
 }
 
@@ -243,6 +278,83 @@ h2 {
 #popup-admin h3 {
     margin-top: 20px;
     color: #4A67DF;
+}
+
+/* =========================
+   POPUP EDITAR USUÁRIO
+========================= */
+#popup-editar-usuario {
+    background: #fff;
+    padding: 28px;
+    border-radius: 14px;
+    width: 480px;
+    max-width: 95%;
+    position: relative;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+#popup-editar-usuario h2 {
+    margin: 0 0 20px;
+    color: #222;
+}
+
+#popup-editar-usuario label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+#popup-editar-usuario input,
+#popup-editar-usuario select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#popup-editar-usuario input:focus,
+#popup-editar-usuario select:focus {
+    outline: none;
+    border-color: #4A67DF;
+}
+
+#popup-editar-usuario .btn-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#popup-editar-usuario button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#btn-salvar-usuario {
+    background: #4A67DF;
+    color: white;
+}
+
+#btn-salvar-usuario:hover {
+    background: #394fcf;
+}
+
+#btn-cancelar-edicao {
+    background: #e0e0e0;
+    color: #333;
+}
+
+#btn-cancelar-edicao:hover {
+    background: #d0d0d0;
 }
 
 /* =========================
