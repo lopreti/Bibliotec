@@ -838,9 +838,6 @@ app.delete('/reservados/:userId/:livroId', async (req, res) => {
 });
 
 
-
- Listar todas as reservas (Admin)
-
 app.get('/reservas/todas', async (req, res) => {
 
     let conn;
