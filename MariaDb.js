@@ -16,13 +16,13 @@ const bcrypt = require('bcrypt');
 
 const path = require('path');
 
- Servir arquivos estáticos do projeto para facilitar desenvolvimento
+// Servir arquivos estáticos do projeto para facilitar desenvolvimento
 
 app.use(express.static(path.join(__dirname)));
 
 
 
- Log simples de todas as requisições para facilitar depuração
+// Log simples de todas as requisições para facilitar depuração
 
 app.use((req, res, next) => {
 
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 
 
 
- Conexão com o banco
+// Conexão com o banco
 
 const pool = mariadb.createPool({
 
@@ -52,11 +52,11 @@ const pool = mariadb.createPool({
 
 
 
- ======================================================
+// ======================================================
 
- LISTAR TODOS OS LIVROS COM CATEGORIAS
+// LISTAR TODOS OS LIVROS COM CATEGORIAS
 
- ======================================================
+// ======================================================
 
 app.get("/livros", async (req, res) => {
 
@@ -68,7 +68,7 @@ app.get("/livros", async (req, res) => {
 
 
 
-         Query que lista todos os livros e agrega suas categorias
+        // Query que lista todos os livros e agrega suas categorias
 
         const query = `
 
@@ -134,11 +134,11 @@ app.get("/livros", async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- BUSCAR UM LIVRO PELO ID COM CATEGORIAS
+// BUSCAR UM LIVRO PELO ID COM CATEGORIAS
 
- ======================================================
+// ======================================================
 
 app.get("/livros/:id", async (req, res) => {
 
@@ -154,7 +154,7 @@ app.get("/livros/:id", async (req, res) => {
 
 
 
-         Query que busca um livro pelo ID e agrega suas categorias
+        // Query que busca um livro pelo ID e agrega suas categorias
 
         const query = `
 
@@ -214,7 +214,7 @@ app.get("/livros/:id", async (req, res) => {
 
 
 
-         Retorna o primeiro (e único) resultado
+        // Retorna o primeiro (e único) resultado
 
         res.json(rows[0]);
 
@@ -232,11 +232,11 @@ app.get("/livros/:id", async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- CADASTRAR NOVO LIVRO
+// CADASTRAR NOVO LIVRO
 
- ======================================================
+// ======================================================
 
 app.post('/livros', async (req, res) => {
     const {
@@ -263,7 +263,7 @@ app.post('/livros', async (req, res) => {
 
         res.status(201).json({
             success: true,
-            livro_id: Number(result.insertId),  🔥 CORREÇÃO AQUI
+            livro_id: Number(result.insertId), // 🔥 CORREÇÃO AQUI
             message: 'Livro cadastrado com sucesso!'
         });
 
@@ -282,11 +282,11 @@ app.post('/livros', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- ATUALIZAR LIVRO
+// ATUALIZAR LIVRO
 
- ======================================================
+// ======================================================
 
 app.put('/livros/:id', async (req, res) => {
 
@@ -338,16 +338,16 @@ app.put('/livros/:id', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- DELETAR LIVRO
+// DELETAR LIVRO
 
- ======================================================
+// ======================================================
 
 app.delete('/livros/:id', async (req, res) => {
     const { id } = req.params;
 
-     validação básica
+    // validação básica
     if (!id || isNaN(id)) {
         return res.status(400).json({
             success: false,
@@ -361,7 +361,7 @@ app.delete('/livros/:id', async (req, res) => {
         conn = await pool.getConnection();
         await conn.beginTransaction();
 
-         Limpeza de tabelas relacionadas
+        // Limpeza de tabelas relacionadas
         await conn.query('DELETE FROM livros_categorias WHERE livro_id = ?', [id]);
         await conn.query('DELETE FROM favoritos WHERE livro_id = ?', [id]);
         await conn.query('DELETE FROM reservas WHERE livro_id = ?', [id]);
@@ -400,15 +400,15 @@ app.delete('/livros/:id', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- FAVORITOS
+// FAVORITOS
 
- ======================================================
+// ======================================================
 
 
 
- Listar favoritos de um usuário
+// Listar favoritos de um usuário
 
 app.get('/favoritos/:usuario_id', async (req, res) => {
 
@@ -468,7 +468,7 @@ app.get('/favoritos/:usuario_id', async (req, res) => {
 
 
 
- Adicionar favorito
+// Adicionar favorito
 
 app.post("/favoritos", async (req, res) => {
 
@@ -498,7 +498,7 @@ app.post("/favoritos", async (req, res) => {
 
     } catch (err) {
 
-         Ignora erro de duplicidade (ex: DUPLICATE ENTRY)
+        // Ignora erro de duplicidade (ex: DUPLICATE ENTRY)
 
         if (err.code && err.code.includes('ER_DUP_ENTRY')) {
 
@@ -518,7 +518,7 @@ app.post("/favoritos", async (req, res) => {
 
 
 
- Remover favorito
+// Remover favorito
 
 app.delete("/favoritos/:userId/:livroId", async (req, res) => {
 
@@ -562,22 +562,22 @@ app.delete("/favoritos/:userId/:livroId", async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- AUTENTICAÇÃO E CADASTRO
+// AUTENTICAÇÃO E CADASTRO
 
- ======================================================
+// ======================================================
 
 
 
- LOGIN
+// LOGIN
 
 app.post('/login', async (req, res) => {
     const { identifier, email, senha } = req.body;
 
     let conn;
 
-     identifier pode ser email ou CPF
+    // identifier pode ser email ou CPF
     const idValue = identifier || email;
 
     if (!idValue || !senha) {
@@ -590,7 +590,7 @@ app.post('/login', async (req, res) => {
     try {
         conn = await pool.getConnection();
 
-         🔹 Buscar usuário SEM validar senha no SQL
+        // 🔹 Buscar usuário SEM validar senha no SQL
         const rows = await conn.query(
             `SELECT 
                 usuario_id,
@@ -605,7 +605,7 @@ app.post('/login', async (req, res) => {
             [idValue, idValue]
         );
 
-         Usuário não encontrado
+        // Usuário não encontrado
         if (rows.length === 0) {
             return res.status(401).json({
                 success: false,
@@ -615,7 +615,7 @@ app.post('/login', async (req, res) => {
 
         const usuario = rows[0];
 
-         🔹 Comparar senha com bcrypt
+        // 🔹 Comparar senha com bcrypt
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
         if (!senhaValida) {
@@ -625,7 +625,7 @@ app.post('/login', async (req, res) => {
             });
         }
 
-         🔹 Login OK
+        // 🔹 Login OK
         res.json({
             success: true,
             usuario_id: usuario.usuario_id,
@@ -651,13 +651,13 @@ app.post('/login', async (req, res) => {
 
 
 
- CADASTRO
+// CADASTRO
 
 app.post('/cadastro', async (req, res) => {
     const { nome, email, cpf, telefone, senha } = req.body;
     let conn;
 
-     🔹 Validações
+    // 🔹 Validações
     if (!nome || !email || !cpf || !telefone || !senha) {
         return res.status(400).json({
             success: false,
@@ -675,7 +675,7 @@ app.post('/cadastro', async (req, res) => {
     try {
         conn = await pool.getConnection();
 
-         🔹 Verifica se email ou CPF já existem
+        // 🔹 Verifica se email ou CPF já existem
         const usuarioExistente = await conn.query(
             'SELECT usuario_id FROM usuarios WHERE email = ? OR CPF = ?',
             [email, cpf]
@@ -688,10 +688,10 @@ app.post('/cadastro', async (req, res) => {
             });
         }
 
-         🔹 Criptografar senha
+        // 🔹 Criptografar senha
         const senhaHash = await bcrypt.hash(senha, 10);
 
-         🔹 Inserir usuário (não admin)
+        // 🔹 Inserir usuário (não admin)
         await conn.query(
             `INSERT INTO usuarios 
              (nome, email, CPF, telefone, senha, is_admin) 
@@ -718,15 +718,15 @@ app.post('/cadastro', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- RESERVAS (Baseado na tabela `reservas`)
+// RESERVAS (Baseado na tabela `reservas`)
 
- ======================================================
+// ======================================================
 
 
 
- Listar reservas de um usuário
+// Listar reservas de um usuário
 app.get('/reservados/:usuario_id', async (req, res) => {
     const { usuario_id } = req.params;
     let conn;
@@ -760,7 +760,7 @@ app.get('/reservados/:usuario_id', async (req, res) => {
 
 
 
- Adicionar uma reserva
+// Adicionar uma reserva
 
 app.post('/reservados', async (req, res) => {
     const { usuario_id, livro_id } = req.body;
@@ -786,7 +786,7 @@ app.post('/reservados', async (req, res) => {
 
     } catch (error) {
 
-         🔁 Duplicidade (mesmo usuário tentando reservar o mesmo livro)
+        // 🔁 Duplicidade (mesmo usuário tentando reservar o mesmo livro)
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(200).json({
                 message: 'Livro já está reservado por você.'
@@ -804,7 +804,7 @@ app.post('/reservados', async (req, res) => {
 
 
 
- Remover uma reserva
+// Remover uma reserva
 
 app.delete('/reservados/:userId/:livroId', async (req, res) => {
     const { userId, livroId } = req.params;
@@ -839,7 +839,7 @@ app.delete('/reservados/:userId/:livroId', async (req, res) => {
 
 
 
- Listar todas as reservas (Admin)
+// Listar todas as reservas (Admin)
 
 app.get('/reservas/todas', async (req, res) => {
 
@@ -885,7 +885,7 @@ app.get('/reservas/todas', async (req, res) => {
 
 
 
- Listar reservas pendentes (para registrar retirada)
+// Listar reservas pendentes (para registrar retirada)
 
 app.get('/reservas/pendentes', async (req, res) => {
 
@@ -949,15 +949,15 @@ app.get('/reservas/pendentes', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- RETIRADAS (Empréstimos)
+// RETIRADAS (Empréstimos)
 
- ======================================================
+// ======================================================
 
 
 
- REGISTRAR RETIRADA
+// REGISTRAR RETIRADA
 
 app.post('/retiradas', async (req, res) => {
 
@@ -975,7 +975,7 @@ app.post('/retiradas', async (req, res) => {
 
 
 
-         1. Buscar dados da reserva
+        // 1. Buscar dados da reserva
 
         const reserva = await conn.query(
 
@@ -1007,7 +1007,7 @@ app.post('/retiradas', async (req, res) => {
 
 
 
-         2. Criar tabela retiradas se não existir (MELHOR MOVER ESTE SQL PARA MIGRAÇÃO)
+        // 2. Criar tabela retiradas se não existir (MELHOR MOVER ESTE SQL PARA MIGRAÇÃO)
 
         await conn.query(`
 
@@ -1041,7 +1041,7 @@ app.post('/retiradas', async (req, res) => {
 
 
 
-         3. Inserir retirada
+        // 3. Inserir retirada
 
         await conn.query(
 
@@ -1053,7 +1053,7 @@ app.post('/retiradas', async (req, res) => {
 
 
 
-         4. Atualizar status da reserva
+        // 4. Atualizar status da reserva
 
         await conn.query(
 
@@ -1095,7 +1095,7 @@ app.post('/retiradas', async (req, res) => {
 
 
 
- LISTAR EMPRÉSTIMOS ATIVOS (Para dar baixa/devolução)
+// LISTAR EMPRÉSTIMOS ATIVOS (Para dar baixa/devolução)
 
 app.get('/retiradas/ativas', async (req, res) => {
 
@@ -1139,7 +1139,7 @@ app.get('/retiradas/ativas', async (req, res) => {
 
         console.error('Erro ao buscar retiradas ativas:', error);
 
-         Não retornar 500 se a tabela `retiradas` não existir ainda (apenas se for erro de conexão/lógica)
+        // Não retornar 500 se a tabela `retiradas` não existir ainda (apenas se for erro de conexão/lógica)
 
         if (error.code !== 'ER_NO_SUCH_TABLE') {
 
@@ -1163,7 +1163,7 @@ app.get('/retiradas/ativas', async (req, res) => {
 
 
 
- REGISTRAR DEVOLUÇÃO DO LIVRO
+// REGISTRAR DEVOLUÇÃO DO LIVRO
 
 app.put('/retiradas/:id/devolucao', async (req, res) => {
 
@@ -1179,9 +1179,9 @@ app.put('/retiradas/:id/devolucao', async (req, res) => {
 
 
 
-         1. Atualiza a tabela retiradas com a data de hoje
+        // 1. Atualiza a tabela retiradas com a data de hoje
 
-        const hoje = new Date().toISOString().split('T')[0];  Formato YYYY-MM-DD
+        const hoje = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
 
 
@@ -1205,13 +1205,13 @@ app.put('/retiradas/:id/devolucao', async (req, res) => {
 
 
 
-         2. Busca o ID da reserva associada
+        // 2. Busca o ID da reserva associada
 
         const retirada = await conn.query("SELECT reserva_id FROM retiradas WHERE retirada_id = ?", [id]);
 
 
 
-         3. Atualiza o status da reserva para "concluido"
+        // 3. Atualiza o status da reserva para "concluido"
 
         if (retirada.length > 0) {
 
@@ -1255,11 +1255,11 @@ app.put('/retiradas/:id/devolucao', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- GESTÃO DE USUÁRIOS (Admin/Perfil)
+// GESTÃO DE USUÁRIOS (Admin/Perfil)
 
- ======================================================
+// ======================================================
 
 app.get('/usuarios', async (req, res) => {
     let conn;
@@ -1282,7 +1282,7 @@ app.get('/usuarios', async (req, res) => {
 });
 
 
- BUSCAR INFORMAÇÕES DO USUÁRIO
+// BUSCAR INFORMAÇÕES DO USUÁRIO
 
 app.get('/usuarios/:usuario_id', async (req, res) => {
 
@@ -1335,9 +1335,9 @@ app.get('/usuarios/:usuario_id', async (req, res) => {
 
 
 
- LISTAR TODOS OS USUÁRIOS (para o admin)
+// LISTAR TODOS OS USUÁRIOS (para o admin)
 
- ALTERAR SENHA
+// ALTERAR SENHA
 
 app.put('/usuarios/alterar-senha', async (req, res) => {
 
@@ -1353,7 +1353,7 @@ app.put('/usuarios/alterar-senha', async (req, res) => {
 
 
 
-         Verificar senha atual (SEM HASH, ATUALIZAR COM SEGURANÇA)
+        // Verificar senha atual (SEM HASH, ATUALIZAR COM SEGURANÇA)
 
         const usuario = await conn.query(
 
@@ -1379,7 +1379,7 @@ app.put('/usuarios/alterar-senha', async (req, res) => {
 
 
 
-         Atualizar senha (SEM HASH, ATUALIZAR COM SEGURANÇA)
+        // Atualizar senha (SEM HASH, ATUALIZAR COM SEGURANÇA)
 
         await conn.query(
 
@@ -1414,7 +1414,7 @@ app.put('/usuarios/alterar-senha', async (req, res) => {
 });
 
 
- ATUALIZAR PERFIL DO USUÁRIO
+// ATUALIZAR PERFIL DO USUÁRIO
 
 app.put('/usuarios/:usuario_id', async (req, res) => {
 
@@ -1465,7 +1465,7 @@ app.put('/usuarios/:usuario_id', async (req, res) => {
 });
 
 
- TORNAR USUÁRIO ADMIN OU REMOVER ADMIN
+// TORNAR USUÁRIO ADMIN OU REMOVER ADMIN
 
 app.put('/usuarios/:usuario_id/admin', async (req, res) => {
 
@@ -1517,13 +1517,13 @@ app.put('/usuarios/:usuario_id/admin', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- DELETAR USUÁRIO (COM LIMPEZA DE DADOS E TRANSAÇÃO)
+// DELETAR USUÁRIO (COM LIMPEZA DE DADOS E TRANSAÇÃO)
 
- ======================================================
+// ======================================================
 
- Esta é a versão completa e correta que substitui a versão simples.
+// Esta é a versão completa e correta que substitui a versão simples.
 
 app.delete('/usuarios/:usuario_id', async (req, res) => {
 
@@ -1539,19 +1539,19 @@ app.delete('/usuarios/:usuario_id', async (req, res) => {
 
 
 
-         Iniciar Transação (garante que ou apaga tudo ou não apaga nada)
+        // Iniciar Transação (garante que ou apaga tudo ou não apaga nada)
 
         await conn.beginTransaction();
 
 
 
-         1. Apagar Favoritos do usuário
+        // 1. Apagar Favoritos do usuário
 
         await conn.query('DELETE FROM favoritos WHERE usuario_id = ?', [usuario_id]);
 
 
 
-         2. Apagar Retiradas do usuário (opcional: ou manter histórico setando usuario_id NULL)
+        // 2. Apagar Retiradas do usuário (opcional: ou manter histórico setando usuario_id NULL)
 
         try {
 
@@ -1561,13 +1561,13 @@ app.delete('/usuarios/:usuario_id', async (req, res) => {
 
 
 
-         3. Apagar Reservas do usuário
+        // 3. Apagar Reservas do usuário
 
         await conn.query('DELETE FROM reservas WHERE usuario_id = ?', [usuario_id]);
 
 
 
-         4. Finalmente, apagar o usuário
+        // 4. Finalmente, apagar o usuário
 
         const result = await conn.query('DELETE FROM usuarios WHERE usuario_id = ?', [usuario_id]);
 
@@ -1583,7 +1583,7 @@ app.delete('/usuarios/:usuario_id', async (req, res) => {
 
 
 
-        await conn.commit();  Confirma as alterações
+        await conn.commit(); // Confirma as alterações
 
 
 
@@ -1597,7 +1597,7 @@ app.delete('/usuarios/:usuario_id', async (req, res) => {
 
     } catch (error) {
 
-        if (conn) await conn.rollback();  Cancela se der erro
+        if (conn) await conn.rollback(); // Cancela se der erro
 
         console.error('Erro ao deletar usuário:', error);
 
@@ -1613,11 +1613,11 @@ app.delete('/usuarios/:usuario_id', async (req, res) => {
 
 
 
- ======================================================
+// ======================================================
 
- DASHBOARD - ESTATÍSTICAS GERAIS
+// DASHBOARD - ESTATÍSTICAS GERAIS
 
- ======================================================
+// ======================================================
 
 app.get('/admin/dashboard', async (req, res) => {
 
@@ -1629,7 +1629,7 @@ app.get('/admin/dashboard', async (req, res) => {
 
 
 
-         Fazemos várias queries em paralelo para ser rápido
+        // Fazemos várias queries em paralelo para ser rápido
 
         const [totalLivros] = await conn.query("SELECT COUNT(*) as total FROM livros");
 
@@ -1637,7 +1637,7 @@ app.get('/admin/dashboard', async (req, res) => {
 
 
 
-         Empréstimos ativos (data_devolucao_real IS NULL)
+        // Empréstimos ativos (data_devolucao_real IS NULL)
 
         let totalEmprestimos = [{ total: 0 }];
 
@@ -1649,13 +1649,13 @@ app.get('/admin/dashboard', async (req, res) => {
 
         } catch (e) {
 
-             Tabela ainda não existe, ignora
+            // Tabela ainda não existe, ignora
 
         }
 
 
 
-         Reservas pendentes
+        // Reservas pendentes
 
         const [totalReservas] = await conn.query("SELECT COUNT(*) as total FROM reservas WHERE status = 'pendente' OR status IS NULL");
 
@@ -1689,9 +1689,9 @@ app.get('/admin/dashboard', async (req, res) => {
 
 });
 
- Adicione esta rota no seu server.js
+// Adicione esta rota no seu server.js
 
- Rota para buscar dados de um admin específico
+// Rota para buscar dados de um admin específico
 app.get('/admin/:id', async (req, res) => {
     const adminId = req.params.id;
     let conn;
@@ -1699,7 +1699,7 @@ app.get('/admin/:id', async (req, res) => {
     try {
         conn = await pool.getConnection();
 
-         mariadb retorna rows diretamente
+        // mariadb retorna rows diretamente
         const rows = await conn.query(
             `
             SELECT 
@@ -1754,7 +1754,7 @@ app.put('/admin/:id/senha', async (req, res) => {
     try {
         conn = await pool.getConnection();
 
-         Busca a senha atual do admin
+        // Busca a senha atual do admin
         const rows = await conn.query(
             `
             SELECT senha
@@ -1773,7 +1773,7 @@ app.put('/admin/:id/senha', async (req, res) => {
 
         const senhaHashBanco = rows[0].senha;
 
-         Confere senha atual
+        // Confere senha atual
         const senhaConfere = await bcrypt.compare(senhaAtual, senhaHashBanco);
 
         if (!senhaConfere) {
@@ -1783,10 +1783,10 @@ app.put('/admin/:id/senha', async (req, res) => {
             });
         }
 
-         Gera novo hash
+        // Gera novo hash
         const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
 
-         Atualiza senha
+        // Atualiza senha
         await conn.query(
             `
             UPDATE usuarios
@@ -1813,7 +1813,7 @@ app.put('/admin/:id/senha', async (req, res) => {
 });
 
 
- Capturar erros globais para não fechar o processo sem log
+// Capturar erros globais para não fechar o processo sem log
 
 process.on('uncaughtException', (err) => {
 
@@ -1831,6 +1831,6 @@ process.on('unhandledRejection', (reason) => {
 
 app.listen(3000, () => {
 
-    console.log("API rodando em http:localhost:3000");
+    console.log("API rodando em http://localhost:3000");
 
 });
