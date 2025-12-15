@@ -766,23 +766,36 @@ app.post('/reservados', async (req, res) => {
     const { usuario_id, livro_id } = req.body;
     let conn;
 
+    if (!usuario_id || !livro_id) {
+        return res.status(400).json({
+            message: 'usuario_id e livro_id são obrigatórios'
+        });
+    }
+
     try {
         conn = await pool.getConnection();
 
-        // ✅ CORRIGIDO: data_reserva -> data_retirada e status -> "reservado"
         await conn.query(
-            'INSERT INTO reservas (usuario_id, livro_id, data_retirada, status) VALUES (?, ?, NOW(), "reservado")',
+            `INSERT INTO reservas 
+             (usuario_id, livro_id, data_retirada, data_devolucao, confirmado_email, status)
+             VALUES (?, ?, NOW(), NULL, FALSE, 'reservado')`,
             [usuario_id, livro_id]
         );
 
         res.json({ message: 'Reserva adicionada!' });
+
     } catch (error) {
-        // Ignora erro de duplicidade
-        if (error.code && error.code.includes('ER_DUP_ENTRY')) {
-            return res.status(200).json({ message: "Livro já está reservado por você." });
+
+        // 🔁 Duplicidade (mesmo usuário tentando reservar o mesmo livro)
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(200).json({
+                message: 'Livro já está reservado por você.'
+            });
         }
+
         console.error('Erro ao adicionar reserva:', error);
         res.status(500).json({ message: 'Erro ao adicionar reserva' });
+
     } finally {
         if (conn) conn.release();
     }
@@ -790,56 +803,38 @@ app.post('/reservados', async (req, res) => {
 
 
 
+
 // Remover uma reserva
 
 app.delete('/reservados/:userId/:livroId', async (req, res) => {
-
-    const userId = req.params.userId;
-
-    const livroId = req.params.livroId;
-
+    const { userId, livroId } = req.params;
     let conn;
 
-
-
     try {
-
         conn = await pool.getConnection();
 
-
-
         const result = await conn.query(
-
-            'DELETE FROM reservas WHERE usuario_id = ? AND livro_id = ? AND status = "pendente"',
-
+            `DELETE FROM reservas 
+             WHERE usuario_id = ? 
+               AND livro_id = ? 
+               AND status = 'reservado'`,
             [userId, livroId]
-
         );
 
-
-
         if (result.affectedRows === 0) {
-
-            return res.status(404).json({ message: 'Reserva não encontrada ou já retirada.' });
-
+            return res.status(404).json({
+                message: 'Reserva não encontrada.'
+            });
         }
-
-
 
         res.json({ message: 'Reserva removida!' });
 
     } catch (error) {
-
         console.error('Erro ao remover reserva:', error);
-
         res.status(500).json({ message: 'Erro ao remover reserva' });
-
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
 
 
