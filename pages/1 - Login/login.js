@@ -1,4 +1,4 @@
-// clicar no enter e ja envia as respostas
+// O listener para a tecla 'Enter' está correto
 const identifier = document.getElementById("identifier");
 const senha = document.getElementById("senha");
 const btn = document.getElementById("btnBotao");
@@ -10,25 +10,28 @@ document.addEventListener("keydown", function (e) {
     }
 });
 
-
 document.getElementById('btnBotao').addEventListener('click', async () => {
-    const identifier = document.getElementById('identifier').value.trim();
-    const senha = document.querySelector('input[type="password"]').value.trim();
+    // Captura os valores do formulário
+    const identifierValue = document.getElementById('identifier').value.trim();
+    const senhaValue = document.querySelector('input[type="password"]').value.trim();
 
-    console.log('Identifier:', identifier);
-    console.log('Senha:', senha);
+    console.log('Identifier:', identifierValue);
+    console.log('Senha:', senhaValue);
 
     const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-});
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+    });
 
     // Validação básica
-    if (!identifier || !senha) {
-        Toast.fire('Por favor, preencha todos os campos!');
+    if (!identifierValue || !senhaValue) {
+        Toast.fire({
+            title: 'Por favor, preencha todos os campos!',
+            icon: 'warning'
+        });
         return;
     }
 
@@ -41,8 +44,8 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                identifier: identifier,
-                senha: senha
+                identifier: identifierValue,
+                senha: senhaValue
             })
         });
 
@@ -53,22 +56,65 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         console.log('Response data:', data);
 
         if (response.ok && data.success) {
-            // Armazena o usuário no localStorage (nome usado para iniciais)
-            localStorage.setItem('usuarioId', data.usuario_id);
-            localStorage.setItem('usuarioLogin', data.nome || data.email || identifier);
+            
+            // ========== VERIFICAR SE É ADMIN ==========
+            const isAdmin = data.is_admin === 1 || data.is_admin === true;
+            
+            if (isAdmin) {
+                // ✅ ADMIN: Salvar dados do admin
+                localStorage.setItem('adminId', data.usuario_id);
+                localStorage.setItem('adminLogin', data.nome || data.email || identifierValue);
+                
+                console.log('Admin logado! ID:', data.usuario_id);
+                
+            } else {
+                // ✅ USUÁRIO COMUM: Salvar dados do usuário
+                localStorage.setItem('usuarioId', data.usuario_id);
+                localStorage.setItem('usuarioLogin', data.nome || data.email || identifierValue);
+                
+                // Salvar dados completos do usuário
+                localStorage.setItem('usuario', JSON.stringify({
+                    usuario_id: data.usuario_id,
+                    nome: data.nome,
+                    email: data.email,
+                    CPF: data.CPF,
+                    is_admin: data.is_admin
+                }));
+                
+                console.log('Usuário comum logado! ID:', data.usuario_id);
+            }
+            
+            // Se tiver token, salva também
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
 
             console.log('Login bem-sucedido, redirecionando...');
+            
             Toast.fire({
-                icon: "sucess",
+                title: 'Login realizado com sucesso!',
+                icon: 'success',
                 timer: 1500,
                 showConfirmButton: false
             });
 
-            window.location.href = '../2 - Principal/principal.html';
+            // ========== REDIRECIONAR BASEADO NO TIPO DE USUÁRIO ==========
+            setTimeout(() => {
+                if (isAdmin) {
+                    // Admin → Painel administrativo
+                    console.log('Redirecionando admin para painel...');
+                    window.location.href = '/adminPage/1.Gerenciar Livros/gerenciarLivros.html'; 
+                } else {
+                    // Usuário comum → Página principal
+                    console.log('Redirecionando usuário para página principal...');
+                    window.location.href = '/pages/2 - Principal/principal.html'; 
+                }
+            }, 1500);
+
         } else {
             Toast.fire({
                 title: (data.message || 'Erro ao fazer login. Verifique suas credenciais.'),
-                icon: "error",
+                icon: 'error',
                 timer: 1500,
                 showConfirmButton: false
             });
@@ -76,9 +122,9 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
     } catch (error) {
         console.error('Erro completo:', error);
         Swal.fire({
-            title: ('Erro ao conectar com o servidor. Verifique se ele está rodando.'),
-            icon: "error",
-            timer: 1500,
+            title: 'Erro ao conectar com o servidor. Verifique se ele está rodando.',
+            icon: 'error',
+            timer: 3000, 
             showConfirmButton: false
         });
     }

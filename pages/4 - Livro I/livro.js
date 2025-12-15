@@ -1,7 +1,94 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 
-const userId = localStorage.getItem('usuarioId') || 1;
+const userId = localStorage.getItem('usuarioId');
+
+// Função para navegar de volta para a página de origem preservando posição
+function voltarParaPágina() {
+    // Primeiro tenta usar o contexto armazenado na sessão (mais confiável)
+    const stored = sessionStorage.getItem('returnContext');
+    if (stored) {
+        try {
+            const ctx = JSON.parse(stored);
+            const targetMap = {
+                principal: '/pages/2 - Principal/principal.html',
+                favoritos: '/pages/5 -Favoritos/favoritos.html',
+                reservados: '/pages/6-Reservados/reservados.html'
+            };
+            const target = targetMap[ctx.from] || document.referrer || '/pages/2 - Principal/principal.html';
+
+            // preserva posição
+            if (ctx.scrollY != null) {
+                sessionStorage.setItem('restoreScroll', String(ctx.scrollY));
+            }
+
+            // limpa o contexto para que não seja reaplicado depois
+            sessionStorage.removeItem('returnContext');
+
+            // navega
+            window.location.href = target;
+            return;
+        } catch (e) {
+            // fallback para os próximos métodos
+            console.error('Erro ao parsear returnContext', e);
+        }
+    }
+
+    // Se o parâmetro 'from' veio na URL, usa ele
+    const fromParam = params.get('from');
+    if (fromParam) {
+        const targetMap = {
+            principal: '/pages/2 - Principal/principal.html',
+            favoritos: '/pages/5 -Favoritos/favoritos.html',
+            reservados: '/pages/6-Reservados/reservados.html'
+        };
+
+        const target = targetMap[fromParam] || null;
+        if (target) {
+            // tenta preservar scroll (se houver valor previamente salvo)
+            const maybeRestore = sessionStorage.getItem('returnContext');
+            if (maybeRestore) {
+                try {
+                    const ctx = JSON.parse(maybeRestore);
+                    if (ctx.scrollY != null) sessionStorage.setItem('restoreScroll', String(ctx.scrollY));
+                } catch (e) { }
+            }
+            window.location.href = target;
+            return;
+        }
+    }
+
+    // Se houver referrer para uma página interna, volta para ela
+    if (document.referrer) {
+        const ref = document.referrer;
+        // se o referrer é uma das páginas do app, navega para ele
+        if (ref.includes('/pages/2 - Principal') || ref.includes('/pages/5 -Favoritos') || ref.includes('/pages/6-Reservados')) {
+            window.location.href = ref;
+            return;
+        }
+    }
+
+    // fallback: usa history.back() se possível, senão vai para a principal
+    if (history.length > 1) {
+        history.back();
+    } else {
+        window.location.href = '/pages/2 - Principal/principal.html';
+    }
+}
+
+function promptLogin(actionName) {
+    Swal.fire({
+        title: `Você precisa estar logado para ${actionName}.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Entrar',
+        cancelButtonText: 'Cancelar'
+    }).then(result => {
+        if (result.isConfirmed) {
+            window.location.href = '/pages/1 - Login/login.html';
+        }
+    });
+}
 
 // =========================
 //  CARREGAR DADOS DO LIVRO
@@ -62,6 +149,16 @@ if (id) {
     document.body.innerHTML = "<h2>ID do livro não informado.</h2>";
 }
 
+// Handler do botão voltar (seta)
+const setaVoltar = document.querySelector('.seta-voltar');
+if (setaVoltar) {
+    setaVoltar.style.cursor = 'pointer';
+    setaVoltar.addEventListener('click', (e) => {
+        e.preventDefault();
+        voltarParaPágina();
+    });
+}
+
 
 
 // =========================
@@ -69,6 +166,12 @@ if (id) {
 // =========================
 
 function verificarFavorito(livroId) {
+    if (!userId) {
+        // Não está logado: deixa botão disponível para redirecionar ao login
+        atualizarBotaoFavorito(false, livroId);
+        return;
+    }
+
     fetch(`http://localhost:3000/favoritos/${userId}`)
         .then(res => res.json())
         .then(favoritos => {
@@ -93,11 +196,19 @@ function atualizarBotaoFavorito(jaFavoritado, livroId) {
         btnFavoritar.innerHTML = '❤️ Favoritar';
         btnFavoritar.style.backgroundColor = '';
         btnFavoritar.style.color = '';
-        btnFavoritar.onclick = () => adicionarFavorito(livroId);
+        if (!userId) {
+            btnFavoritar.onclick = () => promptLogin('favoritar este livro');
+        } else {
+            btnFavoritar.onclick = () => adicionarFavorito(livroId);
+        }
     }
 }
 
 function adicionarFavorito(livroId) {
+    if (!userId) {
+        promptLogin('favoritar este livro');
+        return;
+    }
     const btnFavoritar = document.querySelector('.favoritar button');
     btnFavoritar.disabled = true;
     btnFavoritar.innerHTML = 'Adicionando...';
@@ -189,6 +300,11 @@ function removerFavorito(livroId) {
 // =========================
 
 function verificarReservado(livroId) {
+    if (!userId) {
+        atualizarReservados(false, livroId);
+        return;
+    }
+
     fetch(`http://localhost:3000/reservados/${userId}`)
         .then(res => res.json())
         .then(reservados => {
@@ -213,11 +329,19 @@ function atualizarReservados(jaReservado, livroId) {
         btnReservar.innerHTML = '📖 Reservar';
         btnReservar.style.backgroundColor = '';
         btnReservar.style.color = '';
-        btnReservar.onclick = () => adicionarReservado(livroId);
+        if (!userId) {
+            btnReservar.onclick = () => promptLogin('reservar este livro');
+        } else {
+            btnReservar.onclick = () => adicionarReservado(livroId);
+        }
     }
 }
 
 function adicionarReservado(livroId) {
+    if (!userId) {
+        promptLogin('reservar este livro');
+        return;
+    }
     const btnReservar = document.querySelector('.reservar button');
     btnReservar.disabled = true;
     btnReservar.innerHTML = 'Adicionando...';

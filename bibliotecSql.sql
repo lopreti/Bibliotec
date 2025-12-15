@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           11.8.2-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           12.0.2-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              12.10.0.7000
+-- HeidiSQL Versão:              12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -42,20 +42,17 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   KEY `FK_favoritos_livro` (`livro_id`),
   CONSTRAINT `FK_favoritos_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_favoritos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.favoritos: ~8 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.favoritos: ~7 rows (aproximadamente)
 INSERT INTO `favoritos` (`id`, `usuario_id`, `livro_id`) VALUES
-	(36, 1, 1),
-	(37, 1, 1),
-	(38, 1, 3),
-	(39, 1, 2),
-	(40, 1, 2),
 	(46, 3, 2),
 	(48, 4, 2),
 	(49, 4, 1),
 	(50, 4, 50),
-	(51, 4, 38);
+	(51, 4, 38),
+	(52, 3, 3),
+	(53, 3, 24);
 
 -- Copiando estrutura para tabela bibliotec.livros
 CREATE TABLE IF NOT EXISTS `livros` (
@@ -71,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `livros` (
   `categoria` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`livro_id`),
   CONSTRAINT `chk_quantidade_pagina` CHECK (`quant_paginas` regexp '^[0-9]+$')
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.livros: ~45 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.livros: ~46 rows (aproximadamente)
 INSERT INTO `livros` (`livro_id`, `titulo`, `autor`, `descricao`, `capa_url`, `publicado_ano`, `criado_em`, `quant_paginas`, `idioma`, `categoria`) VALUES
 	(1, 'Crepúsculo', 'Stephenie Meyer', 'Bella Swan se muda para a pequena e chuvosa cidade de Forks, onde sua vida toma um rumo inesperado ao conhecer Edward Cullen, um misterioso colega de escola. Conforme os dois se aproximam, Bella descobre que Edward pertence a uma família de vampiros e acaba envolvida em um romance proibido que coloca sua vida em risco.', 'https://m.media-amazon.com/images/I/618fXbK+OkL._SY425_.jpg', 2005, '2025-11-19 11:19:42', '288', 'Português', NULL),
 	(2, 'Cinquenta Tons de Cinza', 'E. L. James', 'Quando a estudante Anastasia Steele entrevista o jovem empresário Christian Grey, ela é atraída por sua beleza, poder e mistério. Apesar de suas diferenças, os dois embarcam em um relacionamento intenso e complexo, marcado por regras rígidas, limites pessoais e a busca por confiança e vulnerabilidade.', 'https://m.media-amazon.com/images/I/51XHQHnyciL._SY445_SX342_ML2_.jpg', 2011, '2025-11-19 11:19:42', '480', 'Português', NULL),
@@ -119,7 +116,8 @@ INSERT INTO `livros` (`livro_id`, `titulo`, `autor`, `descricao`, `capa_url`, `p
 	(67, 'Garota Exemplar', 'Gillian Flynn', 'No dia do aniversário de casamento, Amy desaparece — e todas as suspeitas recaem sobre seu marido.', 'https://m.media-amazon.com/images/I/510k5EkYuWL._AC_UF1000,1000_QL80_.jpg', 2012, '2025-12-12 12:30:34', '432', 'Português', 'Suspense'),
 	(68, 'As Benevolentes', 'Jonathan Littell', 'Um ex-oficial nazista narra seus próprios crimes e sua visão perturbadora da guerra.', 'https://m.media-amazon.com/images/I/71tmVD7IoCL._UF1000,1000_QL80_.jpg', 2006, '2025-12-12 12:30:34', '992', 'Português', 'Ficção Histórica'),
 	(70, 'A Rainha Vermelha', 'Victoria Aveyard', 'Mare descobre ter poderes extraordinários em um reino dividido entre sangue vermelho e prateado.', 'https://m.media-amazon.com/images/I/81DQMKmWvCL._UF1000,1000_QL80_.jpg', 2015, '2025-12-12 12:30:34', '416', 'Português', 'Fantasia'),
-	(71, 'Sussurro', 'Becca Fitzpatrick', 'Nora conhece Patch, um anjo caído misterioso que a envolve em um romance perigoso.', 'https://m.media-amazon.com/images/I/71vDiJcTPVL._UF1000,1000_QL80_.jpg', 2009, '2025-12-12 12:30:34', '391', 'Português', 'Romance / Fantasia');
+	(71, 'Sussurro', 'Becca Fitzpatrick', 'Nora conhece Patch, um anjo caído misterioso que a envolve em um romance perigoso.', 'https://m.media-amazon.com/images/I/71vDiJcTPVL._UF1000,1000_QL80_.jpg', 2009, '2025-12-12 12:30:34', '391', 'Português', 'Romance / Fantasia'),
+	(72, 'Sombra e Ossos', 'Leigh Bardugo', 'Alina Starkov descobre possuir um poder raro capaz de mudar o destino de seu mundo, mergulhando em intrigas, magia e conflitos sombrios.', 'https://m.media-amazon.com/images/I/81WKPIFKThL.jpg', 2012, '2025-12-13 22:22:10', '358', 'Português', NULL);
 
 -- Copiando estrutura para tabela bibliotec.livros_categorias
 CREATE TABLE IF NOT EXISTS `livros_categorias` (
@@ -147,44 +145,46 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `data_devolucao` int(11) DEFAULT NULL,
   `confirmado_email` int(11) DEFAULT NULL,
   `criado_em` int(11) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'reservado',
   PRIMARY KEY (`id_reservado`),
   KEY `FK_reservas_usuario` (`usuario_id`),
   KEY `FK_reservas_livro` (`livro_id`),
   CONSTRAINT `FK_reservas_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_reservas_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.reservas: ~2 rows (aproximadamente)
-INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `criado_em`) VALUES
-	(7, 3, 1, NULL, NULL, NULL, NULL),
-	(10, 4, 1, NULL, NULL, NULL, NULL),
-	(11, 4, 29, NULL, NULL, NULL, NULL),
-	(12, 4, 25, NULL, NULL, NULL, NULL),
-	(13, 4, 24, NULL, NULL, NULL, NULL),
-	(14, 4, 27, NULL, NULL, NULL, NULL),
-	(15, 4, 30, NULL, NULL, NULL, NULL),
-	(16, 4, 38, NULL, NULL, NULL, NULL),
-	(17, 4, 46, NULL, NULL, NULL, NULL),
-	(18, 4, 58, NULL, NULL, NULL, NULL);
+-- Copiando dados para a tabela bibliotec.reservas: ~10 rows (aproximadamente)
+INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `criado_em`, `status`) VALUES
+	(7, 3, 1, NULL, NULL, NULL, NULL, 'reservado'),
+	(10, 4, 1, NULL, NULL, NULL, NULL, 'reservado'),
+	(11, 4, 29, NULL, NULL, NULL, NULL, 'reservado'),
+	(12, 4, 25, NULL, NULL, NULL, NULL, 'reservado'),
+	(14, 4, 27, NULL, NULL, NULL, NULL, 'reservado'),
+	(15, 4, 30, NULL, NULL, NULL, NULL, 'reservado'),
+	(16, 4, 38, NULL, NULL, NULL, NULL, 'reservado'),
+	(17, 4, 46, NULL, NULL, NULL, NULL, 'reservado'),
+	(18, 4, 58, NULL, NULL, NULL, NULL, 'reservado'),
+	(20, 4, 24, NULL, NULL, NULL, NULL, 'reservado');
 
 -- Copiando estrutura para tabela bibliotec.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `usuario_id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NOT NULL,
-  `senha` varchar(50) NOT NULL,
+  `senha` varchar(255) NOT NULL,
   `nome` varchar(250) NOT NULL,
   `CPF` varchar(11) NOT NULL,
+  `is_admin` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Copiando dados para a tabela bibliotec.usuarios: ~5 rows (aproximadamente)
-INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`) VALUES
-	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890'),
-	(2, 'teste@example.com', 'password123', 'Teste Usuario', '12345678901'),
-	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900'),
-	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109'),
-	(5, 'lopretis@gmail.com', '12345678', 'isabella lopreti', '78965412300');
+INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`) VALUES
+	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890', 0),
+	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900', 0),
+	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109', 0),
+	(5, 'lopretis@gmail.com', '12345678', 'isabella lopreti', '78965412300', 0),
+	(6, 'admin@bibliotec.com', 'Admin123@', 'Admin Master', '999999999', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

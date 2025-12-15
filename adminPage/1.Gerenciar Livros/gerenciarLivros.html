@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Gerenciar Livros</title>
+    <link rel="stylesheet" href="gerenciarLivros.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="/adminPage/1.Gerenciar Livros/gerenciarLivros.html">
+                <img src="/img/icone.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/adminPage/1.Gerenciar Livros/gerenciarLivros.html">GERENCIAR LIVROS</a></li>
+                <li><a href="/adminPage/2.Gerenciar Usuarios/gerenciarUsuarios.html">GERENCIAR USUÁRIOS</a></li>
+                <li><a href="/adminPage/3.Ver Reservas/verReservas.html">VER RESERVAS</a></li>
+            </ul>
+        </nav>
+        <div class="perfil">
+            <div class="perfil-inicial" id="perfil-iniciais">ADM</div>
+        </div>
+    </header>
+
+    <main>
+        <section id="secao-livros" class="secao admin-only">
+            <div class="secao-header">
+                <h2>Gerenciar Livros</h2>
+                <button onclick="abrirModalCadastrarLivro()" class="btn-adicionar">+ Cadastrar Novo Livro</button>
+            </div>
+            <div class="barra-pesquisa">
+                <input type="text" id="input-pesquisa" placeholder="     🔍   Pesquise seu livro"
+                    onkeyup="pesquisarLivros(this.value)">
+            </div>
+
+            <div id="livros-container"></div>
+        </section>
+    </main>
+    </div>
+
+    <div id="modal-livro" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalLivro()">&times;</span>
+            <h2 id="modal-titulo">Cadastrar Novo Livro</h2>
+            <form id="form-livro" onsubmit="salvarLivro(event)">
+                <input type="hidden" id="livro-id">
+                <div class="form-group"> <label>Título:*</label> <input type="text" id="livro-titulo" required> </div>
+                <div class="form-group"> <label>Autor:*</label> <input type="text" id="livro-autor" required> </div>
+                <div class="form-group"> <label>Ano de Publicação:*</label> <input type="number" id="livro-ano"
+                        min="1000" max="2100" required> </div>
+                <div class="form-group"> <label>Categoria:*</label> <input type="text" id="livro-categoria" required>
+                </div>
+                <div class="form-group"> <label>Quantidade de Páginas:*</label> <input type="number"
+                        id="livro-quantidade" min="1" required> </div>
+                <div class="form-group"> <label>Idioma:*</label> <input type="text" id="livro-idioma" required> </div>
+                <div class="form-group"> <label>Capa URL:*</label> <input type="text" id="livro-capa-url" required>
+                </div>
+                <div class="form-group"> <label>Descrição:*</label> <textarea id="livro-descricao" rows="4"
+                        required></textarea> </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-salvar">Salvar</button>
+                    <button type="button" onclick="fecharModalLivro()" class="btn-cancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-detalhes-livro" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalDetalhes()">&times;</span>
+            <h2>Detalhes do Livro</h2>
+            <div id="detalhes-livro-content"></div>
+            <button onclick="fecharModalDetalhes()" class="btn-cancelar">Fechar</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="gerenciarLivros.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', carregarLivros);
+    </script>
+
+</body>
+
+</html>

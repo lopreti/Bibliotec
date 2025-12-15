@@ -1,0 +1,467 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background-color: #fff;
+    color: #000;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+.secao-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-detalhes,
+.btn-editar-item,
+.btn-deletar,
+.btn-adicionar {
+    border: 2px solid #000;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 0.4rem 0.6rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-detalhes:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-editar-item:hover {
+    background-color: #5667ff;
+    color: #fff;
+}
+
+.btn-deletar:hover {
+    background-color: #ff4d4d;
+    color: #fff;
+}
+
+.btn-adicionar:hover {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.barra-pesquisa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.barra-pesquisa input {
+    width: 100%;
+    height: 40px;
+    border-radius: 25px;
+    border: 2px solid #bcbcbc;
+    font-size: 15px;
+    box-shadow: 0 0 4px #ccc;
+}
+
+.navbar {
+    width: 100%;
+    height: 85px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 10;
+}
+
+.logo img {
+    width: 75px;
+}
+
+.navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 4rem;
+}
+
+.navbar nav ul li a {
+    text-decoration: none;
+    font-weight: 700;
+    color: #000;
+    transition: 0.3s;
+    padding: 0.9rem;
+    border-radius: 20px;
+}
+
+.navbar nav ul li a:hover {
+    background-color: #627df565;
+}
+
+.perfil-inicial {
+    width: 55px;
+    height: 55px;
+    background-color: #b6b6f8;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+main {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.btn-salvar {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-salvar:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-cancelar {
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-cancelar:hover {
+    background-color: #7f8c8d;
+}
+
+.livro-item {
+    background-color: #fafafa;
+    box-shadow: 0 2px 50px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    width: 100%;
+    height: 120px;
+    margin: 0 auto 2rem;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fafafa;
+    transition: all 0.3s;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideDown 0.3s;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+#detalhes-livro-content {
+    margin: 20px 0;
+}
+
+#detalhes-livro-content p {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#detalhes-livro-content strong {
+    color: #2c3e50;
+    display: inline-block;
+    width: 150px;
+}
+
+/* =========================
+   PERFIL (NAVBAR)
+========================= */
+.perfil {
+    position: relative;
+}
+
+.perfil-inicial {
+    width: 55px;
+    height: 55px;
+    background-color: #4A67DF;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* =========================
+   MENU DROPDOWN
+========================= */
+.perfil-menu {
+    position: absolute;
+    right: 0;
+    top: 70px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 6px;
+    display: none;
+    min-width: 160px;
+    z-index: 100;
+}
+
+.perfil-menu.show {
+    display: block;
+}
+
+.perfil-menu button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 600;
+    color: #111;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.perfil-menu button:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.perfil-menu .infos {
+    color: #000000;
+}
+
+.perfil-menu .btn-logout {
+    color: #e74c3c;
+}
+
+/* =========================
+   POPUP OVERLAY
+========================= */
+#popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* =========================
+   POPUP ADMIN
+========================= */
+#popup-admin {
+    background: #fff;
+    padding: 28px;
+    border-radius: 14px;
+    width: 420px;
+    max-width: 95%;
+    position: relative;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+#popup-admin h2 {
+    margin: 0 0 18px;
+    color: #222;
+}
+
+#popup-admin h3 {
+    margin-top: 20px;
+    color: #4A67DF;
+}
+
+/* =========================
+   BOTÃO FECHAR
+========================= */
+#fechar-popup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #777;
+}
+
+#fechar-popup:hover {
+    color: #000;
+}
+
+/* =========================
+   INFO SECTIONS
+========================= */
+.info-section {
+    background: #f7f8fc;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.info-section b {
+    color: #555;
+}
+
+/* =========================
+   INPUTS SENHA
+========================= */
+#popup-admin input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#popup-admin input:focus {
+    outline: none;
+    border-color: #4A67DF;
+}
+
+/* =========================
+   BOTÃO ALTERAR SENHA
+========================= */
+#btn-alterar-senha {
+    width: 100%;
+    background: #4A67DF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+#btn-alterar-senha:hover {
+    background: #394fcf;
+}

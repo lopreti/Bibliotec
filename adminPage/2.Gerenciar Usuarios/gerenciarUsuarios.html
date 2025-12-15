@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Gerenciar Usuários</title>
+    <link rel="stylesheet" href="gerenciarUsuarios.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="/adminPage/1.Gerenciar Livros/gerenciarLivros.html">
+                <img src="/img/icone.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/adminPage/1.Gerenciar Livros/gerenciarLivros.html">GERENCIAR LIVROS</a></li>
+                <li><a href="/adminPage/2.Gerenciar Usuarios/gerenciarUsuarios.html">GERENCIAR USUÁRIOS</a></li>
+                <li><a href="/adminPage/3.Ver Reservas/verReservas.html">VER RESERVAS</a></li>
+            </ul>
+        </nav>
+        <div class="perfil">
+            <div class="perfil-inicial" id="perfil-iniciais">ADM</div>
+        </div>
+    </header>
+        <main>
+            <section id="secao-usuarios" class="secao admin-only">
+                <h2>Gerenciar Usuários</h2>
+                <div id="usuarios-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="gerenciarUsuarios.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', carregarUsuarios);
+    </script>
+</body>
+
+</html>
