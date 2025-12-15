@@ -55,17 +55,11 @@ CREATE TABLE IF NOT EXISTS `favoritos` (
   KEY `FK_favoritos_livro` (`livro_id`),
   CONSTRAINT `FK_favoritos_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_favoritos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.favoritos: ~7 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.favoritos: ~1 rows (aproximadamente)
 INSERT INTO `favoritos` (`id`, `usuario_id`, `livro_id`) VALUES
-	(46, 3, 2),
-	(48, 4, 2),
-	(49, 4, 1),
-	(50, 4, 50),
-	(51, 4, 38),
-	(52, 3, 3),
-	(53, 3, 24);
+	(54, 11, 24);
 
 -- Copiando estrutura para tabela bibliotec.livros
 CREATE TABLE IF NOT EXISTS `livros` (
@@ -197,29 +191,20 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   `id_reservado` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,
   `livro_id` int(11) NOT NULL,
-  `data_retirada` int(11) DEFAULT NULL,
-  `data_devolucao` int(11) DEFAULT NULL,
-  `confirmado_email` int(11) DEFAULT NULL,
+  `data_retirada` datetime DEFAULT NULL,
+  `data_devolucao` datetime DEFAULT NULL,
+  `confirmado_email` tinyint(1) DEFAULT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'reservado',
   PRIMARY KEY (`id_reservado`),
   KEY `FK_reservas_usuario` (`usuario_id`),
   KEY `FK_reservas_livro` (`livro_id`),
   CONSTRAINT `FK_reservas_livro` FOREIGN KEY (`livro_id`) REFERENCES `livros` (`livro_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_reservas_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.reservas: ~10 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.reservas: ~1 rows (aproximadamente)
 INSERT INTO `reservas` (`id_reservado`, `usuario_id`, `livro_id`, `data_retirada`, `data_devolucao`, `confirmado_email`, `status`) VALUES
-	(7, 3, 1, NULL, NULL, NULL, 'reservado'),
-	(10, 4, 1, NULL, NULL, NULL, 'reservado'),
-	(11, 4, 29, NULL, NULL, NULL, 'reservado'),
-	(12, 4, 25, NULL, NULL, NULL, 'reservado'),
-	(14, 4, 27, NULL, NULL, NULL, 'reservado'),
-	(15, 4, 30, NULL, NULL, NULL, 'reservado'),
-	(16, 4, 38, NULL, NULL, NULL, 'reservado'),
-	(17, 4, 46, NULL, NULL, NULL, 'reservado'),
-	(18, 4, 58, NULL, NULL, NULL, 'reservado'),
-	(20, 4, 24, NULL, NULL, NULL, 'reservado');
+	(22, 11, 24, '2025-12-14 23:31:21', NULL, 0, 'reservado');
 
 -- Copiando estrutura para tabela bibliotec.usuarios
 CREATE TABLE IF NOT EXISTS `usuarios` (
@@ -232,18 +217,12 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `telefone` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.usuarios: ~8 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.usuarios: ~2 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`, `telefone`) VALUES
-	(1, 'isabella@gmail.com', '82bc79eb224ea98d47f241bfa30d67c2346232c4c6a6e7be8d3dc69110f904cf', 'isabella lopreti', '01234567890', 0, NULL),
-	(3, 'lavinia@gmail.com', 'f583836223551ee2255d185addae4a54beb4e76818ec1ceaad1122b8b086b540', 'lavínia chaves', '12345678900', 0, '11919895100'),
-	(4, 'lavi@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'laví chaves', '98765432109', 0, NULL),
-	(5, 'lopretis@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'isabella lopreti', '78965412300', 0, NULL),
-	(6, 'admin@bibliotec.com', '201bce2458f00a54130c695ca8d1658319b32206d495adf175847b57bd4a4151', 'Admin Master', '999999999', 1, NULL),
-	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0, NULL),
-	(8, 'maria@email.com', '$2b$10$M9jvQQMLlDIeofTH/1736emu9rNHj374dTg1TYKsdy5MLkafFgUW2', 'Maria Silva', '12345677789', 0, '11999999999'),
-	(9, 'teste@gmail.com', '$2b$10$qKtElS2aYCqKcfA/l543ZullsiPemVloK9X2V1Ej1BJs7jNr4MY2y', 'Teste', '12369854789', 0, '11987654321');
+	(10, 'admin@bibliotec.com', 'Admin123@', 'Administrador Master', '9999999999', 1, '11999999999'),
+	(11, 'laviniachaves@gmail.com', '$2b$10$BYBvD6Yxrin3q7EHmXX1AuvfXheDQH9YQlfkMyUmQjPCq3wTwpCma', 'Lavínia Chaves', '12345678912', 0, '11919895100');
 
 -- Copiando estrutura para trigger bibliotec.trg_livro_categoria_ai
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
