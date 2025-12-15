@@ -842,47 +842,37 @@ app.delete('/reservados/:userId/:livroId', async (req, res) => {
 // Listar todas as reservas (Admin)
 
 app.get('/reservas/todas', async (req, res) => {
-
     let conn;
 
-
-
     try {
-
         conn = await pool.getConnection();
-
         const sql = `
-    SELECT
-        r.id_reservado AS reserva_id,
-        r.usuario_id,
-        r.livro_id,
-        r.criado_em AS data_reserva,
-        r.confirmado_email AS status,  -- ou outro campo que use como status
-        u.nome AS usuario_nome,
-        l.titulo
-    FROM reservas r
-    JOIN usuarios u ON r.usuario_id = u.usuario_id
-    JOIN livros l ON r.livro_id = l.livro_id
-    ORDER BY r.criado_em DESC;
-`;
+            SELECT
+                r.id_reservado AS reserva_id,
+                r.usuario_id,
+                r.livro_id,
+                r.data_retirada,
+                r.data_devolucao,
+                r.confirmado_email,
+                r.status,
+                u.nome AS usuario_nome,
+                l.titulo
+            FROM reservas r
+            JOIN usuarios u ON r.usuario_id = u.usuario_id
+            JOIN livros l ON r.livro_id = l.livro_id
+            ORDER BY r.data_retirada DESC;
+        `;
         const rows = await conn.query(sql);
 
         res.json(rows);
 
     } catch (error) {
-
         console.error('Erro ao buscar todas as reservas:', error);
-
         res.status(500).json({ message: 'Erro no servidor' });
-
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
-
 
 
 // Listar reservas pendentes (para registrar retirada)
