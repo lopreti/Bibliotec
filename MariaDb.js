@@ -1699,20 +1699,29 @@ app.get('/admin/:id', async (req, res) => {
     try {
         conn = await pool.getConnection();
 
-        // Busca o admin na tabela de usuários (onde is_admin = 1)
-        const [rows] = await conn.query(
-            "SELECT usuario_id, nome, email, CPF, telefone, is_admin FROM usuarios WHERE usuario_id = ? AND is_admin = 1",
+        // mariadb retorna rows diretamente
+        const rows = await conn.query(
+            `
+            SELECT 
+                usuario_id,
+                nome,
+                email,
+                CPF,
+                telefone,
+                is_admin
+            FROM usuarios
+            WHERE usuario_id = ? AND is_admin = 1
+            `,
             [adminId]
         );
 
-        if (rows.length === 0) {
-            return res.status(404).json({ 
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({
                 success: false,
-                message: 'Administrador não encontrado' 
+                message: 'Administrador não encontrado'
             });
         }
 
-        // Retorna os dados do admin
         res.json({
             success: true,
             ...rows[0]
@@ -1720,22 +1729,88 @@ app.get('/admin/:id', async (req, res) => {
 
     } catch (error) {
         console.error('Erro ao buscar admin:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
-            message: 'Erro no servidor' 
+            message: 'Erro no servidor'
         });
     } finally {
         if (conn) conn.release();
     }
 });
 
-// ============================================
-// OU, se preferir, use a rota de usuários:
-// ============================================
 
-// Se você já tem a rota GET /usuarios/:id, ela serve para admin também!
-// Só precisa garantir que ela retorna os dados quando is_admin = 1
+app.put('/admin/:id/senha', async (req, res) => {
+    const adminId = req.params.id;
+    const { senhaAtual, novaSenha } = req.body;
+    let conn;
 
+    if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({
+            success: false,
+            message: 'Senha atual e nova senha são obrigatórias'
+        });
+    }
+
+    try {
+        conn = await pool.getConnection();
+
+        // Busca a senha atual do admin
+        const rows = await conn.query(
+            `
+            SELECT senha
+            FROM usuarios
+            WHERE usuario_id = ? AND is_admin = 1
+            `,
+            [adminId]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Administrador não encontrado'
+            });
+        }
+
+        const senhaHashBanco = rows[0].senha;
+
+        // Confere senha atual
+        const senhaConfere = await bcrypt.compare(senhaAtual, senhaHashBanco);
+
+        if (!senhaConfere) {
+            return res.status(401).json({
+                success: false,
+                message: 'Senha atual incorreta'
+            });
+        }
+
+        // Gera novo hash
+        const novaSenhaHash = await bcrypt.hash(novaSenha, 10);
+
+        // Atualiza senha
+        await conn.query(
+            `
+            UPDATE usuarios
+            SET senha = ?
+            WHERE usuario_id = ? AND is_admin = 1
+            `,
+            [novaSenhaHash, adminId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Senha alterada com sucesso'
+        });
+
+    } catch (error) {
+        console.error('Erro ao alterar senha do admin:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro no servidor'
+        });
+    } finally {
+        if (conn) conn.release();
+    }
+});
 
 
 // Capturar erros globais para não fechar o processo sem log
