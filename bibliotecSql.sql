@@ -231,15 +231,16 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `is_admin` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`usuario_id`),
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.usuarios: ~5 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.usuarios: ~6 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`) VALUES
-	(1, 'isabella@gmail.com', 'senha12345', 'isabella lopreti', '01234567890', 0),
-	(3, 'lavinia@gmail.com', 'senha54321', 'lavínia chaves', '12345678900', 0),
-	(4, 'lavi@gmail.com', '12345678', 'laví chaves', '98765432109', 0),
-	(5, 'lopretis@gmail.com', '12345678', 'isabella lopreti', '78965412300', 0),
-	(6, 'admin@bibliotec.com', 'Admin123@', 'Admin Master', '999999999', 1);
+	(1, 'isabella@gmail.com', '82bc79eb224ea98d47f241bfa30d67c2346232c4c6a6e7be8d3dc69110f904cf', 'isabella lopreti', '01234567890', 0),
+	(3, 'lavinia@gmail.com', 'f583836223551ee2255d185addae4a54beb4e76818ec1ceaad1122b8b086b540', 'lavínia chaves', '12345678900', 0),
+	(4, 'lavi@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'laví chaves', '98765432109', 0),
+	(5, 'lopretis@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'isabella lopreti', '78965412300', 0),
+	(6, 'admin@bibliotec.com', '201bce2458f00a54130c695ca8d1658319b32206d495adf175847b57bd4a4151', 'Admin Master', '999999999', 1),
+	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
