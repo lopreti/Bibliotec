@@ -234,14 +234,16 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   CONSTRAINT `chk_senha` CHECK (char_length(`senha`) >= 8)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
--- Copiando dados para a tabela bibliotec.usuarios: ~6 rows (aproximadamente)
+-- Copiando dados para a tabela bibliotec.usuarios: ~8 rows (aproximadamente)
 INSERT INTO `usuarios` (`usuario_id`, `email`, `senha`, `nome`, `CPF`, `is_admin`, `telefone`) VALUES
 	(1, 'isabella@gmail.com', '82bc79eb224ea98d47f241bfa30d67c2346232c4c6a6e7be8d3dc69110f904cf', 'isabella lopreti', '01234567890', 0, NULL),
 	(3, 'lavinia@gmail.com', 'f583836223551ee2255d185addae4a54beb4e76818ec1ceaad1122b8b086b540', 'lavínia chaves', '12345678900', 0, '11919895100'),
 	(4, 'lavi@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'laví chaves', '98765432109', 0, NULL),
 	(5, 'lopretis@gmail.com', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'isabella lopreti', '78965412300', 0, NULL),
 	(6, 'admin@bibliotec.com', '201bce2458f00a54130c695ca8d1658319b32206d495adf175847b57bd4a4151', 'Admin Master', '999999999', 1, NULL),
-	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0, NULL);
+	(7, 'kelvin@gmal.com', 'kelvinho123', 'kelvin silva', '12345678912', 0, NULL),
+	(8, 'maria@email.com', '$2b$10$M9jvQQMLlDIeofTH/1736emu9rNHj374dTg1TYKsdy5MLkafFgUW2', 'Maria Silva', '12345677789', 0, '11999999999'),
+	(9, 'teste@gmail.com', '$2b$10$qKtElS2aYCqKcfA/l543ZullsiPemVloK9X2V1Ej1BJs7jNr4MY2y', 'Teste', '12369854789', 0, '11987654321');
 
 -- Copiando estrutura para trigger bibliotec.trg_livro_categoria_ai
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
