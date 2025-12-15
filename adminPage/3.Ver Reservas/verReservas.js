@@ -65,7 +65,6 @@ function mostrarReservas(reservas) {
             <div class="reserva-info">
                 <strong>Livro: ${reserva.titulo}</strong>
                 <span>Usuário: ${reserva.usuario_nome}</span>
-                <span>Reservado em: ${formatarData(reserva.data_reserva)}</span>
             </div>
             <div class="reserva-status ${statusClasse}">
                 ${statusTexto}
