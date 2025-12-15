@@ -1774,7 +1774,52 @@ app.get('/admin/dashboard', async (req, res) => {
 
 });
 
+// Adicione esta rota no seu server.js
 
+// Rota para buscar dados de um admin específico
+app.get('/admin/:id', async (req, res) => {
+    const adminId = req.params.id;
+    let conn;
+
+    try {
+        conn = await pool.getConnection();
+
+        // Busca o admin na tabela de usuários (onde is_admin = 1)
+        const [rows] = await conn.query(
+            "SELECT usuario_id, nome, email, CPF, telefone, is_admin FROM usuarios WHERE usuario_id = ? AND is_admin = 1",
+            [adminId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Administrador não encontrado' 
+            });
+        }
+
+        // Retorna os dados do admin
+        res.json({
+            success: true,
+            ...rows[0]
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar admin:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Erro no servidor' 
+        });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
+// ============================================
+// OU, se preferir, use a rota de usuários:
+// ============================================
+
+// Se você já tem a rota GET /usuarios/:id, ela serve para admin também!
+// Só precisa garantir que ela retorna os dados quando is_admin = 1
 
 
 

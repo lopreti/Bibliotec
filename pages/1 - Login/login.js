@@ -44,7 +44,6 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                // Usamos identifierValue e senhaValue na requisição
                 identifier: identifierValue,
                 senha: senhaValue
             })
@@ -57,18 +56,33 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         console.log('Response data:', data);
 
         if (response.ok && data.success) {
-            // Armazena os dados do usuário no localStorage
-            localStorage.setItem('usuarioId', data.usuario_id);
-            localStorage.setItem('usuarioLogin', data.nome || data.email || identifierValue);
             
-            // Salvar dados completos do usuário
-            localStorage.setItem('usuario', JSON.stringify({
-                usuario_id: data.usuario_id,
-                nome: data.nome,
-                email: data.email,
-                CPF: data.CPF,
-                is_admin: data.is_admin
-            }));
+            // ========== VERIFICAR SE É ADMIN ==========
+            const isAdmin = data.is_admin === 1 || data.is_admin === true;
+            
+            if (isAdmin) {
+                // ✅ ADMIN: Salvar dados do admin
+                localStorage.setItem('adminId', data.usuario_id);
+                localStorage.setItem('adminLogin', data.nome || data.email || identifierValue);
+                
+                console.log('Admin logado! ID:', data.usuario_id);
+                
+            } else {
+                // ✅ USUÁRIO COMUM: Salvar dados do usuário
+                localStorage.setItem('usuarioId', data.usuario_id);
+                localStorage.setItem('usuarioLogin', data.nome || data.email || identifierValue);
+                
+                // Salvar dados completos do usuário
+                localStorage.setItem('usuario', JSON.stringify({
+                    usuario_id: data.usuario_id,
+                    nome: data.nome,
+                    email: data.email,
+                    CPF: data.CPF,
+                    is_admin: data.is_admin
+                }));
+                
+                console.log('Usuário comum logado! ID:', data.usuario_id);
+            }
             
             // Se tiver token, salva também
             if (data.token) {
@@ -86,17 +100,14 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
 
             // ========== REDIRECIONAR BASEADO NO TIPO DE USUÁRIO ==========
             setTimeout(() => {
-                if (data.is_admin === 1 || data.is_admin === true) {
-                    // Se for admin, vai para o painel administrativo
-                    // USAMOS 'gerenciarLivros.html' pois 'adm.html' não existe na sua lista
-                    console.log('Usuário é admin, redirecionando para painel admin');
+                if (isAdmin) {
+                    // Admin → Painel administrativo
+                    console.log('Redirecionando admin para painel...');
                     window.location.href = '/adminPage/1.Gerenciar Livros/gerenciarLivros.html'; 
                 } else {
-                    // Se for usuário comum, vai para página principal
-                    // USAMOS CAMINHO ABSOLUTO para evitar problemas de "../"
-                    console.log('Usuário comum, redirecionando para página principal');
+                    // Usuário comum → Página principal
+                    console.log('Redirecionando usuário para página principal...');
                     window.location.href = '/pages/2 - Principal/principal.html'; 
-
                 }
             }, 1500);
 
@@ -113,7 +124,6 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
         Swal.fire({
             title: 'Erro ao conectar com o servidor. Verifique se ele está rodando.',
             icon: 'error',
-            // Aumentei o timer para dar tempo de ler a mensagem de erro crítico
             timer: 3000, 
             showConfirmButton: false
         });
