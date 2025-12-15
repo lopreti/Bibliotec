@@ -94,7 +94,7 @@ document.getElementById('btnBotao').addEventListener('click', async () => {
                 if (isAdmin) {
                     console.log('Redirecionando admin para painel...');
                     window.location.href = '/adminPage/1.Gerenciar Livros/gerenciarLivros.html'; 
-                } else {l
+                } else {
                     console.log('Redirecionando usuário para página principal...');
                     window.location.href = '/pages/2 - Principal/principal.html'; 
                 }
