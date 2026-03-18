@@ -1513,89 +1513,90 @@ app.put('/usuarios/:usuario_id/admin', async (req, res) => {
 // Esta é a versão completa e correta que substitui a versão simples.
 
 app.delete('/usuarios/:usuario_id', async (req, res) => {
-
     const { usuario_id } = req.params;
-
     let conn;
 
-
-
     try {
-
         conn = await pool.getConnection();
-
-
-
-        // Iniciar Transação (garante que ou apaga tudo ou não apaga nada)
-
         await conn.beginTransaction();
 
+        // 1️⃣ Verifica se usuário existe e se é admin
+        const [usuario] = await conn.query(
+            'SELECT is_admin FROM usuarios WHERE usuario_id = ?',
+            [usuario_id]
+        );
 
-
-        // 1. Apagar Favoritos do usuário
-
-        await conn.query('DELETE FROM favoritos WHERE usuario_id = ?', [usuario_id]);
-
-
-
-        // 2. Apagar Retiradas do usuário (opcional: ou manter histórico setando usuario_id NULL)
-
-        try {
-
-            await conn.query('DELETE FROM retiradas WHERE usuario_id = ?', [usuario_id]);
-
-        } catch (e) { /* Tabela pode não existir ainda */ }
-
-
-
-        // 3. Apagar Reservas do usuário
-
-        await conn.query('DELETE FROM reservas WHERE usuario_id = ?', [usuario_id]);
-
-
-
-        // 4. Finalmente, apagar o usuário
-
-        const result = await conn.query('DELETE FROM usuarios WHERE usuario_id = ?', [usuario_id]);
-
-
-
-        if (result.affectedRows === 0) {
-
+        if (!usuario) {
             await conn.rollback();
-
-            return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
-
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
         }
 
+        // ❌ Impede exclusão de administrador
+        if (usuario.is_admin === 1) {
+            await conn.rollback();
+            return res.status(403).json({
+                success: false,
+                message: 'Não é permitido excluir um administrador'
+            });
+        }
 
+        // 2️⃣ Apaga dependências
+        await conn.query(
+            'DELETE FROM favoritos WHERE usuario_id = ?',
+            [usuario_id]
+        );
 
-        await conn.commit(); // Confirma as alterações
+        await conn.query(
+            'DELETE FROM reservas WHERE usuario_id = ?',
+            [usuario_id]
+        );
 
+        // Se existir tabela retiradas
+        try {
+            await conn.query(
+                'DELETE FROM retiradas WHERE usuario_id = ?',
+                [usuario_id]
+            );
+        } catch (e) {
+            // ignora se não existir
+        }
 
+        // 3️⃣ Apaga o usuário
+        const result = await conn.query(
+            'DELETE FROM usuarios WHERE usuario_id = ?',
+            [usuario_id]
+        );
+
+        if (result.affectedRows === 0) {
+            await conn.rollback();
+            return res.status(404).json({
+                success: false,
+                message: 'Usuário não encontrado'
+            });
+        }
+
+        await conn.commit();
 
         res.json({
-
             success: true,
-
-            message: 'Usuário e seus dados foram deletados com sucesso'
-
+            message: 'Conta excluída com sucesso'
         });
 
     } catch (error) {
-
-        if (conn) await conn.rollback(); // Cancela se der erro
-
+        if (conn) await conn.rollback();
         console.error('Erro ao deletar usuário:', error);
 
-        res.status(500).json({ message: 'Erro ao deletar usuário. Verifique pendências.' });
+        res.status(500).json({
+            success: false,
+            message: 'Erro ao excluir conta'
+        });
 
     } finally {
-
         if (conn) conn.release();
-
     }
-
 });
 
 
